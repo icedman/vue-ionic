@@ -1,0 +1,74 @@
+:host {
+  display: flex;
+  align-items: center;
+  transform: translateZ(0);
+  z-index: 99;
+  pointer-events: none; }
+
+::slotted(*) .button {
+  --margin-top: 0;
+  --margin-bottom: 0;
+  --margin-start: 0;
+  --margin-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  --box-shadow: none;
+  pointer-events: auto; }
+
+::slotted(*) .button {
+  --padding-top: 0;
+  --pading-bottom: 0;
+  --padding-start: 5px;
+  --padding-end: 5px;
+  --height: 32px;
+  font-size: 17px;
+  font-weight: 400; }
+
+::slotted(*) .button:not(.button-round) {
+  --border-radius: 4px; }
+
+:host-context(.ion-color)::slotted(*) .button {
+  --ion-color-base: currentColor; }
+
+::slotted(*) ion-icon[slot="start"] {
+  margin: 0;
+  margin-right: 0.3em;
+  font-size: 24px;
+  line-height: .67;
+  pointer-events: none; }
+
+::slotted(*) ion-icon[slot="end"] {
+  margin: 0;
+  margin-left: 0.4em;
+  font-size: 24px;
+  line-height: .67;
+  pointer-events: none; }
+
+::slotted(*) ion-icon[slot="icon-only"] {
+  padding: 0;
+  margin: 0;
+  font-size: 31px;
+  line-height: .67;
+  pointer-events: none; }
+
+::slotted(*) .button.button-clear {
+  --height: 35px; }
+
+::slotted(*) .button.button-solid-ios:hover {
+  opacity: .4; }
+
+:host([slot="start"]) {
+  order: 2; }
+
+:host([slot="secondary"]) {
+  order: 3; }
+
+:host([slot="primary"]) {
+  order: 5;
+  text-align: end; }
+
+:host([slot="end"]) {
+  order: 6;
+  text-align: end; }

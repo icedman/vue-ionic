@@ -1,0 +1,93 @@
+:host {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 30px;
+  background-color: var(--ion-color-base);
+  color: var(--ion-color-contrast);
+  overflow: hidden;
+  z-index: 100;
+  box-sizing: border-box; }
+
+:host([sticky]) {
+  position: sticky;
+  top: 0; }
+
+.item-divider-inner {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex: 1;
+  flex-direction: inherit;
+  align-items: inherit;
+  align-self: stretch;
+  min-height: inherit;
+  border: 0;
+  overflow: hidden; }
+
+.item-divider-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: inherit;
+  align-items: inherit;
+  align-self: stretch;
+  text-overflow: ellipsis;
+  overflow: hidden; }
+
+:host {
+  --ion-color-base: var(--ion-background-color, #fff);
+  --ion-color-contrast: var(--ion-text-color-step-600, #999999);
+  padding-left: 16px;
+  border-bottom: 1px solid rgba(var(--ion-item-border-color-rgb, 0, 0, 0), 0.13);
+  font-family: var(--ion-font-family, inherit);
+  font-size: 14px; }
+
+.item-divider-inner {
+  padding-right: 8px; }
+
+:host([slot="start"]),
+:host([slot="end"]) {
+  margin: 2px 8px 2px 0; }
+
+::slotted(ion-icon[slot="start"]),
+::slotted(ion-icon[slot="end"]) {
+  margin-left: 0;
+  margin-top: 3px;
+  margin-bottom: 2px; }
+
+::slotted(ion-avatar[slot="start"]),
+::slotted(ion-thumbnail[slot="start"]) {
+  margin: 8px 16px 8px 0; }
+
+::slotted(ion-avatar[slot="end"]),
+::slotted(ion-thumbnail[slot="end"]) {
+  margin: 8px; }
+
+::slotted(h1) {
+  margin: 0 0 2px;
+  font-size: 24px;
+  font-weight: normal; }
+
+::slotted(h2) {
+  margin: 2px 0;
+  font-size: 16px;
+  font-weight: normal; }
+
+::slotted(h3, h4, h5, h6) {
+  margin: 2px 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: normal; }
+
+::slotted(p) {
+  margin: 0 0 2px;
+  color: var(--ion-text-color-step-400, #666666);
+  font-size: 14px;
+  line-height: normal;
+  text-overflow: inherit;
+  overflow: inherit; }

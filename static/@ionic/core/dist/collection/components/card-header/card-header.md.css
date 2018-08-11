@@ -1,0 +1,9 @@
+:host {
+  display: block;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
+
+:host {
+  padding: 16px; }

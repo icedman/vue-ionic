@@ -1,0 +1,28 @@
+ion-header {
+  display: block;
+  position: relative;
+  order: -1;
+  width: 100%;
+  z-index: 10; }
+
+ion-header ion-toolbar:first-child {
+  /* stylelint-disable-next-line property-blacklist */
+  padding-top: var(--ion-statusbar-padding); }
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  ion-header ion-toolbar:first-child {
+    /* stylelint-disable-next-line property-blacklist */
+    padding-top: calc(env(safe-area-inset-top) + var(--ion-statusbar-padding)); } }
+
+.header-ios ion-toolbar:last-child {
+  --border-width: 0 0 0.55px; }
+
+.header-ios[no-border] ion-toolbar:last-child {
+  --border-width: 0; }
+
+.header-translucent-ios {
+  backdrop-filter: saturate(180%) blur(20px); }
+
+.header-translucent-ios ion-toolbar {
+  --opacity: .8;
+  --backdrop-filter: saturate(180%) blur(20px); }

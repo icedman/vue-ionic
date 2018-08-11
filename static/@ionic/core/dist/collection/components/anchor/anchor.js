@@ -1,0 +1,32 @@
+import { createColorClasses, openURL } from '../../utils/theme';
+export class Anchor {
+    hostData() {
+        return {
+            class: createColorClasses(this.color)
+        };
+    }
+    render() {
+        return (h("a", { href: this.href, onClick: ev => openURL(this.win, this.href, ev, this.routerDirection) },
+            h("slot", null)));
+    }
+    static get is() { return "ion-anchor"; }
+    static get encapsulation() { return "shadow"; }
+    static get properties() { return {
+        "color": {
+            "type": String,
+            "attr": "color"
+        },
+        "href": {
+            "type": String,
+            "attr": "href"
+        },
+        "routerDirection": {
+            "type": String,
+            "attr": "router-direction"
+        },
+        "win": {
+            "context": "window"
+        }
+    }; }
+    static get style() { return "/**style-placeholder:ion-anchor:**/"; }
+}

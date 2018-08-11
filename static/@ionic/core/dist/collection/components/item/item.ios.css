@@ -1,0 +1,234 @@
+:host {
+  --min-height: 44px;
+  --background: var(--ion-color-base);
+  --background-active: var(--ion-color-tint);
+  --color: var(--ion-color-contrast);
+  --detail-push-color: var(--ion-color-shade);
+  --border-radius: 0;
+  --border-width: 0;
+  --border-style: solid;
+  --border-color: var(--ion-color-shade);
+  --inner-border-width: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-end: 0;
+  --padding-start: 0;
+  --inner-padding-top: 0;
+  --inner-padding-bottom: 0;
+  --inner-padding-start: 0;
+  --inner-padding-end: 0;
+  --box-shadow: none;
+  --inner-box-shadow: none;
+  --highlight-color-focus: var(--ion-color-primary, #3880ff);
+  --highlight-color-valid: var(--ion-color-success, #10dc60);
+  --highlight-color-invalid: var(--ion-color-danger, #f04141);
+  --highlight-height: 2px;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: block;
+  color: var(--ion-color-contrast);
+  text-align: initial;
+  text-decoration: none;
+  box-sizing: border-box; }
+
+:host(.activated) {
+  --background: var(--background-active); }
+
+:host(.item-disabled) {
+  cursor: default;
+  opacity: .3;
+  pointer-events: none; }
+
+.item-native {
+  padding: var(--padding-top) var(--padding-end) var(--padding-bottom) var(--padding-start);
+  border-radius: var(--border-radius);
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-decoration: inherit;
+  text-overflow: inherit;
+  text-transform: inherit;
+  text-align: inherit;
+  white-space: inherit;
+  color: inherit;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: var(--min-height);
+  transition: var(--transition);
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: var(--border-color);
+  outline: none;
+  background-color: var(--background);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  box-sizing: border-box; }
+
+button, a {
+  cursor: pointer; }
+
+.item-state {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  height: var(--highlight-height); }
+
+.item-inner {
+  margin: 0;
+  padding: var(--inner-padding-top) var(--inner-padding-end) var(--inner-padding-bottom) var(--inner-padding-start);
+  display: flex;
+  flex: 1;
+  flex-direction: inherit;
+  align-items: inherit;
+  align-self: stretch;
+  min-height: inherit;
+  border-width: var(--inner-border-width);
+  border-style: var(--border-style);
+  border-color: var(--border-color);
+  box-shadow: var(--inner-box-shadow);
+  overflow: hidden;
+  box-sizing: border-box; }
+
+.input-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: inherit;
+  align-items: inherit;
+  align-self: stretch;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  box-sizing: border-box; }
+
+:host([vertical-align-top]),
+:host(.item-input) {
+  align-items: flex-start; }
+
+::slotted(ion-icon) {
+  font-size: 1.6em; }
+
+::slotted(ion-button) {
+  --margin-top: 0;
+  --margin-bottom: 0;
+  --margin-start: 0;
+  --margin-end: 0;
+  z-index: 1; }
+
+:host(.item-label-stacked) .input-wrapper,
+:host(.item-label-floating) .input-wrapper {
+  flex: 1;
+  flex-direction: column; }
+
+:host(.item-label-stacked)::slotted(ion-select),
+:host(.item-label-floating)::slotted(ion-select) {
+  align-self: stretch;
+  max-width: 100%; }
+
+:host(.item-textarea) {
+  align-items: stretch; }
+
+:host(.item-multiple-inputs) ::slotted(ion-select) {
+  position: relative; }
+
+:host(.item-label-stacked) ::slotted(ion-select),
+:host(.item-label-floating) ::slotted(ion-select) {
+  max-width: 100%; }
+
+::slotted(ion-reorder[slot]) {
+  margin-top: 0;
+  margin-bottom: 0; }
+
+:host {
+  --ion-color-base: var(--ion-item-background, transparent);
+  --ion-color-contrast: var(--ion-item-text-color, var(--ion-text-color, #000));
+  --ion-color-tint: var(--ion-item-background-color-active, #d9d9d9);
+  --ion-color-shade: var(--ion-item-border-color, #c8c7cc);
+  --transition: background-color 200ms linear;
+  --padding-start: 16px;
+  --inner-padding-end: 8px;
+  --inner-border-width: 0 0 0.55px 0;
+  font-family: var(--ion-font-family, inherit);
+  font-size: 17px; }
+
+:host(.activated) {
+  --transition: none; }
+
+@media screen and (orientation: landscape) {
+  .item-inner {
+    padding-left: calc(constant(safe-area-inset-left) + var(--inner-padding-start));
+    padding-right: calc(constant(safe-area-inset-right) + var(--inner-padding-end));
+    padding-left: calc(env(safe-area-inset-left) + var(--inner-padding-start));
+    padding-right: calc(env(safe-area-inset-right) + var(--inner-padding-end)); } }
+
+:host(.item-lines-full) {
+  --border-width: 0 0 0.55px 0; }
+
+:host(.item-lines-inset) {
+  --inner-border-width: 0 0 0.55px 0; }
+
+:host(.item-lines-inset),
+:host(.item-lines-none) {
+  --border-width: 0; }
+
+:host(.item-lines-full),
+:host(.item-lines-none) {
+  --inner-border-width: 0; }
+
+::slotted(:not(.interactive)[slot="start"]) {
+  margin: 2px 16px 2px 0; }
+
+::slotted(:not(.interactive)[slot="end"]) {
+  margin-left: 8px;
+  margin-right: 8px; }
+
+::slotted(ion-icon[slot="start"]),
+::slotted(ion-icon[slot="end"]) {
+  margin-left: 0;
+  margin-top: 7px;
+  margin-bottom: 7px; }
+
+:host(.item-label-stacked) ::slotted([slot="end"]),
+:host(.item-label-floating) ::slotted([slot="end"]) {
+  margin-top: 7px;
+  margin-bottom: 7px; }
+
+::slotted(.button-small) {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: .5em;
+  --padding-end: .5em;
+  --height: 24px;
+  font-size: 13px; }
+
+::slotted(ion-avatar) {
+  width: 36px;
+  height: 36px; }
+
+::slotted(ion-thumbnail) {
+  width: 56px;
+  height: 56px; }
+
+::slotted(ion-avatar[slot="end"]),
+::slotted(ion-thumbnail[slot="end"]) {
+  margin: 8px; }
+
+.item-detail-icon {
+  color: var(--detail-push-color);
+  font-size: 20px; }
+
+:host(.item-radio) ::slotted(ion-label),
+:host(.item-toggle) ::slotted(ion-label) {
+  margin-left: 0; }
+
+:host(.item-label-stacked) ::slotted(ion-input),
+:host(.item-label-floating) ::slotted(ion-input),
+:host(.item-label-stacked) ::slotted(ion-textarea),
+:host(.item-label-floating) ::slotted(ion-textarea) {
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --padding-start: 0; }

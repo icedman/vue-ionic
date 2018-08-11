@@ -1,0 +1,26 @@
+ion-footer {
+  display: block;
+  position: relative;
+  order: 1;
+  width: 100%;
+  z-index: 10; }
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  ion-footer ion-toolbar:last-child {
+    /* stylelint-disable-next-line property-blacklist */
+    padding-bottom: env(safe-area-inset-bottom); } }
+
+.footer-md::before {
+  left: 0;
+  top: -2px;
+  bottom: auto;
+  background-position: left 0 top 0;
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAHBAMAAADzDtBxAAAAD1BMVEUAAAAAAAAAAAAAAAAAAABPDueNAAAABXRSTlMUCS0gBIh/TXEAAAAaSURBVAjXYxCEAgY4UIICBmMogMsgFLtAAQCNSwXZKOdPxgAAAABJRU5ErkJggg==");
+  background-repeat: repeat-x;
+  content: ""; }
+
+.footer-md[no-border]::before {
+  display: none; }

@@ -1,0 +1,33 @@
+@import "../../themes/ionic.globals";
+
+// Radio
+// --------------------------------------------------
+
+:host {
+  --ion-color-base: #{ion-color(primary, base)};
+
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+
+  user-select: none;
+}
+
+.radio-icon {
+  display: block;
+  position: relative;
+
+  width: var(--width);
+  height: var(--height);
+
+  contain: layout size style;
+}
+
+input {
+  @include input-cover();
+}
+
+.radio-icon,
+.radio-inner {
+  box-sizing: border-box;
+}

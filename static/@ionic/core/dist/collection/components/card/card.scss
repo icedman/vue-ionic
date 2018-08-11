@@ -1,0 +1,27 @@
+@import "../../themes/ionic.globals";
+
+// Card
+// --------------------------------------------------
+
+:host {
+  @include font-smoothing();
+
+  display: block;
+  position: relative;
+
+  background: #{current-color(base)};
+  color: #{current-color(contrast)};
+
+  overflow: hidden;
+}
+
+:host(.ion-color)::slotted(*) ion-card-title,
+:host(.ion-color)::slotted(*) ion-card-subtitle {
+  color: currentColor;
+}
+
+::slotted(*) img {
+  display: block;
+
+  width: 100%;
+}

@@ -1,0 +1,49 @@
+@import "./datetime.vars";
+
+// Datetime
+// --------------------------------------------------
+
+ion-datetime {
+  display: flex;
+  position: relative;
+
+  overflow: hidden;
+}
+
+.datetime-cover {
+  @include input-cover();
+}
+
+.datetime-text {
+  flex: 1;
+
+  min-width: $datetime-text-min-width;
+  min-height: $datetime-text-min-height;
+
+  font-size: inherit;
+
+  line-height: $datetime-text-line-height;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+}
+
+.datetime-disabled,
+.item-datetime-disabled ion-label {
+  opacity: $datetime-disabled-opacity;
+  pointer-events: none;
+}
+
+.item-label-stacked ion-datetime,
+.item-label-floating ion-datetime {
+  @include padding-horizontal(0, null);
+
+  width: 100%;
+}
+
+.item .datetime {
+  position: static;
+}

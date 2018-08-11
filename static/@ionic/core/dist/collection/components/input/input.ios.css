@@ -1,0 +1,102 @@
+:host {
+  --placeholder-color: currentColor;
+  --placeholder-weight: inherit;
+  --placeholder-opacity: .5;
+  --padding-top: 0;
+  --padding-end: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --border-radius: 0;
+  display: flex;
+  position: relative;
+  flex: 1;
+  align-items: center;
+  width: 100%;
+  /* stylelint-disable */
+  /* TODO: find a better solution in padding.css, that does not require !important, */
+  padding: 0 !important;
+  /* stylelint-enable */ }
+
+:host(.ion-color) {
+  color: var(--ion-color-base); }
+
+.native-input {
+  border-radius: var(--border-radius);
+  padding: var(--padding-top) var(--padding-end) var(--padding-bottom) var(--padding-start);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-decoration: inherit;
+  text-overflow: inherit;
+  text-transform: inherit;
+  text-align: inherit;
+  white-space: inherit;
+  color: inherit;
+  display: inline-block;
+  flex: 1;
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  box-sizing: border-box;
+  appearance: none; }
+  .native-input::placeholder {
+    color: var(--placeholder-color);
+    font-family: inherit;
+    font-weight: var(--placeholder-weight);
+    opacity: var(--placeholder-opacity); }
+  .native-input:-webkit-autofill {
+    background-color: transparent; }
+
+.native-input[disabled] {
+  opacity: .4; }
+
+.input-cover {
+  left: 0;
+  top: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%; }
+
+:host([disabled]) .input-cover {
+  pointer-events: none; }
+
+.input-clear-icon {
+  margin: 0;
+  padding: 0;
+  background-position: center;
+  border: 0;
+  outline: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  visibility: hidden;
+  appearance: none; }
+
+:host(.has-focus.has-value) .input-clear-icon {
+  visibility: visible; }
+
+:host(.has-focus) .input-cover {
+  display: none; }
+
+:host(.has-focus) {
+  pointer-events: none; }
+
+:host(.has-focus) input,
+:host(.has-focus) a,
+:host(.has-focus) button {
+  pointer-events: auto; }
+
+:host {
+  --padding-top: 10px;
+  --padding-end: 8px;
+  --padding-bottom: 10px;
+  --padding-start: 0;
+  font-family: var(--ion-font-family, inherit);
+  font-size: inherit; }
+
+.input-clear-icon {
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20512%20512'><path%20fill='var(--ion-text-color-step-400,%20%23666666)'%20d='M403.1,108.9c-81.2-81.2-212.9-81.2-294.2,0s-81.2,212.9,0,294.2c81.2,81.2,212.9,81.2,294.2,0S484.3,190.1,403.1,108.9z%20M352,340.2L340.2,352l-84.4-84.2l-84,83.8L160,339.8l84-83.8l-84-83.8l11.8-11.8l84,83.8l84.4-84.2l11.8,11.8L267.6,256L352,340.2z'/></svg>");
+  width: 30px;
+  height: 30px;
+  background-size: 18px; }

@@ -1,0 +1,17 @@
+@import "./list-header";
+@import "./list-header.md.vars";
+
+// Material Design List Header
+// --------------------------------------------------
+
+:host {
+  --ion-color-base: transparent;
+  --ion-color-contrast: #{$list-md-header-color};
+
+  @include padding-horizontal($list-md-header-padding-start, null);
+  @include margin(null, null, $list-md-header-margin-bottom, null);
+
+  min-height: $list-md-header-min-height;
+
+  font-size: $list-md-header-font-size;
+}

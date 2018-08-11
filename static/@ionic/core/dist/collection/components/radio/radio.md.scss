@@ -1,0 +1,104 @@
+@import "./radio";
+@import "./radio.md.vars";
+
+// Material Design Radio
+// --------------------------------------------------
+
+:host {
+  --width: #{$radio-md-icon-width};
+  --height: #{$radio-md-icon-height};
+}
+
+// Material Design Radio Outer Circle: Unchecked
+// -----------------------------------------
+
+.radio-icon {
+  @include position(0, null, null, 0);
+  @include margin(0);
+  @include border-radius($radio-md-icon-border-radius);
+
+  border-width: $radio-md-icon-border-width;
+  border-style: $radio-md-icon-border-style;
+  border-color: $radio-md-color-off;
+}
+
+
+// Material Design Radio Inner Circle: Unchecked
+// -----------------------------------------
+
+.radio-inner {
+  @include position($radio-md-icon-border-width, null, null, $radio-md-icon-border-width);
+  @include border-radius(50%);
+
+  position: absolute;
+
+  width: $radio-md-icon-width - $radio-md-icon-border-width * 4;
+  height: $radio-md-icon-height - $radio-md-icon-border-width * 4;
+
+  transform: scale3d(0, 0, 0);
+
+  transition: transform $radio-md-transition-duration $radio-md-transition-easing;
+
+  background-color: $radio-md-color-on;
+}
+
+
+// Material Design Radio Outer Circle: Checked
+// -----------------------------------------
+
+:host(.radio-checked) .radio-icon {
+  border-color: $radio-md-color-on;
+}
+
+
+// Material Design Radio Inner Circle: Checked
+// -----------------------------------------
+
+:host(.radio-checked) .radio-inner {
+  transform: scale3d(1, 1, 1);
+}
+
+
+// Material Design Radio: Disabled
+// -----------------------------------------
+
+// .item-md.item-radio-disabled ion-label {
+:host(.radio-disabled) {
+  opacity: $radio-md-disabled-opacity;
+  pointer-events: none;
+}
+
+
+// Material Design Radio: Keyboard Focus
+// -----------------------------------------
+
+:host(.radio-key) .radio-icon::after {
+  @include border-radius(50%);
+  @include position(-12px, null, null, -12px);
+
+  display: block;
+  position: absolute;
+
+  width: 36px;
+  height: 36px;
+
+  background: $radio-md-background-color-focused;
+
+  content: "";
+  opacity: .2;
+}
+
+
+// Material Design Radio Within An Item
+// -----------------------------------------
+
+:host(.in-item) {
+  @include margin($radio-md-item-end-margin-top, $radio-md-item-end-margin-end, $radio-md-item-end-margin-bottom, $radio-md-item-end-margin-start);
+
+  display: block;
+  position: static;
+}
+
+:host(.in-item[slot="start"]) {
+  @include margin($radio-md-item-start-margin-top, $radio-md-item-start-margin-end, $radio-md-item-start-margin-bottom, $radio-md-item-start-margin-start);
+}

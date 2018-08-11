@@ -1,0 +1,16 @@
+@import "../../themes/ionic.globals";
+
+
+// Card Title
+// --------------------------------------------------
+
+:host {
+  display: block;
+  position: relative;
+}
+
+:host(.ion-color) {
+  // TODO can we remove important here
+  /* stylelint-disable-next-line declaration-no-important */
+  color: #{current-color(base)} !important;
+}

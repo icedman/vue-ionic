@@ -1,0 +1,197 @@
+@import "./item.vars";
+
+// Item
+// --------------------------------------------------
+
+:host {
+  --min-height: #{$item-min-height};
+  --background: #{current-color(base)};
+  --background-active: #{current-color(tint)};
+  --color: #{current-color(contrast)};
+  --detail-push-color: #{current-color(shade)};
+  --border-radius: 0;
+  --border-width: 0;
+  --border-style: solid;
+  --border-color: #{current-color(shade)};
+  --inner-border-width: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-end: 0;
+  --padding-start: 0;
+  --inner-padding-top: 0;
+  --inner-padding-bottom: 0;
+  --inner-padding-start: 0;
+  --inner-padding-end: 0;
+  --box-shadow: none;
+  --inner-box-shadow: none;
+  --highlight-color-focus: #{ion-color(primary, base)};
+  --highlight-color-valid: #{ion-color(success, base)};
+  --highlight-color-invalid: #{ion-color(danger, base)};
+  --highlight-height: 2px;
+
+  @include font-smoothing();
+
+  display: block;
+
+  color: #{current-color(contrast)};
+
+  text-align: initial;
+  text-decoration: none;
+
+  box-sizing: border-box;
+}
+
+:host(.activated) {
+  --background: var(--background-active);
+}
+
+:host(.item-disabled) {
+  cursor: default;
+  opacity: .3;
+  pointer-events: none;
+}
+
+
+.item-native {
+  @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
+  @include border-radius(var(--border-radius));
+  @include margin(0);
+  @include text-inherit();
+
+  display: flex;
+  position: relative;
+
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  min-height: var(--min-height);
+
+  transition: var(--transition);
+
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: var(--border-color);
+
+  outline: none;
+
+  background-color: var(--background);
+
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+button, a {
+  cursor: pointer;
+}
+
+.item-state {
+  @include position(null, 0, 0, 0);
+
+  position: absolute;
+
+  height: var(--highlight-height);
+}
+
+.item-inner {
+  @include margin(0);
+  @include padding(var(--inner-padding-top), var(--inner-padding-end), var(--inner-padding-bottom), var(--inner-padding-start));
+
+  display: flex;
+
+  flex: 1;
+  flex-direction: inherit;
+  align-items: inherit;
+  align-self: stretch;
+
+  min-height: inherit;
+
+  border-width: var(--inner-border-width);
+  border-style: var(--border-style);
+  border-color: var(--border-color);
+
+  box-shadow: var(--inner-box-shadow);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.input-wrapper {
+  display: flex;
+
+  flex: 1;
+  flex-direction: inherit;
+  align-items: inherit;
+  align-self: stretch;
+
+  text-overflow: ellipsis;
+
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+:host([vertical-align-top]),
+:host(.item-input) {
+  align-items: flex-start;
+}
+
+::slotted(ion-icon) {
+  font-size: 1.6em;
+}
+
+::slotted(ion-button) {
+  --margin-top: 0;
+  --margin-bottom: 0;
+  --margin-start: 0;
+  --margin-end: 0;
+
+  z-index: 1;
+}
+
+
+// FROM LABEL
+:host(.item-label-stacked) .input-wrapper,
+:host(.item-label-floating) .input-wrapper {
+  flex: 1;
+  flex-direction: column;
+}
+
+:host(.item-label-stacked)::slotted(ion-select),
+:host(.item-label-floating)::slotted(ion-select) {
+  align-self: stretch;
+
+  max-width: 100%;
+}
+
+
+
+
+// TODO: FROM textarea
+
+:host(.item-textarea) {
+  align-items: stretch;
+}
+
+// :host(.item-input-has-focus) a,
+// :host(.item-input-has-focus) button,
+// :host(.item-input-has-focus) textarea {
+//   pointer-events: auto;
+// }
+
+
+// FROM SELECT
+:host(.item-multiple-inputs) ::slotted(ion-select) {
+  position: relative;
+}
+
+:host(.item-label-stacked) ::slotted(ion-select),
+:host(.item-label-floating) ::slotted(ion-select) {
+  max-width: 100%;
+}
+
+// Item Reorder
+// --------------------------------------------------
+
+::slotted(ion-reorder[slot]) {
+  @include margin(0, null);
+}

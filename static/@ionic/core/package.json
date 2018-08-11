@@ -1,0 +1,224 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "@ionic/core",
+        "scope": "@ionic",
+        "escapedName": "@ionic%2fcore",
+        "name": "@ionic/core",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Volumes/DATA/Projects/vue/vue-ionic"
+    ]
+  ],
+  "_from": "@ionic/core@latest",
+  "_id": "@ionic/core@4.0.0-beta.1",
+  "_inCache": true,
+  "_location": "/@ionic/core",
+  "_nodeVersion": "10.7.0",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/core_4.0.0-beta.1_1533144521799_0.16969419947495523"
+  },
+  "_npmUser": {
+    "name": "manucorporat",
+    "email": "manu.mtza@gmail.com"
+  },
+  "_npmVersion": "6.2.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "@ionic/core",
+    "scope": "@ionic",
+    "escapedName": "@ionic%2fcore",
+    "name": "@ionic/core",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@ionic/core/-/core-4.0.0-beta.1.tgz",
+  "_shasum": "90173c466083e394615eaae6cd1e9795a6bda079",
+  "_shrinkwrap": null,
+  "_spec": "@ionic/core",
+  "_where": "/Volumes/DATA/Projects/vue/vue-ionic",
+  "author": {
+    "name": "Ionic Team"
+  },
+  "bugs": {
+    "url": "https://github.com/ionic-team/ionic/issues"
+  },
+  "collection": "dist/collection/collection-manifest.json",
+  "dependencies": {
+    "ionicons": "4.2.6"
+  },
+  "description": "Base components for Ionic",
+  "devDependencies": {
+    "@stencil/core": "0.11.0",
+    "@stencil/dev-server": "latest",
+    "@stencil/sass": "0.1.0",
+    "@stencil/utils": "latest",
+    "@types/jest": "^23.3.1",
+    "autoprefixer": "^9.0.2",
+    "chromedriver": "^2.38.3",
+    "clean-css-cli": "^4.1.11",
+    "jest": "^23.4.2",
+    "mocha": "^4.0.1",
+    "np": "^3.0.4",
+    "selenium-webdriver": "^3.6.0",
+    "stylelint": "^9.4.0",
+    "stylelint-order": "^0.8.1",
+    "tslint": "^5.10.0",
+    "tslint-ionic-rules": "0.0.17",
+    "typescript": "^2.9.2",
+    "yargs": "^12.0.1"
+  },
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-dUKfpyB96kVSMu6JUYKIoWdM+bnfNJFD469Qs0QA0fA8HA0e75h2wsWnWgtHwqgwQd709bNTP16pkHz2t9pjwg==",
+    "shasum": "90173c466083e394615eaae6cd1e9795a6bda079",
+    "tarball": "https://registry.npmjs.org/@ionic/core/-/core-4.0.0-beta.1.tgz",
+    "fileCount": 2029,
+    "unpackedSize": 8866829,
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJbYe3KCRA9TVsSAnZWagAAaIgP/00uLsH3DB74HgOtZnQV\n5qmtwAgU1HwelnzW9pXEU5Pm38KrzzwLJhoLlqCVeIPAliPGL01nO5vYDPA5\nMO1R8efniWwhcokS7/3BIW24Fgx5ShTK+DnZTOOHv3y4/YkSC4D5Ix9atsqZ\nqvFZTZ+G5FA1ppsLr8DkkUzl/Mq4M75ewO/gEXp3rJ0wVukSVjT3VTasoVin\n003l4DF9JJCFVYtVJJkrYYGe7JbZkRKEpPVBQeZluptqES98dKMtXjl8lENT\nNXrKfvfKoGUhJT/r13JkyupmfeFSeFAe+WQKInD8opouwalLSV+wZBSFGF3l\nJTu0drGOuvWE+ChtLWDXa6zCwKyK3+76qEbq/ejj8921AOq+qSoLVC6L3pbS\np/fqxqMtlPMqoacQY9mCBcskUKvgDBdnXEgerlFalOEEsZMHo4qyQIBUFtuI\nfKg64kAqH+O4M9WqVhQUtFF2HG7x7432JsULtvANPaHBupqntFbfwpXbRu0F\nFk9t+NDuoskSYC0ECf06YiAz6865oPXFhbejMiT975cUmTvLmI4xEiMpWkxk\nAbNuuwtN94lNAtIwZBWGRCN0I4xvZdaDgfIpmcSIcqwOuC2L1T+KCECZXg5Y\n4CaHGGRd6G17RuhYapi4MiItZuNdRB5kx/52Q0BlFkc0wmvPRTwMt1OlM6Gw\nrK9g\r\n=/L6S\r\n-----END PGP SIGNATURE-----\r\n"
+  },
+  "files": [
+    "dist/",
+    "css/"
+  ],
+  "homepage": "https://github.com/ionic-team/ionic#readme",
+  "jest": {
+    "transform": {
+      "^.+\\.(js|ts|tsx)$": "<rootDir>/node_modules/@stencil/core/testing/jest.preprocessor.js"
+    },
+    "testRegex": "src/.*\\.spec\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "d.ts"
+    ]
+  },
+  "keywords": [
+    "ionic",
+    "framework",
+    "stencil",
+    "mobile",
+    "app",
+    "webapp",
+    "capacitor",
+    "cordova",
+    "progressive web app",
+    "pwa"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "maintainers": [
+    {
+      "name": "adamdbradley",
+      "email": "hi+adam@ionicframework.com"
+    },
+    {
+      "name": "brandyscarney",
+      "email": "brandy@ionic.io"
+    },
+    {
+      "name": "camwiegert",
+      "email": "cam@camwiegert.com"
+    },
+    {
+      "name": "drifty",
+      "email": "max@drifty.com"
+    },
+    {
+      "name": "dwieeb",
+      "email": "dwieeb@gmail.com"
+    },
+    {
+      "name": "fuiste",
+      "email": "rudy@ionic.io"
+    },
+    {
+      "name": "giodimiliaionic",
+      "email": "giovanni@ionic.io"
+    },
+    {
+      "name": "ionicjs",
+      "email": "hi@ionicframework.com"
+    },
+    {
+      "name": "jthoms1",
+      "email": "jthoms1@gmail.com"
+    },
+    {
+      "name": "larsmikkelsen",
+      "email": "lars@ionic.io"
+    },
+    {
+      "name": "manucorporat",
+      "email": "manu.mtza@gmail.com"
+    },
+    {
+      "name": "maxlynch",
+      "email": "max@ionic.io"
+    },
+    {
+      "name": "mhartington",
+      "email": "mikehartington@gmail.com"
+    },
+    {
+      "name": "nhyatt",
+      "email": "nick@ionic.io"
+    },
+    {
+      "name": "perrygovier",
+      "email": "perry@ionic.io"
+    }
+  ],
+  "module": "dist/collection/index.js",
+  "name": "@ionic/core",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ionic-team/ionic.git"
+  },
+  "scripts": {
+    "build": "npm run clean && npm run build.css && stencil build --docs",
+    "build.css": "npm run css.sass && npm run css.clean",
+    "build.debug": "npm run clean && stencil build --debug",
+    "build.docs.json": "stencil build --docs-json dist/docs.json",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "clean": "node scripts/clean.js",
+    "css.clean": "cleancss -O2 -o ./css/ionic.min.css ./css/ionic.css",
+    "css.sass": "node-sass --output ./css src/css --output-style compressed",
+    "dev": "npm run build.css && stencil build --dev --watch --serve",
+    "e2e": "node ./scripts/e2e",
+    "e2e-debug": "node --inspect --debug-brk ./scripts/e2e",
+    "lint": "npm run lint.ts && npm run lint.sass",
+    "lint.fix": "npm run lint.ts.fix && npm run lint.sass.fix",
+    "lint.sass": "stylelint 'src/**/*.scss'",
+    "lint.sass.fix": "npm run lint.sass -- --fix",
+    "lint.ts": "tslint --project .",
+    "lint.ts.fix": "tslint --project . --fix",
+    "prerelease": "npm run validate && np prerelease --yolo --any-branch --tag next",
+    "snapshot": "node ./scripts/e2e --snapshot",
+    "test": "jest",
+    "test.watch": "jest --watch --no-cache",
+    "theme-app-build": "stencil build --dev --config scripts/theme-builder/stencil.config.js",
+    "theme-builder": "sd concurrent \"npm run theme-app-build\" \"stencil build --dev --watch\" \"stencil-dev-server\" \"npm run theme-server\" ",
+    "theme-builder:dev": "sd concurrent \"npm run theme-app-build -- --watch\" \"stencil build --dev --watch\" \"stencil-dev-server\" \"npm run theme-server\" ",
+    "theme-server": "node scripts/theme-builder/server.js",
+    "tsc": "tsc -p .",
+    "validate": "npm run lint && npm run test && npm run build",
+    "validate.ci": "npm run lint && npm run test && npm run build --max-workers 1 --debug"
+  },
+  "types": "dist/types/index.d.ts",
+  "unpkg": "dist/ionic.js",
+  "version": "4.0.0-beta.1"
+}

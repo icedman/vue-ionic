@@ -1,0 +1,20 @@
+@import "./avatar";
+@import "./avatar.ios.vars";
+
+
+// iOS Avatar
+// --------------------------------------------------
+
+:host {
+  @include border-radius($avatar-ios-border-radius);
+
+  width: $avatar-ios-width;
+  height: $avatar-ios-height;
+}
+
+::slotted(ion-img),
+::slotted(img) {
+  @include border-radius($avatar-ios-border-radius);
+
+  overflow: hidden;
+}

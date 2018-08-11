@@ -1,0 +1,76 @@
+:host {
+  display: flex;
+  align-items: center;
+  transform: translateZ(0);
+  z-index: 99;
+  pointer-events: none; }
+
+::slotted(*) .button {
+  --margin-top: 0;
+  --margin-bottom: 0;
+  --margin-start: 0;
+  --margin-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  --box-shadow: none;
+  pointer-events: auto; }
+
+:host {
+  margin: 0 2px; }
+
+::slotted(*) .button {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --height: 32px;
+  --box-shadow: none;
+  font-size: 14px;
+  font-weight: 500; }
+
+::slotted(*) .button:not(.button-round) {
+  --border-radius: 2px; }
+
+::slotted(*) ion-icon[slot="start"] {
+  margin: 0;
+  margin-right: 0.3em;
+  font-size: 1.4em;
+  pointer-events: none; }
+
+::slotted(*) ion-icon[slot="end"] {
+  margin: 0;
+  margin-left: 0.4em;
+  font-size: 1.4em;
+  pointer-events: none; }
+
+::slotted(*) ion-icon[slot="icon-only"] {
+  padding: 0;
+  margin: 0;
+  font-size: 1.8em;
+  pointer-events: none; }
+
+::slotted(*) .button.button-solid,
+::slotted(*) .button.button-outline {
+  --ion-color-base: var(--ion-toolbar-text-color, #424242);
+  --ion-color-contrast: var(--ion-toolbar-background-color, #f8f8f8);
+  --ion-color-shade: var(--ion-toolbar-text-color, #424242); }
+
+::slotted(*) .button.button-clear {
+  --ion-color-base: currentColor;
+  --height: 45px; }
+
+:host([slot="start"]) {
+  order: 2; }
+
+:host([slot="secondary"]) {
+  order: 4; }
+
+:host([slot="primary"]) {
+  order: 5;
+  text-align: end; }
+
+:host([slot="end"]) {
+  order: 6;
+  text-align: end; }

@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  position: relative; }
+
+:host(.ion-color) {
+  /* stylelint-disable-next-line declaration-no-important */
+  color: var(--ion-color-base) !important; }
+
+:host {
+  margin: 0;
+  padding: 0;
+  color: var(--ion-text-color, #000);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2; }

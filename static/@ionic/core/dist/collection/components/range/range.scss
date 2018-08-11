@@ -1,0 +1,68 @@
+@import "../../themes/ionic.globals";
+
+// Range
+// --------------------------------------------------
+
+:host {
+  --ion-color-base: #{ion-color(primary, base)};
+  --ion-color-contrast: #{ion-color(primary, contrast)};
+
+  display: flex;
+  position: relative;
+
+  flex: 1;
+  align-items: center;
+}
+
+::slotted(ion-label) {
+  flex: initial;
+}
+
+::slotted(ion-icon[slot]) {
+  font-size: 24px;
+}
+
+.range-slider {
+  position: relative;
+
+  flex: 1;
+
+  cursor: pointer;
+}
+
+.range-pin {
+  box-sizing: border-box;
+}
+
+.range-knob-handle {
+  &:active,
+  &:focus {
+    outline: none;
+  }
+}
+
+// Range in Item
+// ----------------------------
+
+// .item ion-range .item-inner {
+//   overflow: visible;
+
+//   width: 100%;
+// }
+
+// .item ion-range .input-wrapper {
+//   overflow: visible;
+
+//   flex-direction: column;
+
+//   width: 100%;
+// }
+
+:host(.in-item) {
+  width: 100%;
+}
+
+
+:host(.in-item) ::slotted(ion-label) {
+  align-self: center;
+}

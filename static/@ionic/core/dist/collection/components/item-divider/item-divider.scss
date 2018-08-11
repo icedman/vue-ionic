@@ -1,0 +1,62 @@
+@import "./item-divider.vars";
+
+
+// Item Divider
+// --------------------------------------------------
+
+:host {
+  @include font-smoothing();
+  @include margin(0);
+  @include padding(0);
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  min-height: $item-divider-min-height;
+
+  background-color: #{current-color(base)};
+  color: #{current-color(contrast)};
+
+  overflow: hidden;
+  z-index: $z-index-item-divider;
+  box-sizing: border-box;
+}
+
+:host([sticky]) {
+  position: sticky;
+  top: 0;
+}
+
+.item-divider-inner {
+  @include margin(0);
+  @include padding(0);
+
+  display: flex;
+
+  flex: 1;
+  flex-direction: inherit;
+  align-items: inherit;
+  align-self: stretch;
+
+  min-height: inherit;
+
+  border: 0;
+
+  overflow: hidden;
+}
+
+.item-divider-wrapper {
+  display: flex;
+
+  flex: 1;
+  flex-direction: inherit;
+  align-items: inherit;
+  align-self: stretch;
+
+  text-overflow: ellipsis;
+
+  overflow: hidden;
+}

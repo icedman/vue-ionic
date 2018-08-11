@@ -1,0 +1,185 @@
+@import "./searchbar";
+@import "./searchbar.ios.vars";
+
+// iOS Searchbar
+// --------------------------------------------------
+
+:host {
+  --clear-button-color: #{$searchbar-ios-input-clear-icon-color};
+  --cancel-button-color: #{$searchbar-ios-cancel-button-color};
+
+  @include padding($searchbar-ios-padding-top, $searchbar-ios-padding-end, $searchbar-ios-padding-bottom, $searchbar-ios-padding-start);
+
+  height: $searchbar-ios-input-height + $searchbar-ios-padding-top + $searchbar-ios-padding-bottom;
+
+  color: $searchbar-ios-input-text-color;
+
+  font-family: $searchbar-ios-font-family;
+
+  contain: strict;
+}
+
+.searchbar-input-container {
+  height: $searchbar-ios-input-height;
+
+  contain: strict;
+}
+
+
+// Searchbar Search Icon
+// -----------------------------------------
+
+.searchbar-search-icon {
+  @include margin-horizontal(calc(50% - 60px), null);
+  @include position(0, null, null, 8px);
+
+  position: absolute;
+
+  width: $searchbar-ios-input-search-icon-size;
+  height: 100%;
+
+  color: $searchbar-ios-input-search-icon-color;
+
+  contain: strict;
+}
+
+
+// Searchbar Input Field
+// -----------------------------------------
+
+.searchbar-input {
+  @include padding(0, 28px);
+  @include border-radius($searchbar-ios-input-border-radius);
+
+  height: 100%;
+
+  background-color: $searchbar-ios-input-background-color;
+
+  font-size: 14px;
+  font-weight: 400;
+
+  contain: strict;
+}
+
+
+// Searchbar Clear Input Icon
+// -----------------------------------------
+
+.searchbar-clear-button {
+  @include position(0, 0, null, null);
+  @include background-position(center);
+
+  position: absolute;
+
+  width: 30px;
+  height: 100%;
+
+  border: 0;
+
+  background-color: transparent;
+}
+
+.searchbar-clear-icon {
+  width: $searchbar-ios-input-clear-icon-size;
+  height: 100%;
+}
+
+
+// Searchbar Cancel
+// -----------------------------------------
+
+.searchbar-cancel-button {
+  @include padding(0, 0, 0, 8px);
+
+  display: none;
+
+  flex-shrink: 0;
+
+  border: 0;
+
+  outline: none;
+
+  background-color: $searchbar-ios-cancel-button-background-color;
+
+  font-size: $searchbar-ios-cancel-button-font-size;
+
+  cursor: pointer;
+  appearance: none;
+}
+
+
+// Searchbar Left Aligned (iOS Only)
+// -----------------------------------------
+
+:host(.searchbar-left-aligned) .searchbar-search-icon {
+  @include margin-horizontal(0, null);
+}
+
+:host(.searchbar-left-aligned) .searchbar-input {
+  @include padding-horizontal(30px, null);
+}
+
+
+// Searchbar Has Focus & Animated
+// -----------------------------------------
+
+:host(.searchbar-show-cancel.searchbar-has-focus) .searchbar-cancel-button,
+:host(.searchbar-show-cancel.searchbar-animated) .searchbar-cancel-button {
+  display: block;
+}
+
+:host(.searchbar-animated) .searchbar-search-icon,
+:host(.searchbar-animated) .searchbar-input {
+  transition: $searchbar-ios-input-transition;
+}
+
+:host(.searchbar-animated.searchbar-has-focus) .searchbar-cancel-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+:host(.searchbar-animated) .searchbar-cancel-button {
+  @include margin-horizontal(null, -100%);
+  @include transform(translate3d(0, 0, 0));
+
+  transition: $searchbar-ios-cancel-transition;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+// Searchbar Color
+// -----------------------------------------
+
+:host(.ion-color) .searchbar-cancel-button {
+  color: #{current-color(base)};
+}
+
+:host(.ion-color) .searchbar-cancel-button:hover {
+  color: #{current-color(tint)};
+}
+
+// Searchbar in Toolbar Color
+// -----------------------------------------
+
+:host-context(ion-toolbar.ion-color) .searchbar-cancel-button {
+  color: currentColor;
+}
+
+:host-context(ion-toolbar.ion-color) .searchbar-search-icon {
+  color: currentColor;
+
+  opacity: $searchbar-ios-input-icon-opacity;
+}
+
+:host-context(ion-toolbar.ion-color) .searchbar-input {
+  background: rgba(var(--ion-color-contrast-rgb), $searchbar-ios-input-background-color-alpha);
+  color: currentColor;
+}
+
+:host-context(ion-toolbar.ion-color) .searchbar-clear-button {
+  color: currentColor;
+
+  opacity: $searchbar-ios-input-icon-opacity;
+}

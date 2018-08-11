@@ -1,0 +1,12 @@
+@import "./skeleton-text";
+@import "./skeleton-text.md.vars";
+
+
+// Material Design Skeleton Text
+// --------------------------------------------------
+
+span {
+  background-color: $skeleton-text-md-bar-background-color;
+
+  opacity: $skeleton-text-md-bar-opacity;
+}

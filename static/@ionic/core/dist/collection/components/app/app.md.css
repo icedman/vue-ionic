@@ -1,0 +1,47 @@
+ion-app,
+ion-router-outlet,
+ion-tab,
+ion-tabs,
+ion-nav,
+.ion-page {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  contain: layout size style;
+  overflow: hidden;
+  z-index: 0; }
+
+ion-app,
+.ion-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; }
+
+.ion-page-invisible {
+  opacity: 0; }
+
+.ion-page-hidden {
+  /* stylelint-disable-next-line declaration-no-important */
+  display: none !important; }
+
+ion-app.is-device {
+  user-select: none; }
+
+ion-route,
+ion-route-redirect,
+ion-router,
+ion-animation-controller,
+ion-nav-controller,
+ion-menu-controller,
+ion-action-sheet-controller,
+ion-alert-controller,
+ion-loading-controller,
+ion-modal-controller,
+ion-picker-controller,
+ion-toast-controller {
+  display: none; }
+
+.app-md.statusbar-padding {
+  --ion-statusbar-padding: 20px; }

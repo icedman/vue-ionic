@@ -1,0 +1,43 @@
+@import "./back-button";
+@import "./back-button.ios.vars";
+
+// iOS Back Button
+// --------------------------------------------------
+
+:host {
+  --ion-color-base: #{$back-button-ios-color};
+}
+
+.back-button-native {
+  @include padding(0);
+  @include margin(0);
+
+  min-height: 32px;
+
+  transform: translateZ(0);
+
+  border: 0;
+
+  background-color: transparent;
+
+  font-size: 17px;
+
+  line-height: 1;
+
+  overflow: visible;
+  z-index: $back-button-ios-button-z-index;
+
+  &.activated {
+    opacity: .4;
+  }
+}
+
+ion-icon {
+  @include padding(0);
+  @include margin(0, -5px, 0, -4px);
+
+  display: inherit;
+
+  font-size: 1.85em;
+  pointer-events: none;
+}

@@ -1,0 +1,49 @@
+@import "./select.vars";
+
+// Select
+// --------------------------------------------------
+
+:host {
+  display: flex;
+
+  overflow: hidden;
+}
+
+:host(.in-item) {
+  max-width: 45%;
+}
+
+.select-cover {
+  @include input-cover();
+}
+
+.select-text {
+  flex: 1;
+
+  min-width: 16px;
+
+  font-size: inherit;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+}
+
+:host(.select-disabled) {
+  opacity: .4;
+  pointer-events: none;
+}
+
+::slotted(ion-select-option) {
+  display: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+:host(.select-key) button {
+  border: 2px solid #5e9ed6;
+}

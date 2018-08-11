@@ -1,0 +1,94 @@
+:host {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+  position: absolute;
+  contain: strict; }
+
+:host(.show-menu) {
+  display: block; }
+
+.menu-inner {
+  left: 0;
+  right: auto;
+  top: 0;
+  bottom: 0;
+  transform: translate3d(-9999px,  0,  0);
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 304px;
+  height: 100%;
+  contain: strict; }
+
+:host(.menu-side-start) .menu-inner {
+  /* stylelint-disable property-blacklist */
+  right: auto;
+  left: 0; }
+
+:host(.menu-side-end) .menu-inner {
+  right: 0;
+  left: auto;
+  /* stylelint-enable property-blacklist */ }
+
+ion-backdrop {
+  display: none;
+  opacity: .01;
+  z-index: -1; }
+
+.menu-content {
+  transform: translate3d(0,  0,  0); }
+
+.menu-content-open {
+  cursor: pointer;
+  touch-action: manipulation; }
+
+.menu-content-open ion-pane,
+.menu-content-open .ion-pane,
+.menu-content-open ion-content,
+.menu-content-open .toolbar {
+  pointer-events: none; }
+
+@media (max-width: 340px) {
+  .menu-inner {
+    width: 264px; } }
+
+:host(.menu-type-reveal) {
+  z-index: 0; }
+
+:host(.menu-type-reveal.show-menu) .menu-inner {
+  transform: translate3d(0,  0,  0); }
+
+:host(.menu-type-overlay) {
+  z-index: 80; }
+
+:host(.menu-type-overlay) .show-backdrop {
+  display: block;
+  cursor: pointer; }
+
+:host(.menu-pane-visible) .menu-inner {
+  left: 0;
+  right: 0;
+  width: auto;
+  /* stylelint-disable declaration-no-important */
+  transform: none !important;
+  box-shadow: none !important; }
+
+:host(.menu-pane-visible) ion-backdrop {
+  display: hidden !important;
+  /* stylelint-enable declaration-no-important */ }
+
+.menu-inner {
+  background: var(--ion-background-color, #fff); }
+
+:host(.menu-type-push) {
+  z-index: 80; }
+
+:host(.menu-type-push) .show-backdrop {
+  display: block; }
+
+.app-ios .menu-content-reveal {
+  box-shadow: -8px 0 42px rgba(0, 0, 0, 0.08); }

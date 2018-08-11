@@ -1,0 +1,23 @@
+:host {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 40px;
+  background: var(--ion-color-base);
+  color: var(--ion-color-contrast);
+  overflow: hidden; }
+
+:host {
+  --ion-color-base: transparent;
+  --ion-color-contrast: var(--ion-text-color-step-150, #262626);
+  padding-left: 16px;
+  position: relative;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase; }

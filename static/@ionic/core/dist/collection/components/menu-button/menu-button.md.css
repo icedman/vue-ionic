@@ -1,0 +1,45 @@
+:host {
+  pointer-events: all;
+  color: var(--ion-color-base); }
+
+button {
+  margin: 0;
+  padding: 0;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  position: relative;
+  flex-flow: row nowrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  z-index: 0;
+  font-kerning: none;
+  appearance: none; }
+
+ion-icon {
+  margin: 0;
+  padding: 0;
+  pointer-events: none; }
+
+:host {
+  --ion-color-base: currentColor; }
+
+button {
+  padding: 0 8px; }
+
+ion-icon {
+  font-size: 26px; }

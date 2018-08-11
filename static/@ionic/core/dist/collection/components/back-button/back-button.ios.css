@@ -1,0 +1,66 @@
+:host {
+  display: none;
+  color: var(--ion-color-base);
+  pointer-events: all; }
+
+:host-context(.can-go-back > ion-header),
+:host(.show-back-button) {
+  display: block; }
+
+.back-button-native {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: block;
+  position: relative;
+  transition: background-color, opacity 100ms linear;
+  border: 0;
+  outline: none;
+  color: inherit;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  z-index: 0;
+  font-kerning: none;
+  appearance: none; }
+
+.back-button-inner {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%; }
+
+.back-button-text {
+  display: flex;
+  align-items: center; }
+
+:host {
+  --ion-color-base: var(--ion-color-primary, #3880ff); }
+
+.back-button-native {
+  padding: 0;
+  margin: 0;
+  min-height: 32px;
+  transform: translateZ(0);
+  border: 0;
+  background-color: transparent;
+  font-size: 17px;
+  line-height: 1;
+  overflow: visible;
+  z-index: 99; }
+  .back-button-native.activated {
+    opacity: .4; }
+
+ion-icon {
+  padding: 0;
+  margin: 0 -5px 0 -4px;
+  display: inherit;
+  font-size: 1.85em;
+  pointer-events: none; }

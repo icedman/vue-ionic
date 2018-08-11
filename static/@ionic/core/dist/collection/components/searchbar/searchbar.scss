@@ -1,0 +1,86 @@
+@import "../../themes/ionic.globals";
+
+// Searchbar
+// --------------------------------------------------
+
+:host {
+  --placeholder-color: currentColor;
+  --placeholder-weight: inherit;
+  --placeholder-opacity: .5;
+
+  @include font-smoothing();
+
+  display: flex;
+  position: relative;
+
+  align-items: center;
+
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.searchbar-icon {
+  // Don't let them tap on the icon
+  pointer-events: none;
+}
+
+.searchbar-input-container {
+  display: block;
+  position: relative;
+
+  flex-shrink: 1;
+
+  width: 100%;
+}
+
+.searchbar-input {
+  @include text-inherit();
+
+  box-sizing: border-box;
+
+  display: block;
+
+  width: 100%;
+
+  border: 0;
+
+  outline: none;
+
+  font-family: inherit;
+  appearance: none;
+
+  &::placeholder {
+    color: var(--placeholder-color);
+
+    font-family: inherit;
+    font-weight: var(--placeholder-weight);
+
+    opacity: var(--placeholder-opacity);
+  }
+
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+.searchbar-cancel-button {
+  color: var(--cancel-button-color);
+}
+
+.searchbar-clear-button {
+  @include margin(0);
+  @include padding(0);
+
+  display: none;
+
+  min-height: 0;
+
+  outline: none;
+
+  color: var(--clear-button-color);
+  appearance: none;
+}
+
+:host(.searchbar-has-value.searchbar-has-focus) .searchbar-clear-button {
+  display: block;
+}

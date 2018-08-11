@@ -1,0 +1,15 @@
+@import "./textarea";
+@import "./textarea.ios.vars";
+
+// iOS Textarea
+// --------------------------------------------------
+
+:host {
+  --padding-top: #{$textarea-ios-padding-top};
+  --padding-end: #{$textarea-ios-padding-end};
+  --padding-bottom: #{$textarea-ios-padding-bottom};
+  --padding-start: #{$textarea-ios-padding-start};
+
+  font-family: $textarea-ios-font-family;
+  font-size: $textarea-ios-font-size;
+}

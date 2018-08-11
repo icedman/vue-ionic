@@ -1,0 +1,24 @@
+@import "../../themes/ionic.globals";
+@import "../../themes/ionic.theme.default";
+
+
+// List
+// --------------------------------------------------
+
+ion-list {
+  @include margin(0);
+  @include padding(0);
+
+  display: block;
+
+  background: $item-background-color;
+
+  contain: content;
+  list-style-type: none;
+}
+
+ion-list.list-inset {
+  transform: translateZ(0);
+
+  overflow: hidden;
+}

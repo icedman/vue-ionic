@@ -1,0 +1,24 @@
+@import "./chip.vars";
+
+// Chip
+// --------------------------------------------------
+
+:host {
+  --ion-color-base: #{ion-color(primary, base)};
+  --ion-color-contrast: #{ion-color(primary, contrast)};
+
+  @include font-smoothing();
+
+  display: inline-flex;
+
+  align-items: center;
+  align-self: center;
+
+  background-color: var(--ion-color-base);
+  color: var(--ion-color-contrast);
+
+  font-weight: normal;
+
+  vertical-align: middle;
+  box-sizing: border-box;
+}

@@ -1,0 +1,42 @@
+:host {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: block;
+  position: relative;
+  background: var(--ion-color-base);
+  color: var(--ion-color-contrast);
+  overflow: hidden; }
+
+:host(.ion-color)::slotted(*) ion-card-title,
+:host(.ion-color)::slotted(*) ion-card-subtitle {
+  color: currentColor; }
+
+::slotted(*) img {
+  display: block;
+  width: 100%; }
+
+:host {
+  --ion-color-base: var(--ion-item-background, transparent);
+  --ion-color-contrast: var(--ion-text-color-step-150, #262626);
+  margin: 10px;
+  border-radius: 2px;
+  width: calc(100% - 20px);
+  font-family: var(--ion-font-family, inherit);
+  font-size: 14px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12); }
+
+::slotted(*) ion-list {
+  margin-bottom: 0; }
+
+::slotted(*) .item {
+  --border-width: 0; }
+
+::slotted(*) .item:last-child {
+  --border-width: 0;
+  --inner-border-width: 0; }
+
+.card .note-md {
+  font-size: 13px; }
+
+:host + ion-card {
+  margin-top: 0; }

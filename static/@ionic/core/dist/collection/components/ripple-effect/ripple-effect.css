@@ -1,0 +1,28 @@
+:host {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  contain: strict; }
+
+.ripple-effect {
+  border-radius: 50%;
+  position: absolute;
+  background-color: currentColor;
+  color: inherit;
+  contain: strict;
+  opacity: 0;
+  animation-name: rippleAnimation;
+  animation-duration: 200ms;
+  animation-timing-function: ease-out;
+  will-change: transform, opacity;
+  pointer-events: none; }
+
+@keyframes rippleAnimation {
+  0% {
+    transform: scale(0.1);
+    opacity: .2; }
+  100% {
+    transform: scale(1);
+    opacity: 0; } }

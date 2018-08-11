@@ -1,0 +1,29 @@
+ion-header {
+  display: block;
+  position: relative;
+  order: -1;
+  width: 100%;
+  z-index: 10; }
+
+ion-header ion-toolbar:first-child {
+  /* stylelint-disable-next-line property-blacklist */
+  padding-top: var(--ion-statusbar-padding); }
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  ion-header ion-toolbar:first-child {
+    /* stylelint-disable-next-line property-blacklist */
+    padding-top: calc(env(safe-area-inset-top) + var(--ion-statusbar-padding)); } }
+
+.header-md::after {
+  left: 0;
+  bottom: -5px;
+  background-position: left 0 top -2px;
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAHBAMAAADzDtBxAAAAD1BMVEUAAAAAAAAAAAAAAAAAAABPDueNAAAABXRSTlMUCS0gBIh/TXEAAAAaSURBVAjXYxCEAgY4UIICBmMogMsgFLtAAQCNSwXZKOdPxgAAAABJRU5ErkJggg==");
+  background-repeat: repeat-x;
+  content: ""; }
+
+.header-md[no-border]::after {
+  display: none; }

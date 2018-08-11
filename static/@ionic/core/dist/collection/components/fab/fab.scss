@@ -1,0 +1,55 @@
+@import "./fab.vars";
+
+// Floating Action Button Container
+// --------------------------------------------------
+
+:host {
+  position: absolute;
+
+  z-index: $z-index-fixed-content;
+}
+
+
+// FAB Horizontal Positioning
+// --------------------------------------------------
+
+:host(.fab-horizontal-center) {
+  @include position(null, null, null, 50%);
+  @include margin-horizontal(-$fab-size / 2, null);
+}
+
+:host(.fab-horizontal-start) {
+  @include position-horizontal($fab-content-margin, null);
+  @include safe-position-horizontal($fab-content-margin, null);
+}
+
+:host(.fab-horizontal-end) {
+  @include position-horizontal(null, $fab-content-margin);
+  @include safe-position-horizontal(null, $fab-content-margin);
+}
+
+
+// FAB Vertical Positioning
+// --------------------------------------------------
+
+:host(.fab-vertical-top) {
+  top: $fab-content-margin;
+
+  &.fab-edge {
+    top: -$fab-size / 2;
+  }
+}
+
+:host(.fab-vertical-bottom) {
+  bottom: $fab-content-margin;
+
+  &.fab-edge {
+    bottom: -$fab-size / 2;
+  }
+}
+
+:host(.fab-vertical-center) {
+  @include margin(-$fab-size / 2, null, null, null);
+
+  top: 50%;
+}

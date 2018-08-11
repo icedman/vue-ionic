@@ -1,0 +1,30 @@
+@import "./grid.vars";
+
+// Grid
+// --------------------------------------------------
+
+:host {
+  @include make-breakpoint-padding($grid-paddings);
+  @include margin-horizontal(auto);
+
+  display: block;
+}
+
+// Fixed Grid
+// --------------------------------------------------
+
+:host(.grid-fixed) {
+  @include make-grid-widths();
+}
+
+// Grid Padding
+// --------------------------------------------------
+
+// Remove the padding from grid and all immediate children columns
+:host([no-padding]) {
+  @include padding(0);
+}
+
+:host([no-padding]) ::slotted(ion-col) {
+  @include padding(0);
+}

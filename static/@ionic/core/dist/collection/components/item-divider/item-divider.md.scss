@@ -1,0 +1,92 @@
+@import "./item-divider";
+@import "./item-divider.md.vars";
+
+// Material Design Item Divider
+// --------------------------------------------------
+
+:host {
+  --ion-color-base: #{$item-md-divider-background};
+  --ion-color-contrast: #{$item-md-divider-color};
+
+  @include padding-horizontal($item-md-divider-padding-start, null);
+
+  border-bottom: $item-md-divider-border-bottom;
+
+  font-family: $item-md-divider-font-family;
+  font-size: $item-md-divider-font-size;
+}
+
+.item-divider-inner {
+  @include padding-horizontal(null, ($item-md-divider-padding-end / 2));
+}
+
+
+// Material Design Item Divider Slots
+// --------------------------------------------------
+
+:host([slot="start"]),
+:host([slot="end"]) {
+  @include margin($item-md-slot-margin-top, $item-md-slot-margin-end, $item-md-slot-margin-bottom, $item-md-slot-margin-start);
+}
+
+::slotted(ion-icon[slot="start"]),
+::slotted(ion-icon[slot="end"]) {
+  @include margin($item-md-icon-slot-margin-top, $item-md-icon-slot-margin-end, $item-md-icon-slot-margin-bottom, $item-md-icon-slot-margin-start);
+}
+
+// TODO
+// .item-divider-md ion-icon[slot="start"] + .item-inner,
+// .item-divider-md ion-icon[slot="start"] + .item-interactive {
+//   @include margin-horizontal($item-md-padding-start + ($item-md-padding-start / 2), null);
+// }
+
+::slotted(ion-avatar[slot="start"]),
+::slotted(ion-thumbnail[slot="start"]) {
+  @include margin(($item-md-padding-end / 2), $item-md-padding-end, ($item-md-padding-end / 2), 0);
+}
+
+::slotted(ion-avatar[slot="end"]),
+::slotted(ion-thumbnail[slot="end"]) {
+  @include margin(($item-md-padding-end / 2));
+}
+
+
+// Material Design Item Divider Content
+// --------------------------------------------------
+
+::slotted(h1) {
+  @include margin(0, 0, 2px);
+
+  font-size: 24px;
+  font-weight: normal;
+}
+
+::slotted(h2) {
+  @include margin(2px, 0);
+
+  font-size: 16px;
+  font-weight: normal;
+}
+
+::slotted(h3, h4, h5, h6) {
+  @include margin(2px, 0);
+
+  font-size: 14px;
+  font-weight: normal;
+
+  line-height: normal;
+}
+
+::slotted(p) {
+  @include margin(0, 0, 2px);
+
+  color: $item-md-paragraph-text-color;
+
+  font-size: 14px;
+
+  line-height: normal;
+
+  text-overflow: inherit;
+
+  overflow: inherit;
+}

@@ -1,0 +1,26 @@
+import { isFocused, relocateInput } from './common';
+export function enableHideCaretOnScroll(componentEl, inputEl, scrollEl) {
+    if (!scrollEl || !inputEl) {
+        return () => { return; };
+    }
+    console.debug('Input: enableHideCaretOnScroll');
+    const scrollHideCaret = (shouldHideCaret) => {
+        // console.log('scrollHideCaret', shouldHideCaret)
+        if (isFocused(inputEl)) {
+            relocateInput(componentEl, inputEl, shouldHideCaret);
+        }
+    };
+    const onBlur = () => relocateInput(componentEl, inputEl, false);
+    const hideCaret = () => scrollHideCaret(true);
+    const showCaret = () => scrollHideCaret(false);
+    if (scrollEl) {
+        scrollEl.addEventListener('ionScrollStart', hideCaret);
+        scrollEl.addEventListener('ionScrollEnd', showCaret);
+    }
+    inputEl.addEventListener('blur', onBlur);
+    return () => {
+        scrollEl.removeEventListener('ionScrollStart', hideCaret);
+        scrollEl.removeEventListener('ionScrollEnd', showCaret);
+        inputEl.addEventListener('ionBlur', onBlur);
+    };
+}

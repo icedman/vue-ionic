@@ -1,0 +1,116 @@
+:host {
+  --ion-color-base: var(--ion-color-primary, #3880ff);
+  --ion-color-contrast: var(--ion-color-primary-contrast, #fff);
+  --ion-color-tint: var(--ion-color-primary-tint, #4c8dff);
+  --size: 56px;
+  --background: var(--ion-color-base);
+  --transition: background-color, opacity 100ms linear;
+  --padding-start: calc((56px - var(--size)) / 2);
+  --padding-end: calc((56px - var(--size)) / 2);
+  --padding-top: calc((56px - var(--size)) / 2);
+  --padding-bottom: calc((56px - var(--size)) / 2);
+  color: var(--ion-color-contrast);
+  font-size: 14px; }
+
+:host(.activated) {
+  --background: var(--ion-color-tint); }
+
+.fab-button-native {
+  border-radius: 50%;
+  margin: var(--padding-top) var(--padding-end) var(--padding-bottom) var(--padding-start);
+  display: block;
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  transform: var(--transform);
+  transition: var(--transition);
+  border: 0;
+  outline: none;
+  background: var(--background);
+  background-clip: padding-box;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: var(--size);
+  text-align: center;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+  box-shadow: var(--box-shadow);
+  contain: strict;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 0;
+  font-kerning: none;
+  appearance: none; }
+
+.fab-button-native[disabled] {
+  cursor: default;
+  opacity: .5;
+  pointer-events: none; }
+
+::slotted(ion-icon) {
+  line-height: 1; }
+
+.fab-button-inner {
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  position: absolute;
+  flex-flow: row nowrap;
+  flex-shrink: 0;
+  align-items: center;
+  align-items: center;
+  justify-content: center;
+  justify-content: center;
+  height: 100%;
+  transition: all ease-in-out 300ms;
+  transition-property: transform, opacity; }
+
+:host([mini]) {
+  --size: 40px; }
+
+.fab-button-close-icon {
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  transform: scale(0.4) rotateZ(-45deg);
+  transition: all ease-in-out 300ms;
+  transition-property: transform, opacity;
+  opacity: 0; }
+
+:host(.fab-button-close-active) .fab-button-close-icon {
+  transform: scale(1) rotateZ(0deg);
+  opacity: 1; }
+
+:host(.fab-button-close-active) .fab-button-inner {
+  transform: scale(0.4) rotateZ(45deg);
+  opacity: 0; }
+
+ion-ripple-effect {
+  color: var(--ripple-color); }
+
+:host {
+  --box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.14), 0 4px 5px rgba(0, 0, 0, 0.1);
+  --transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1), background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), color 300ms cubic-bezier(0.4, 0, 0.2, 1); }
+
+:host(.activated) {
+  --box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.4), 0 4px 7px 0 rgba(0, 0, 0, 0.1); }
+
+::slotted(ion-icon),
+.fab-button-close-icon {
+  font-size: 24px; }
+
+:host(.fab-button-in-list) {
+  --ion-color-contrast: var(--ion-color-light-contrast, #000);
+  --ion-color-base: var(--ion-color-light, #f4f5f8);
+  --transition: transform 200ms ease 10ms, opacity 200ms ease 10ms, box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1), background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), color 300ms cubic-bezier(0.4, 0, 0.2, 1); }
+
+:host(.fab-button-in-list.activated) {
+  --background: var(--ion-color-primary-tint, #4c8dff); }

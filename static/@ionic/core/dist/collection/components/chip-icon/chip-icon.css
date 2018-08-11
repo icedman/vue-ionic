@@ -1,0 +1,14 @@
+:host {
+  --ion-color-base: var(--ion-color-primary, #3880ff);
+  --ion-color-contrast: var(--ion-color-primary-contrast, #fff);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size, 32px);
+  height: var(--size, 32px);
+  background-color: var(--ion-color-base); }
+
+ion-icon {
+  color: var(--ion-color-contrast);
+  font-size: var(--icon-size, 18px); }

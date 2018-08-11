@@ -1,0 +1,60 @@
+:host {
+  --border-width: 0;
+  --border-style: solid;
+  --background: var(--ion-color-base);
+  --opacity: 1;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: block;
+  width: 100%;
+  color: var(--ion-color-contrast);
+  contain: content;
+  z-index: 10;
+  box-sizing: border-box; }
+
+.toolbar-container {
+  padding: var(--padding-top) var(--padding-end) var(--padding-bottom) var(--padding-start);
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: var(--min-height);
+  contain: content;
+  overflow: hidden;
+  z-index: 10;
+  box-sizing: border-box; }
+
+.toolbar-background {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  transform: translateZ(0);
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: var(--border-color);
+  background: var(--background);
+  contain: strict;
+  opacity: var(--opacity);
+  z-index: -1;
+  pointer-events: none; }
+
+:host {
+  --ion-color-base: var(--ion-toolbar-background-color, #f8f8f8);
+  --ion-color-contrast: var(--ion-toolbar-text-color, var(--ion-text-color, #000));
+  --border-color: rgba(var(--ion-toolbar-border-color-rgb, 0, 0, 0), 0.2);
+  --translucent-filter: saturate(180%) blur(20px);
+  --padding-top: 4px;
+  --padding-bottom: 4px;
+  --padding-start: 4px;
+  --padding-end: 4px;
+  --min-height: 44px;
+  font-family: var(--ion-font-family, inherit); }
+
+.toolbar-content {
+  flex: 1;
+  order: 4;
+  min-width: 0; }

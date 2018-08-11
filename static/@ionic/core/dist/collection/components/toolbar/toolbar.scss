@@ -1,0 +1,72 @@
+@import "../../themes/ionic.globals";
+
+// Toolbar
+// --------------------------------------------------
+
+:host {
+  --border-width: 0;
+  --border-style: solid;
+  --background: #{current-color(base)};
+  --opacity: 1;
+
+  @include font-smoothing();
+
+  display: block;
+
+  width: 100%;
+
+  color: #{current-color(contrast)};
+
+  contain: content;
+
+  z-index: $z-index-toolbar;
+  box-sizing: border-box;
+}
+
+.toolbar-container {
+  @include padding(
+    var(--padding-top),
+    var(--padding-end),
+    var(--padding-bottom),
+    var(--padding-start)
+  );
+
+  display: flex;
+  position: relative;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+
+  min-height: var(--min-height);
+
+  contain: content;
+  overflow: hidden;
+  z-index: $z-index-toolbar;
+
+  box-sizing: border-box;
+}
+
+// Transparent Toolbar
+// --------------------------------------------------
+
+.toolbar-background {
+  @include position(0, 0, 0, 0);
+
+  position: absolute;
+
+  transform: translateZ(0);
+
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: var(--border-color);
+
+  background: var(--background);
+
+  contain: strict;
+  opacity: var(--opacity);
+  z-index: $z-index-toolbar-background;
+  pointer-events: none;
+}

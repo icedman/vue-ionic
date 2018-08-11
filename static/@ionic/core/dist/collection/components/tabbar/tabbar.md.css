@@ -1,0 +1,79 @@
+:host {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  order: 1;
+  width: 100%;
+  background: var(--background);
+  color: var(--color);
+  z-index: 10; }
+
+:host(.ion-color),
+:host(.ion-color) ion-tab-button {
+  --background: var(--ion-color-base);
+  --color: rgba(var(--ion-color-contrast-rgb), 0.7);
+  --color-selected: var(--ion-color-contrast); }
+
+:host(.tabbar-hidden) {
+  /* stylelint-disable-next-line declaration-no-important */
+  display: none !important; }
+
+:host(.placement-top) {
+  order: -1; }
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  :host(.placement-bottom) {
+    padding-bottom: env(safe-area-inset-bottom); } }
+
+.tabbar-highlight {
+  left: 0;
+  bottom: 0;
+  transform-origin: 0 0;
+  display: block;
+  position: absolute;
+  width: 1px;
+  height: 2px;
+  transform: translateZ(0);
+  background: currentColor; }
+  .tabbar-highlight.animated {
+    transition-duration: 300ms;
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform; }
+
+:host(.placement-top) .tabbar-highlight {
+  bottom: 0; }
+
+:host(.placement-bottom) .tabbar-highlight {
+  top: 0; }
+
+ion-scroll {
+  overflow: hidden; }
+
+.scroll-inner {
+  display: flex;
+  position: relative;
+  flex-direction: row; }
+
+ion-button.inactive {
+  visibility: hidden; }
+
+:host {
+  --background: var(--ion-tabbar-background-color, #f8f8f8);
+  --color: var(--ion-tabbar-text-color-active, #488aff);
+  height: 56px;
+  border-top: 1px solid rgba(var(--ion-tabbar-border-color-rgb, 0, 0, 0), 0.07);
+  contain: strict; }
+
+ion-scroll {
+  margin: 0 8px;
+  max-width: 650px; }
+
+:host(.placement-top) .tab-button.tab-selected .tab-button-icon,
+:host(.placement-top) .tab-button.tab-selected .tab-button-text {
+  transform: inherit; }
+
+.scrollable .tab-button {
+  flex: 1 0 auto;
+  overflow: hidden; }

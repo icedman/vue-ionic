@@ -1,0 +1,62 @@
+<template>
+<ion-app id="app">
+  <ion-menu name="menu" :type="type">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        <ion-list-header>
+          Navigate
+        </ion-list-header>
+        <ion-menu-toggle auto-hide="false">
+          <ion-item button>
+            <router-link to="/">
+            <ion-icon slot="start" name='home'></ion-icon>
+            <ion-label>
+              Home
+            </ion-label>
+            </router-link>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <ion-page class="ion-page" main>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-toggle>
+            <ion-button>
+              <ion-icon slot="icon-only" name="menu"></ion-icon>
+            </ion-button>
+          </ion-menu-toggle>
+        </ion-buttons>
+        <ion-title>Header</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content padding>
+      <router-view/>
+    </ion-content>
+  </ion-page>
+
+</ion-app>
+
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      type: 'reveal' // reveal, push, overlay
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>

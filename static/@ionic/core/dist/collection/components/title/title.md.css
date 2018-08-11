@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  transform: translateZ(0); }
+
+:host(.ion-color) {
+  color: var(--ion-color-base); }
+
+.toolbar-title {
+  display: block;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: auto; }
+
+:host {
+  padding: 0 12px;
+  font-size: 20px;
+  font-weight: 500; }

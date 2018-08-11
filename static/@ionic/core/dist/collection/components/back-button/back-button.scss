@@ -1,0 +1,64 @@
+@import "../../themes/ionic.globals";
+
+// Back Button
+// --------------------------------------------------
+
+:host {
+  display: none;
+
+  color: #{current-color(base)};
+  pointer-events: all;
+}
+
+:host-context(.can-go-back > ion-header),
+:host(.show-back-button) {
+  display: block;
+}
+
+.back-button-native {
+  @include font-smoothing();
+
+  display: block;
+  position: relative;
+
+  transition: background-color, opacity 100ms linear;
+
+  border: 0;
+
+  outline: none;
+
+  color: inherit;
+
+  line-height: 1;
+
+  text-align: center;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  text-transform: none;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+  user-select: none;
+  z-index: 0;
+  font-kerning: none;
+  appearance: none;
+}
+
+.back-button-inner {
+  display: flex;
+
+  flex-flow: row nowrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+}
+
+.back-button-text {
+  display: flex;
+
+  align-items: center;
+}
