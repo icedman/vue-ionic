@@ -8,21 +8,32 @@
           </ion-toolbar>
         </ion-header>
 
-        <ion-content>
-          <ion-list>
-            <ion-list-header>
-              Navigate
-            </ion-list-header>
-            <ion-menu-toggle auto-hide="false">
-              <ion-item button>
+      <ion-content>
+        <ion-list>
+          <ion-list-header>
+            Navigate
+          </ion-list-header>
+          <ion-menu-toggle auto-hide="false">
+            <router-link to='/'>
+            <ion-item button>
                 <ion-icon slot="start" name='home'></ion-icon>
                 <ion-label>
                   Home
                 </ion-label>
-              </ion-item>
-            </ion-menu-toggle>
-          </ion-list>
-        </ion-content>
+            </ion-item>
+            </router-link>
+          </ion-menu-toggle>
+          <router-link to='/another'>
+          <ion-item button>
+              <ion-icon slot="start" name='another'></ion-icon>
+              <ion-label>
+                Another Page
+              </ion-label>
+          </ion-item>
+          </router-link>
+        </ion-list>
+      </ion-content>
+
       </ion-menu>
 
       <div class="ion-page" main>

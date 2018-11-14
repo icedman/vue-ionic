@@ -10,14 +10,26 @@ Vue.config.productionTip = false
 Vue.config.ignoredElements = [/^ion-/]
 
 sync(store, router, { moduleName: 'route' })
+
 router.beforeEach((to, from, next) => {
   // if ((!Store.state.user.user || !Store.state.user.user.name) &&
   //   to.matched.some(record => record.meta.requiresAuth)) {
   //   next('/auth/login')
   //   return
   // }
-  // Store.commit('ui/setMenuActive', false)
-  // Store.commit('ui/setAnimate', false)
+  
+  let layout
+  to.matched.forEach(record => {
+    if (record.meta) {
+      if (record.meta.layout) {
+        layout = record.meta.layout
+      }
+    }
+  })
+  if (layout) {
+    store.commit('ui/SET_LAYOUT', layout)
+  }
+
   next()
 })
 router.afterEach((to, from) => {

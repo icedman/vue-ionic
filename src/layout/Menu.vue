@@ -13,15 +13,23 @@
             Navigate
           </ion-list-header>
           <ion-menu-toggle auto-hide="false">
+            <router-link to='/'>
             <ion-item button>
-              <router-link to="/">
                 <ion-icon slot="start" name='home'></ion-icon>
                 <ion-label>
                   Home
                 </ion-label>
-              </router-link>
             </ion-item>
+            </router-link>
           </ion-menu-toggle>
+          <router-link to='/another'>
+          <ion-item button>
+              <ion-icon slot="start" name='another'></ion-icon>
+              <ion-label>
+                Another Page
+              </ion-label>
+          </ion-item>
+          </router-link>
         </ion-list>
       </ion-content>
     </ion-menu>
@@ -39,7 +47,7 @@
           <ion-title>Header</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content padding>
+      <ion-content>
         <router-view />
       </ion-content>
     </div>

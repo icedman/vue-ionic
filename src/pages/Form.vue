@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div padding>
     <h1>{{ msg }}</h1>
     <ion-list>
       <ion-item>
@@ -258,9 +258,5 @@ li {
 
 a {
   color: #42b983;
-}
-
-.page {
-  margin: 10px;
 }
 </style>

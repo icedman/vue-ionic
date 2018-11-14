@@ -1,42 +1,55 @@
 <template>
   <ion-app id="app">
-    <!--
-    <ion-tabs>
-      <ion-tab label="Home" icon="home">
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>Home</ion-title>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content padding>
-          <router-view />
-        </ion-content>
-      </ion-tab>
 
-      <ion-tab label="Map" icon="map">
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>Map</ion-title>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content padding>
-          <h1>Map Content</h1>
-        </ion-content>
-      </ion-tab>
+<ion-tabs>
 
-      <ion-tab label="Camera" icon="camera">
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>Camera</ion-title>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content padding>
-          <h1>Camera Content</h1>
-        </ion-content>
-      </ion-tab>
-    </ion-tabs>
+<ion-tab tab="home-view">
+<ion-content>
+<router-view/>
+</ion-content>
+</ion-tab>
+
+  <!--
+  <ion-tab tab="home-view">
+    <ion-content>
+      <router-view/>
+    </ion-content>
+  -->
+    <!-- or <ion-nav></ion-nav>-->
+    <!-- or <ion-router-outlet></ion-router-outlet> -->
+  <!--
+  </ion-tab>
+  -->
+
+
+  <ion-tab-bar slot="bottom">
+    <!-- No ion-tab, just a link that looks like a tab -->
+    <ion-tab-button tab="globle"  @click="$router.push('/yetAnother')">
+      <!-- <a href="https://beta.ionicframework.com"> -->
+      <ion-icon name="globe"></ion-icon>
+      <ion-label>Schedule</ion-label>
+    </ion-tab-button>
+
+    <!-- No ion-tab, just a button that looks like a tab -->
+    <ion-tab-button tab="camera" @click="$router.push('/another')">
+      <ion-icon name="camera"></ion-icon>
+      <ion-label>Photo</ion-label>
+    </ion-tab-button>
+
+    <!-- Connected to ion-tab, on click will show the ion-tab with id home-view -->
+    <ion-tab-button tab="home-view" @click="$router.push('/')">
+      <ion-icon name="home"></ion-icon>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
+
+    <!-- 
+    <router-link>
+      does not seem to work
     -->
-    Some breaking changes...
+
+  </ion-tab-bar>
+ </ion-tabs> 
+
   </ion-app>
 
 </template>
