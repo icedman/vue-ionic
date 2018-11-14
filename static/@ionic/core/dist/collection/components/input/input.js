@@ -1,62 +1,53 @@
-import { debounceEvent, deferEvent, renderHiddenInput } from '../../utils/helpers';
+import { debounceEvent, renderHiddenInput } from '../../utils/helpers';
 import { createColorClasses, hostContext } from '../../utils/theme';
 export class Input {
     constructor() {
         this.inputId = `ion-input-${inputIds++}`;
         this.didBlurAfterEdit = false;
         this.hasFocus = false;
-        /**
-         * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user. Defaults to `"none"`.
-         */
         this.autocapitalize = 'none';
-        /**
-         * Indicates whether the value of the control can be automatically completed by the browser. Defaults to `"off"`.
-         */
         this.autocomplete = 'off';
-        /**
-         * Whether autocorrection should be enabled when the user is entering/editing the text value. Defaults to `"off"`.
-         */
         this.autocorrect = 'off';
-        /**
-         * This Boolean attribute lets you specify that a form control should have input focus when the page loads. Defaults to `false`.
-         */
         this.autofocus = false;
-        /**
-         * If true, a clear icon will appear in the input when there is a value. Clicking it clears the input. Defaults to `false`.
-         */
         this.clearInput = false;
-        /**
-         * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `0`.
-         */
         this.debounce = 0;
-        /**
-         * If true, the user cannot interact with the input. Defaults to `false`.
-         */
         this.disabled = false;
-        /**
-         * The name of the control, which is submitted with the form data.
-         */
         this.name = this.inputId;
-        /**
-         * If true, the user cannot modify the value. Defaults to `false`.
-         */
         this.readonly = false;
-        /**
-         * If true, the user must fill in a value before submitting a form.
-         */
         this.required = false;
-        /**
-         * If true, the element will have its spelling and grammar checked. Defaults to `false`.
-         */
         this.spellcheck = false;
-        /**
-         * The type of control to display. The default type is text. Possible values are: `"text"`, `"password"`, `"email"`, `"number"`, `"search"`, `"tel"`, or `"url"`.
-         */
         this.type = 'text';
-        /**
-         * The value of the input.
-         */
         this.value = '';
+        this.onInput = (ev) => {
+            const input = ev.target;
+            if (input) {
+                this.value = input.value || '';
+            }
+            this.ionInput.emit(ev);
+        };
+        this.onBlur = () => {
+            this.hasFocus = false;
+            this.focusChanged();
+            this.emitStyle();
+            this.ionBlur.emit();
+        };
+        this.onFocus = () => {
+            this.hasFocus = true;
+            this.focusChanged();
+            this.emitStyle();
+            this.ionFocus.emit();
+        };
+        this.onKeydown = () => {
+            if (this.clearOnEdit) {
+                if (this.didBlurAfterEdit && this.hasValue()) {
+                    this.clearTextInput();
+                }
+                this.didBlurAfterEdit = false;
+            }
+        };
+        this.clearTextInput = () => {
+            this.value = '';
+        };
     }
     debounceChanged() {
         this.ionChange = debounceEvent(this.ionChange, this.debounce);
@@ -64,12 +55,9 @@ export class Input {
     disabledChanged() {
         this.emitStyle();
     }
-    /**
-     * Update the native input element when the value changes
-     */
     valueChanged() {
         const inputEl = this.nativeInput;
-        const value = this.value;
+        const value = this.getValue();
         if (inputEl && inputEl.value !== value) {
             inputEl.value = value;
         }
@@ -77,20 +65,26 @@ export class Input {
         this.ionChange.emit({ value });
     }
     componentWillLoad() {
-        // By default, password inputs clear after focus when they have content
         if (this.clearOnEdit === undefined && this.type === 'password') {
             this.clearOnEdit = true;
         }
+        this.emitStyle();
     }
     componentDidLoad() {
-        this.ionStyle = deferEvent(this.ionStyle);
         this.debounceChanged();
-        this.emitStyle();
         this.ionInputDidLoad.emit();
     }
     componentDidUnload() {
         this.nativeInput = undefined;
         this.ionInputDidUnload.emit();
+    }
+    setFocus() {
+        if (this.nativeInput) {
+            this.nativeInput.focus();
+        }
+    }
+    getValue() {
+        return this.value || '';
     }
     emitStyle() {
         this.ionStyle.emit({
@@ -101,63 +95,26 @@ export class Input {
             'interactive-disabled': this.disabled,
         });
     }
-    onInput(ev) {
-        const input = ev.target;
-        if (input) {
-            this.value = ev.target && ev.target.value || '';
-        }
-        this.ionInput.emit(ev);
-    }
-    onBlur() {
-        this.hasFocus = false;
-        this.focusChanged();
-        this.emitStyle();
-        this.ionBlur.emit();
-    }
-    onFocus() {
-        this.hasFocus = true;
-        this.focusChanged();
-        this.emitStyle();
-        this.ionFocus.emit();
-    }
     focusChanged() {
-        // If clearOnEdit is enabled and the input blurred but has a value, set a flag
         if (this.clearOnEdit && !this.hasFocus && this.hasValue()) {
             this.didBlurAfterEdit = true;
         }
     }
-    /**
-     * Check if we need to clear the text input if clearOnEdit is enabled
-     */
-    onKeydown() {
-        if (!this.clearOnEdit) {
-            return;
-        }
-        // Did the input value change after it was blurred and edited?
-        if (this.didBlurAfterEdit && this.hasValue()) {
-            // Clear the input
-            this.clearTextInput();
-        }
-        // Reset the flag
-        this.didBlurAfterEdit = false;
-    }
-    clearTextInput() {
-        this.value = '';
-    }
     hasValue() {
-        return !!this.value;
+        return this.getValue().length > 0;
     }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('.item', this.el), 'has-value': this.hasValue(), 'has-focus': this.hasFocus })
+            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('ion-item', this.el), 'has-value': this.hasValue(), 'has-focus': this.hasFocus })
         };
     }
     render() {
-        renderHiddenInput(this.el, this.name, this.value, this.disabled);
+        const value = this.getValue();
+        renderHiddenInput(this.el, this.name, value, this.disabled);
         return [
-            h("input", { ref: input => this.nativeInput = input, "aria-disabled": this.disabled ? 'true' : null, accept: this.accept, autoCapitalize: this.autocapitalize, autoComplete: this.autocomplete, autoCorrect: this.autocorrect, autoFocus: this.autofocus, class: "native-input", disabled: this.disabled, inputMode: this.inputmode, min: this.min, max: this.max, minLength: this.minlength, maxLength: this.maxlength, multiple: this.multiple, name: this.name, pattern: this.pattern, placeholder: this.placeholder, results: this.results, readOnly: this.readonly, required: this.required, spellCheck: this.spellcheck, step: this.step, size: this.size, type: this.type, value: this.value, onInput: this.onInput.bind(this), onBlur: this.onBlur.bind(this), onFocus: this.onFocus.bind(this), onKeyDown: this.onKeydown.bind(this) }),
+            h("input", { ref: input => this.nativeInput = input, "aria-disabled": this.disabled ? 'true' : null, accept: this.accept, autoCapitalize: this.autocapitalize, autoComplete: this.autocomplete, autoCorrect: this.autocorrect, autoFocus: this.autofocus, class: "native-input", disabled: this.disabled, inputMode: this.inputmode, min: this.min, max: this.max, minLength: this.minlength, maxLength: this.maxlength, multiple: this.multiple, name: this.name, pattern: this.pattern, placeholder: this.placeholder, results: this.results, readOnly: this.readonly, required: this.required, spellCheck: this.spellcheck, step: this.step, size: this.size, type: this.type, value: value, onInput: this.onInput, onBlur: this.onBlur, onFocus: this.onFocus, onKeyDown: this.onKeydown }),
             h("slot", null),
-            this.clearInput && h("button", { type: "button", class: "input-clear-icon", onClick: this.clearTextInput.bind(this), onMouseDown: this.clearTextInput.bind(this) })
+            (this.clearInput && !this.readonly && !this.disabled) && h("button", { type: "button", class: "input-clear-icon", tabindex: "-1", onTouchStart: this.clearTextInput, onMouseDown: this.clearTextInput })
         ];
     }
     static get is() { return "ion-input"; }
@@ -263,6 +220,9 @@ export class Input {
         "results": {
             "type": Number,
             "attr": "results"
+        },
+        "setFocus": {
+            "method": true
         },
         "size": {
             "type": Number,

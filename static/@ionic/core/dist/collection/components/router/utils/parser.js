@@ -18,7 +18,7 @@ export function readRouteNodes(root, node = root) {
         .filter(el => el.tagName === 'ION-ROUTE' && el.component)
         .map(el => {
         const component = readProp(el, 'component');
-        if (!component) {
+        if (component == null) {
             throw new Error('component missing in ion-route');
         }
         return {

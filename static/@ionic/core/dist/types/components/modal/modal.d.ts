@@ -1,16 +1,25 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
 import { Animation, AnimationBuilder, ComponentProps, ComponentRef, Config, FrameworkDelegate, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
-export declare class Modal implements OverlayInterface {
+export declare class Modal implements ComponentInterface, OverlayInterface {
     private usersElement?;
     animation: Animation | undefined;
     presented: boolean;
-    mode: Mode;
     el: HTMLElement;
     animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
-    overlayId: number;
+    /** @internal */
+    overlayIndex: number;
+    /** @internal */
     delegate?: FrameworkDelegate;
+    /**
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
+     */
+    mode: Mode;
+    /**
+     * If `true`, the keyboard will be automatically dismissed when the overlay is presented.
+     */
     keyboardClose: boolean;
     /**
      * Animation to use when the modal is presented.
@@ -34,17 +43,17 @@ export declare class Modal implements OverlayInterface {
      */
     cssClass?: string | string[];
     /**
-     * If true, the modal will be dismissed when the backdrop is clicked. Defaults to `true`.
+     * If `true`, the modal will be dismissed when the backdrop is clicked. Defaults to `true`.
      */
-    enableBackdropDismiss: boolean;
+    backdropDismiss: boolean;
     /**
-     * If true, a backdrop will be displayed behind the modal. Defaults to `true`.
+     * If `true`, a backdrop will be displayed behind the modal. Defaults to `true`.
      */
     showBackdrop: boolean;
     /**
-     * If true, the modal will animate. Defaults to `true`.
+     * If `true`, the modal will animate. Defaults to `true`.
      */
-    willAnimate: boolean;
+    animated: boolean;
     /**
      * Emitted after the modal has loaded.
      */
@@ -81,19 +90,17 @@ export declare class Modal implements OverlayInterface {
     /**
      * Dismiss the modal overlay after it has been presented.
      */
-    dismiss(data?: any, role?: string): Promise<void>;
+    dismiss(data?: any, role?: string): Promise<boolean>;
     /**
-     * Returns a promise that resolves when the modal did dismiss. It also accepts a callback
-     * that is called in the same circustances.
+     * Returns a promise that resolves when the modal did dismiss.
      *
      */
-    onDidDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onDidDismiss(): Promise<OverlayEventDetail>;
     /**
-     * Returns a promise that resolves when the modal will dismiss. It also accepts a callback
-     * that is called in the same circustances.
+     * Returns a promise that resolves when the modal will dismiss.
      *
      */
-    onWillDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onWillDismiss(): Promise<OverlayEventDetail>;
     hostData(): {
         'no-router': boolean;
         class: {

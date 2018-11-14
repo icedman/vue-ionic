@@ -1,33 +1,17 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { Color, InputChangeEvent, Mode, StyleEvent } from '../../interface';
-import { TextareaComponent } from '../input/input-base';
-export declare class Textarea implements TextareaComponent {
-    private inputEl?;
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { Color, Mode, StyleEvent, TextInputChangeEvent } from '../../interface';
+export declare class Textarea implements ComponentInterface {
+    private nativeInput?;
     private inputId;
-    didBlurAfterEdit: boolean;
+    private didBlurAfterEdit;
     el: HTMLElement;
     hasFocus: boolean;
     /**
-     * Emitted when the input value has changed.
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
      */
-    ionChange: EventEmitter<InputChangeEvent>;
-    /**
-     * Emitted when a keyboard input ocurred.
-     */
-    ionInput: EventEmitter<KeyboardEvent>;
-    /**
-     * Emitted when the styles change.
-     */
-    ionStyle: EventEmitter<StyleEvent>;
-    /**
-     * Emitted when the input loses focus.
-     */
-    ionBlur: EventEmitter<void>;
-    /**
-     * Emitted when the input has focus.
-     */
-    ionFocus: EventEmitter<void>;
+    mode: Mode;
     /**
      * The color to use from your application's color palette.
      * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
@@ -35,24 +19,15 @@ export declare class Textarea implements TextareaComponent {
      */
     color?: Color;
     /**
-     * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
-     */
-    mode: Mode;
-    /**
      * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user. Defaults to `"none"`.
      */
     autocapitalize: string;
-    /**
-     * Indicates whether the value of the control can be automatically completed by the browser. Defaults to `"off"`.
-     */
-    autocomplete: string;
     /**
      * This Boolean attribute lets you specify that a form control should have input focus when the page loads. Defaults to `false`.
      */
     autofocus: boolean;
     /**
-     * If true, the value will be cleared after focus upon edit. Defaults to `true` when `type` is `"password"`, `false` for all other types.
+     * If `true`, the value will be cleared after focus upon edit. Defaults to `true` when `type` is `"password"`, `false` for all other types.
      */
     clearOnEdit: boolean;
     /**
@@ -61,7 +36,7 @@ export declare class Textarea implements TextareaComponent {
     debounce: number;
     protected debounceChanged(): void;
     /**
-     * If true, the user cannot interact with the textarea. Defaults to `false`.
+     * If `true`, the user cannot interact with the textarea. Defaults to `false`.
      */
     disabled: boolean;
     protected disabledChanged(): void;
@@ -82,15 +57,15 @@ export declare class Textarea implements TextareaComponent {
      */
     placeholder?: string;
     /**
-     * If true, the user cannot modify the value. Defaults to `false`.
+     * If `true`, the user cannot modify the value. Defaults to `false`.
      */
     readonly: boolean;
     /**
-     * If true, the user must fill in a value before submitting a form.
+     * If `true`, the user must fill in a value before submitting a form.
      */
     required: boolean;
     /**
-     * If true, the element will have its spelling and grammar checked. Defaults to `false`.
+     * If `true`, the element will have its spelling and grammar checked. Defaults to `false`.
      */
     spellcheck: boolean;
     /**
@@ -108,12 +83,38 @@ export declare class Textarea implements TextareaComponent {
     /**
      * The value of the textarea.
      */
-    value: string;
+    value?: string | null;
     /**
      * Update the native input element when the value changes
      */
     protected valueChanged(): void;
+    /**
+     * Emitted when the input value has changed.
+     */
+    ionChange: EventEmitter<TextInputChangeEvent>;
+    /**
+     * Emitted when a keyboard input ocurred.
+     */
+    ionInput: EventEmitter<KeyboardEvent>;
+    /**
+     * Emitted when the styles change.
+     */
+    ionStyle: EventEmitter<StyleEvent>;
+    /**
+     * Emitted when the input loses focus.
+     */
+    ionBlur: EventEmitter<void>;
+    /**
+     * Emitted when the input has focus.
+     */
+    ionFocus: EventEmitter<void>;
+    componentWillLoad(): void;
     componentDidLoad(): void;
+    /**
+     * Sets focus on the specified `ion-textarea`. Use this method instead of the global
+     * `input.focus()`.
+     */
+    setFocus(): void;
     private emitStyle;
     private onInput;
     private onFocus;
@@ -125,5 +126,9 @@ export declare class Textarea implements TextareaComponent {
     private checkClearOnEdit;
     private focusChange;
     private hasValue;
+    private getValue;
+    hostData(): {
+        class: {};
+    };
     render(): JSX.Element;
 }

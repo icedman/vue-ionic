@@ -1,9 +1,6 @@
-import { createColorClasses, hostContext } from '../../utils/theme';
+import { createColorClasses } from '../../utils/theme';
 export class Segment {
     constructor() {
-        /*
-         * If true, the user cannot interact with the segment. Defaults to `false`.
-         */
         this.disabled = false;
     }
     valueChanged(value) {
@@ -15,7 +12,7 @@ export class Segment {
         this.value = selectedButton.value;
     }
     componentDidLoad() {
-        if (this.value === undefined) {
+        if (this.value == null) {
             const checked = this.getButtons().find(b => b.checked);
             if (checked) {
                 this.value = checked.value;
@@ -34,14 +31,11 @@ export class Segment {
     }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'segment-disabled': this.disabled, 'in-toolbar': hostContext('ion-toolbar', this.el), 'in-color-toolbar': hostContext('ion-toolbar.ion-color', this.el) })
+            class: Object.assign({}, createColorClasses(this.color), { 'segment-disabled': this.disabled })
         };
     }
-    render() {
-        return h("slot", null);
-    }
     static get is() { return "ion-segment"; }
-    static get encapsulation() { return "shadow"; }
+    static get encapsulation() { return "scoped"; }
     static get properties() { return {
         "color": {
             "type": String,

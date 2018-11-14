@@ -2,7 +2,6 @@ ion-list {
   margin: 0;
   padding: 0;
   display: block;
-  background: var(--ion-item-background-color, var(--ion-background-color, #fff));
   contain: content;
   list-style-type: none; }
 
@@ -11,10 +10,15 @@ ion-list.list-inset {
   overflow: hidden; }
 
 .list-md {
-  margin: -1px 0 16px; }
+  margin: -1px 0 16px;
+  background: var(--ion-item-background, var(--ion-background-color, #fff)); }
 
 .list-md > .input:last-child::after {
   left: 0; }
+
+.list-md:not(.list-inset):not(.list-md-lines-none) .item:last-child {
+  --inner-border-width: 0;
+  --border-width: 0 0 1px 0; }
 
 .list-md.list-inset {
   margin: 16px;
@@ -43,12 +47,15 @@ ion-list.list-inset {
 .list-md .item-lines-full {
   --border-width: 0 0 1px 0; }
 
+.list-md-lines-full .item {
+  --inner-border-width: 0; }
+
 .list-md-lines-inset .item,
 .list-md .item-lines-inset {
   --inner-border-width: 0 0 1px 0; }
 
-.list-md .item-lines-full {
-  --inner-border-width: 0; }
-
 .list-md .item-lines-inset {
   --border-width: 0; }
+
+.list-md .item-lines-full {
+  --inner-border-width: 0; }

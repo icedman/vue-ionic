@@ -1,16 +1,27 @@
 :host {
-  --ion-color-base: var(--ion-color-primary, #3880ff);
+  /**
+   * @prop --color: Color of the radio
+   * @prop --color-checked: Color of the checked radio
+   */
   display: inline-block;
   position: relative;
   box-sizing: border-box;
   user-select: none; }
 
+:host(.radio-disabled) {
+  pointer-events: none; }
+
 .radio-icon {
-  display: block;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: var(--width);
   height: var(--height);
   contain: layout size style; }
+
+.radio-inner {
+  width: var(--inner-width);
+  height: var(--inner-height); }
 
 input {
   left: 0;
@@ -30,16 +41,19 @@ input {
   box-sizing: border-box; }
 
 :host {
+  --color-checked: var(--ion-color-primary, #3880ff);
   --width: 16px;
-  --height: 21px; }
+  --height: 21px;
+  --inner-width: 5px;
+  --inner-height: 12px; }
+
+:host(.ion-color.radio-checked) .radio-inner {
+  border-color: var(--ion-color-base); }
 
 .item-radio.item-ios ion-label {
   margin-left: 0; }
 
 :host(.radio-checked) .radio-inner {
-  left: 7px;
-  top: 4px;
-  position: absolute;
   width: 5px;
   height: 12px;
   transform: rotate(45deg);
@@ -47,11 +61,10 @@ input {
   border-top-width: 0;
   border-left-width: 0;
   border-style: solid;
-  border-color: var(--ion-color-base); }
+  border-color: var(--color-checked); }
 
 :host(.radio-disabled) {
-  opacity: 0.3;
-  pointer-events: none; }
+  opacity: 0.3; }
 
 :host(.radio-key) .radio-icon::after {
   border-radius: 50%;

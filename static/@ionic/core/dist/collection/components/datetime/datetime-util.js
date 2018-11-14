@@ -8,10 +8,10 @@ export function renderDatetime(template, value, locale) {
         if (template.indexOf(format.f) > -1) {
             const token = '{' + index + '}';
             const text = renderTextFormat(format.f, value[format.k], value, locale);
-            if (!hasText && text && value[format.k]) {
+            if (!hasText && text !== undefined && value[format.k] != null) {
                 hasText = true;
             }
-            tokens.push(token, text);
+            tokens.push(token, text || '');
             template = template.replace(format.f, token);
         }
     });
@@ -33,15 +33,18 @@ export function renderTextFormat(format, value, date, locale) {
             return (locale.dayShortNames ? locale.dayShortNames : DAY_SHORT_NAMES)[value];
         }
         catch (e) {
-            // ignore
         }
-        return '';
+        return undefined;
     }
     if (format === FORMAT_A) {
-        return date && date.hour ? date.hour < 12 ? 'AM' : 'PM' : value ? value.toUpperCase() : '';
+        return date !== undefined && date.hour !== undefined
+            ? (date.hour < 12 ? 'AM' : 'PM')
+            : value ? value.toUpperCase() : '';
     }
     if (format === FORMAT_a) {
-        return date && date.hour ? date.hour < 12 ? 'am' : 'pm' : value ? value : '';
+        return date !== undefined && date.hour !== undefined
+            ? (date.hour < 12 ? 'am' : 'pm')
+            : value || '';
     }
     if (value == null) {
         return '';
@@ -76,49 +79,42 @@ export function renderTextFormat(format, value, date, locale) {
 export function dateValueRange(format, min, max) {
     const opts = [];
     if (format === FORMAT_YYYY || format === FORMAT_YY) {
-        // year
-        if (!max.year || !min.year) {
+        if (max.year === undefined || min.year === undefined) {
             throw new Error('min and max year is undefined');
         }
-        for (let i = max.year - 1; i >= min.year; i--) {
+        for (let i = max.year; i >= min.year; i--) {
             opts.push(i);
         }
     }
     else if (format === FORMAT_MMMM || format === FORMAT_MMM ||
         format === FORMAT_MM || format === FORMAT_M ||
         format === FORMAT_hh || format === FORMAT_h) {
-        // month or 12-hour
         for (let i = 1; i < 13; i++) {
             opts.push(i);
         }
     }
     else if (format === FORMAT_DDDD || format === FORMAT_DDD ||
         format === FORMAT_DD || format === FORMAT_D) {
-        // day
         for (let i = 1; i < 32; i++) {
             opts.push(i);
         }
     }
     else if (format === FORMAT_HH || format === FORMAT_H) {
-        // 24-hour
         for (let i = 0; i < 24; i++) {
             opts.push(i);
         }
     }
     else if (format === FORMAT_mm || format === FORMAT_m) {
-        // minutes
         for (let i = 0; i < 60; i++) {
             opts.push(i);
         }
     }
     else if (format === FORMAT_ss || format === FORMAT_s) {
-        // seconds
         for (let i = 0; i < 60; i++) {
             opts.push(i);
         }
     }
     else if (format === FORMAT_A || format === FORMAT_a) {
-        // AM/PM
         opts.push('am', 'pm');
     }
     return opts;
@@ -127,10 +123,7 @@ export function dateSortValue(year, month, day, hour = 0, minute = 0) {
     return parseInt(`1${fourDigit(year)}${twoDigit(month)}${twoDigit(day)}${twoDigit(hour)}${twoDigit(minute)}`, 10);
 }
 export function dateDataSortValue(data) {
-    if (data) {
-        return dateSortValue(data.year, data.month, data.day, data.hour, data.minute);
-    }
-    return -1;
+    return dateSortValue(data.year, data.month, data.day, data.hour, data.minute);
 }
 export function daysInMonth(month, year) {
     return (month === 4 || month === 6 || month === 9 || month === 11) ? 30 : (month === 2) ? isLeapYear(year) ? 29 : 28 : 31;
@@ -141,40 +134,30 @@ export function isLeapYear(year) {
 const ISO_8601_REGEXP = /^(\d{4}|[+\-]\d{6})(?:-(\d{2})(?:-(\d{2}))?)?(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?(?:(Z)|([+\-])(\d{2})(?::(\d{2}))?)?)?$/;
 const TIME_REGEXP = /^((\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?(?:(Z)|([+\-])(\d{2})(?::(\d{2}))?)?)?$/;
 export function parseDate(val) {
-    // manually parse IS0 cuz Date.parse cannot be trusted
-    // ISO 8601 format: 1994-12-15T13:47:20Z
     let parse = null;
-    if (val && val !== '') {
-        // try parsing for just time first, HH:MM
+    if (val != null) {
         parse = TIME_REGEXP.exec(val);
         if (parse) {
-            // adjust the array so it fits nicely with the datetime parse
             parse.unshift(undefined, undefined);
             parse[2] = parse[3] = undefined;
         }
         else {
-            // try parsing for full ISO datetime
             parse = ISO_8601_REGEXP.exec(val);
         }
     }
-    if (parse == null) {
-        // wasn't able to parse the ISO datetime
-        return null;
+    if (parse === null) {
+        return undefined;
     }
-    // ensure all the parse values exist with at least 0
     for (let i = 1; i < 8; i++) {
-        parse[i] = (parse[i] !== undefined ? parseInt(parse[i], 10) : null);
+        parse[i] = parse[i] !== undefined ? parseInt(parse[i], 10) : undefined;
     }
     let tzOffset = 0;
     if (parse[9] && parse[10]) {
-        // hours
         tzOffset = parseInt(parse[10], 10) * 60;
         if (parse[11]) {
-            // minutes
             tzOffset += parseInt(parse[11], 10);
         }
         if (parse[9] === '-') {
-            // + or -
             tzOffset *= -1;
         }
     }
@@ -192,34 +175,26 @@ export function parseDate(val) {
 export function updateDate(existingData, newData) {
     if (newData && newData !== '') {
         if (typeof newData === 'string') {
-            // new date is a string, and hopefully in the ISO format
-            // convert it to our DatetimeData if a valid ISO
             newData = parseDate(newData);
             if (newData) {
-                // successfully parsed the ISO string to our DatetimeData
                 Object.assign(existingData, newData);
                 return true;
             }
         }
         else if ((newData.year || newData.hour || newData.month || newData.day || newData.minute || newData.second)) {
-            // newData is from of a datetime picker's selected values
-            // update the existing DatetimeData data with the new values
-            // do some magic for 12-hour values
             if (newData.ampm && newData.hour) {
                 newData.hour.value = (newData.ampm.value === 'pm')
                     ? (newData.hour.value === 12 ? 12 : newData.hour.value + 12)
                     : (newData.hour.value === 12 ? 0 : newData.hour.value);
             }
-            // merge new values from the picker's selection
-            // to the existing DatetimeData values
-            Object.assign(existingData, newData);
+            for (const key of Object.keys(newData)) {
+                existingData[key] = newData[key].value;
+            }
             return true;
         }
-        // eww, invalid data
         console.warn(`Error parsing date: "${newData}". Please provide a valid ISO 8601 datetime format: https://www.w3.org/TR/NOTE-datetime`);
     }
     else {
-        // blank data, clear everything out
         for (const k in existingData) {
             if (existingData.hasOwnProperty(k)) {
                 delete existingData[k];
@@ -241,12 +216,8 @@ export function parseTemplate(template) {
         FORMAT_KEYS.forEach(format => {
             if (word === format.f) {
                 if (word === FORMAT_A || word === FORMAT_a) {
-                    // this format is an am/pm format, so it's an "a" or "A"
                     if ((formats.indexOf(FORMAT_h) < 0 && formats.indexOf(FORMAT_hh) < 0) ||
                         VALID_AMPM_PREFIX.indexOf(words[i - 1]) === -1) {
-                        // template does not already have a 12-hour format
-                        // or this am/pm format doesn't have a hour, minute, or second format immediately before it
-                        // so do not treat this word "a" or "A" as the am/pm format
                         return;
                     }
                 }
@@ -271,91 +242,64 @@ export function convertFormatToKey(format) {
             return FORMAT_KEYS[k].k;
         }
     }
-    return null;
+    return undefined;
 }
 export function convertDataToISO(data) {
-    // https://www.w3.org/TR/NOTE-datetime
     let rtn = '';
-    if (data) {
-        if (data.year) {
-            // YYYY
-            rtn = fourDigit(data.year);
-            if (data.month) {
-                // YYYY-MM
-                rtn += '-' + twoDigit(data.month);
-                if (data.day) {
-                    // YYYY-MM-DD
-                    rtn += '-' + twoDigit(data.day);
-                    if (data.hour) {
-                        // YYYY-MM-DDTHH:mm:SS
-                        rtn += `T${twoDigit(data.hour)}:${twoDigit(data.minute)}:${twoDigit(data.second)}`;
-                        if (data.millisecond > 0) {
-                            // YYYY-MM-DDTHH:mm:SS.SSS
-                            rtn += '.' + threeDigit(data.millisecond);
-                        }
-                        if (data.tzOffset == null || data.tzOffset === 0) {
-                            // YYYY-MM-DDTHH:mm:SSZ
-                            rtn += 'Z';
-                        }
-                        else {
-                            // YYYY-MM-DDTHH:mm:SS+/-HH:mm
-                            rtn += (data.tzOffset > 0 ? '+' : '-') + twoDigit(Math.floor(data.tzOffset / 60)) + ':' + twoDigit(data.tzOffset % 60);
-                        }
+    if (data.year !== undefined) {
+        rtn = fourDigit(data.year);
+        if (data.month !== undefined) {
+            rtn += '-' + twoDigit(data.month);
+            if (data.day !== undefined) {
+                rtn += '-' + twoDigit(data.day);
+                if (data.hour !== undefined) {
+                    rtn += `T${twoDigit(data.hour)}:${twoDigit(data.minute)}:${twoDigit(data.second)}`;
+                    if (data.millisecond > 0) {
+                        rtn += '.' + threeDigit(data.millisecond);
+                    }
+                    if (data.tzOffset === undefined) {
+                        rtn += 'Z';
+                    }
+                    else {
+                        rtn += (data.tzOffset > 0 ? '+' : '-') + twoDigit(Math.floor(Math.abs(data.tzOffset / 60))) + ':' + twoDigit(data.tzOffset % 60);
                     }
                 }
             }
         }
-        else if (data.hour) {
-            // HH:mm
-            rtn = twoDigit(data.hour) + ':' + twoDigit(data.minute);
-            if (data.second) {
-                // HH:mm:SS
-                rtn += ':' + twoDigit(data.second);
-                if (data.millisecond) {
-                    // HH:mm:SS.SSS
-                    rtn += '.' + threeDigit(data.millisecond);
-                }
+    }
+    else if (data.hour !== undefined) {
+        rtn = twoDigit(data.hour) + ':' + twoDigit(data.minute);
+        if (data.second !== undefined) {
+            rtn += ':' + twoDigit(data.second);
+            if (data.millisecond !== undefined) {
+                rtn += '.' + threeDigit(data.millisecond);
             }
         }
     }
     return rtn;
 }
-/**
- * Use to convert a string of comma separated strings or
- * an array of strings, and clean up any user input
- */
 export function convertToArrayOfStrings(input, type) {
-    if (!input) {
+    if (input == null) {
         return undefined;
     }
     if (typeof input === 'string') {
-        // convert the string to an array of strings
-        // auto remove any [] characters
         input = input.replace(/\[|\]/g, '').split(',');
     }
     let values;
     if (Array.isArray(input)) {
-        // trim up each string value
         values = input.map(val => val.toString().trim());
     }
-    if (!values || !values.length) {
+    if (values === undefined || values.length === 0) {
         console.warn(`Invalid "${type}Names". Must be an array of strings, or a comma separated string.`);
     }
     return values;
 }
-/**
- * Use to convert a string of comma separated numbers or
- * an array of numbers, and clean up any user input
- */
 export function convertToArrayOfNumbers(input, type) {
     if (typeof input === 'string') {
-        // convert the string to an array of strings
-        // auto remove any whitespace and [] characters
         input = input.replace(/\[|\]|\s/g, '').split(',');
     }
     let values;
     if (Array.isArray(input)) {
-        // ensure each value is an actual number in the returned array
         values = input
             .map((num) => parseInt(num, 10))
             .filter(isFinite);
@@ -363,19 +307,19 @@ export function convertToArrayOfNumbers(input, type) {
     else {
         values = [input];
     }
-    if (!values || !values.length) {
+    if (values.length === 0) {
         console.warn(`Invalid "${type}Values". Must be an array of numbers, or a comma separated string of numbers.`);
     }
     return values;
 }
 function twoDigit(val) {
-    return ('0' + (val ? Math.abs(val) : '0')).slice(-2);
+    return ('0' + (val !== undefined ? Math.abs(val) : '0')).slice(-2);
 }
 function threeDigit(val) {
-    return ('00' + (val ? Math.abs(val) : '0')).slice(-3);
+    return ('00' + (val !== undefined ? Math.abs(val) : '0')).slice(-3);
 }
 function fourDigit(val) {
-    return ('000' + (val ? Math.abs(val) : '0')).slice(-4);
+    return ('000' + (val !== undefined ? Math.abs(val) : '0')).slice(-4);
 }
 const FORMAT_YYYY = 'YYYY';
 const FORMAT_YY = 'YY';

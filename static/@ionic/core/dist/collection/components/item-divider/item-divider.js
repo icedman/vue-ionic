@@ -1,8 +1,6 @@
 import { createColorClasses } from '../../utils/theme';
 export class ItemDivider {
     componentDidLoad() {
-        // Change the button size to small for each ion-button in the item
-        // unless the size is explicitly set
         Array.from(this.el.querySelectorAll('ion-button')).forEach(button => {
             if (!button.size) {
                 button.size = 'small';
@@ -11,7 +9,7 @@ export class ItemDivider {
     }
     hostData() {
         return {
-            class: createColorClasses(this.color)
+            class: Object.assign({}, createColorClasses(this.color), { 'item': true })
         };
     }
     render() {

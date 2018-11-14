@@ -1,6 +1,7 @@
 import '../../stencil.core';
-export declare class Col {
-    [key: string]: any;
+import { ComponentInterface } from '../../stencil.core';
+export declare class Col implements ComponentInterface {
+    win: Window;
     el: HTMLStencilElement;
     /**
      * The amount to offset the column, in terms of how many columns it should shift to the right

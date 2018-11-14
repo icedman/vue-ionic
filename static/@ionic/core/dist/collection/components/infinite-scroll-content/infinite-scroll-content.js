@@ -1,7 +1,7 @@
 import { createThemedClasses } from '../../utils/theme';
 export class InfiniteScrollContent {
     componentDidLoad() {
-        if (!this.loadingSpinner) {
+        if (this.loadingSpinner === undefined) {
             this.loadingSpinner = this.config.get('infiniteLoadingSpinner', this.config.get('spinner', 'lines'));
         }
     }

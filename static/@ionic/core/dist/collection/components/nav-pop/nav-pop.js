@@ -1,10 +1,9 @@
 export class NavPop {
     pop() {
         const nav = this.el.closest('ion-nav');
-        if (nav && !nav.isAnimating()) {
-            return nav.pop();
+        if (nav) {
+            nav.pop({ skipIfBusy: true });
         }
-        return Promise.resolve(null);
     }
     static get is() { return "ion-nav-pop"; }
     static get properties() { return {

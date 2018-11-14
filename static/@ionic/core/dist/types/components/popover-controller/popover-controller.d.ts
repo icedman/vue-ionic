@@ -1,21 +1,17 @@
-import { PopoverOptions } from '../../interface';
-import { OverlayController } from '../../utils/overlays';
-export declare class PopoverController implements OverlayController {
-    private popovers;
+import { ComponentInterface } from '../../stencil.core';
+import { ComponentRef, OverlayController, PopoverOptions } from '../../interface';
+export declare class PopoverController implements ComponentInterface, OverlayController {
     doc: Document;
-    protected popoverWillPresent(ev: any): void;
-    protected popoverWillDismiss(ev: any): void;
-    protected escapeKeyUp(): void;
     /**
      * Create a popover overlay with popover options.
      */
-    create(opts?: PopoverOptions): Promise<HTMLIonPopoverElement>;
+    create<T extends ComponentRef>(opts: PopoverOptions<T>): Promise<HTMLIonPopoverElement>;
     /**
      * Dismiss the open popover overlay.
      */
-    dismiss(data?: any, role?: string, popoverId?: number): Promise<void>;
+    dismiss(data?: any, role?: string, id?: string): Promise<boolean>;
     /**
      * Get the most recently opened popover overlay.
      */
-    getTop(): HTMLIonPopoverElement;
+    getTop(): Promise<HTMLIonPopoverElement | undefined>;
 }

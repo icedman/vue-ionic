@@ -2,31 +2,29 @@ import { createColorClasses, openURL } from '../../utils/theme';
 export class BackButton {
     async onClick(ev) {
         const nav = this.el.closest('ion-nav');
-        if (nav && nav.canGoBack()) {
-            ev.preventDefault();
-            if (!nav.isAnimating()) {
-                nav.pop();
-            }
+        ev.preventDefault();
+        if (nav && await nav.canGoBack()) {
+            return nav.pop({ skipIfBusy: true });
         }
-        else if (this.defaultHref) {
-            openURL(this.win, this.defaultHref, ev, 'back');
-        }
+        return openURL(this.win, this.defaultHref, ev, 'back');
     }
     hostData() {
-        const showBackButton = !!this.defaultHref;
+        const showBackButton = this.defaultHref !== undefined;
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'button': true, 'show-back-button': showBackButton }),
-            'tappable': true,
+            'ion-activatable': true,
+            class: Object.assign({}, createColorClasses(this.color), { 'button': true, 'show-back-button': showBackButton })
         };
     }
     render() {
-        const backButtonIcon = this.icon || this.config.get('backButtonIcon', 'arrow-back');
-        const backButtonText = this.text != null ? this.text : this.config.get('backButtonText', 'Back');
-        return (h("button", { class: "back-button-native", onClick: ev => this.onClick(ev) },
-            h("span", { class: "back-button-inner" },
+        const defaultBackButtonText = this.mode === 'ios' ? 'Back' : null;
+        const backButtonIcon = this.icon != null ? this.icon : this.config.get('backButtonIcon', 'arrow-back');
+        const backButtonText = this.text != null ? this.text : this.config.get('backButtonText', defaultBackButtonText);
+        return (h("button", { type: "button", class: "button-native", onClick: ev => this.onClick(ev) },
+            h("span", { class: "button-inner" },
                 backButtonIcon && h("ion-icon", { icon: backButtonIcon, lazy: false }),
-                this.mode === 'ios' && backButtonText && h("span", { class: "button-text" }, backButtonText),
-                this.mode === 'md' && h("ion-ripple-effect", { tapClick: true, parent: this.el }))));
+                backButtonText && h("span", { class: "button-text" }, backButtonText),
+                this.mode === 'md' && h("ion-ripple-effect", null)),
+            this.mode === 'md' && h("ion-ripple-effect", null)));
     }
     static get is() { return "ion-back-button"; }
     static get encapsulation() { return "scoped"; }

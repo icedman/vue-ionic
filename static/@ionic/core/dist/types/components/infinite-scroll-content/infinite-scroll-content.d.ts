@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Config, Mode } from '../../interface';
-export declare class InfiniteScrollContent {
+export declare class InfiniteScrollContent implements ComponentInterface {
     mode: Mode;
     config: Config;
     /**

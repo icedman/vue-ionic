@@ -5,39 +5,13 @@ import { iosLeaveAnimation } from './animations/ios.leave';
 export class Picker {
     constructor() {
         this.presented = false;
-        /**
-         * If the keyboard should be able to close the picker. Defaults to true.
-         */
         this.keyboardClose = true;
-        /**
-         * Array of buttons to be displayed at the top of the picker.
-         */
         this.buttons = [];
-        /**
-         * Array of columns to be displayed in the picker.
-         */
         this.columns = [];
-        /**
-         * If true, a backdrop will be displayed behind the picker. Defaults to `true`.
-         */
+        this.duration = 0;
         this.showBackdrop = true;
-        /**
-         * If true, the picker will be dismissed when the backdrop is clicked. Defaults to `true`.
-         */
-        this.enableBackdropDismiss = true;
-        /**
-         * If true, the picker will animate. Defaults to `true`.
-         */
-        this.willAnimate = true;
-    }
-    componentWillLoad() {
-        if (!this.spinner) {
-            const defaultSpinner = this.mode === 'ios' ? 'lines' : 'crescent';
-            this.spinner = this.config.get('pickerSpinner', defaultSpinner);
-        }
-        if (this.showSpinner === undefined) {
-            this.showSpinner = !!(this.spinner && this.spinner !== 'hide');
-        }
+        this.backdropDismiss = true;
+        this.animated = true;
     }
     componentDidLoad() {
         this.ionPickerDidLoad.emit();
@@ -54,91 +28,48 @@ export class Picker {
             this.dismiss();
         }
     }
-    /**
-     * Present the picker overlay after it has been created.
-     */
     async present() {
         await present(this, 'pickerEnter', iosEnterAnimation, iosEnterAnimation, undefined);
-        if (this.duration) {
+        if (this.duration > 0) {
             this.durationTimeout = setTimeout(() => this.dismiss(), this.duration);
         }
     }
-    /**
-     * Dismiss the picker overlay after it has been presented.
-     */
     dismiss(data, role) {
         if (this.durationTimeout) {
             clearTimeout(this.durationTimeout);
         }
         return dismiss(this, data, role, 'pickerLeave', iosLeaveAnimation, iosLeaveAnimation);
     }
-    /**
-     * Returns a promise that resolves when the picker did dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
-     */
-    onDidDismiss(callback) {
-        return eventMethod(this.el, 'ionPickerDidDismiss', callback);
+    onDidDismiss() {
+        return eventMethod(this.el, 'ionPickerDidDismiss');
     }
-    /**
-     * Returns a promise that resolves when the picker will dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
-     */
-    onWillDismiss(callback) {
-        return eventMethod(this.el, 'ionPickerWillDismiss', callback);
+    onWillDismiss() {
+        return eventMethod(this.el, 'ionPickerWillDismiss');
     }
-    /**
-     * Add a new PickerButton to the picker
-     */
-    addButton(button) {
-        this.buttons.push(button);
-    }
-    /**
-     * Add a new PickerColumn to the picker
-     */
-    addColumn(column) {
-        this.columns.push(column);
-    }
-    /**
-     * Returns the column the matches the specified name
-     */
     getColumn(name) {
-        return this.columns.find(column => column.name === name);
-    }
-    /**
-     * Returns all the PickerColumns
-     */
-    getColumns() {
-        return this.columns;
+        return Promise.resolve(this.columns.find(column => column.name === name));
     }
     buttonClick(button) {
-        // if (this.disabled) {
-        //   return;
-        // }
-        // keep the time of the most recent button click
         let shouldDismiss = true;
         if (button.handler) {
-            // a handler has been provided, execute it
-            // pass the handler the values from the inputs
             if (button.handler(this.getSelected()) === false) {
-                // if the return value of the handler is false then do not dismiss
                 shouldDismiss = false;
             }
         }
         if (shouldDismiss) {
-            this.dismiss();
+            return this.dismiss();
         }
+        return Promise.resolve(false);
     }
     getSelected() {
         const selected = {};
         this.columns.forEach((col, index) => {
-            const selectedColumn = col.selectedIndex
+            const selectedColumn = col.selectedIndex !== undefined
                 ? col.options[col.selectedIndex]
-                : null;
+                : undefined;
             selected[col.name] = {
-                text: selectedColumn ? selectedColumn.text : null,
-                value: selectedColumn ? selectedColumn.value : null,
+                text: selectedColumn ? selectedColumn.text : undefined,
+                value: selectedColumn ? selectedColumn.value : undefined,
                 columnIndex: index
             };
         });
@@ -148,63 +79,34 @@ export class Picker {
         return {
             class: Object.assign({}, createThemedClasses(this.mode, 'picker'), getClassMap(this.cssClass)),
             style: {
-                zIndex: 20000 + this.overlayId
+                zIndex: 20000 + this.overlayIndex
             }
         };
     }
     render() {
-        const buttons = this.buttons.map(b => {
-            return (typeof b === 'string')
-                ? { text: b }
-                : b;
-        });
-        const columns = this.columns;
-        // // clean up dat data
-        // data.columns = data.columns.map(column => {
-        //   if (!isPresent(column.options)) {
-        //     column.options = [];
-        //   }
-        //   column.selectedIndex = column.selectedIndex || 0;
-        //   column.options = column.options.map(inputOpt => {
-        //     let opt: PickerColumnOption = {
-        //       text: '',
-        //       value: '',
-        //       disabled: inputOpt.disabled,
-        //     };
-        //     if (isPresent(inputOpt)) {
-        //       if (isString(inputOpt) || isNumber(inputOpt)) {
-        //         opt.text = inputOpt.toString();
-        //         opt.value = inputOpt;
-        //       } else {
-        //         opt.text = isPresent(inputOpt.text) ? inputOpt.text : inputOpt.value;
-        //         opt.value = isPresent(inputOpt.value) ? inputOpt.value : inputOpt.text;
-        //       }
-        //     }
-        //     return opt;
-        //   });
-        //   return column;
-        // });
         return [
-            h("ion-backdrop", { visible: this.showBackdrop, tappable: this.enableBackdropDismiss }),
+            h("ion-backdrop", { visible: this.showBackdrop, tappable: this.backdropDismiss }),
             h("div", { class: "picker-wrapper", role: "dialog" },
-                h("div", { class: "picker-toolbar" }, buttons.map(b => (h("div", { class: buttonWrapperClass(b) },
-                    h("button", { onClick: () => this.buttonClick(b), class: buttonClass(b) }, b.text))))),
+                h("div", { class: "picker-toolbar" }, this.buttons.map(b => (h("div", { class: buttonWrapperClass(b) },
+                    h("button", { type: "button", "ion-activatable": true, onClick: () => this.buttonClick(b), class: buttonClass(b) }, b.text))))),
                 h("div", { class: "picker-columns" },
                     h("div", { class: "picker-above-highlight" }),
-                    columns.map(c => h("ion-picker-column", { col: c })),
+                    this.columns.map(c => h("ion-picker-column", { col: c })),
                     h("div", { class: "picker-below-highlight" })))
         ];
     }
     static get is() { return "ion-picker"; }
     static get properties() { return {
-        "addButton": {
-            "method": true
-        },
-        "addColumn": {
-            "method": true
+        "animated": {
+            "type": Boolean,
+            "attr": "animated"
         },
         "animationCtrl": {
             "connect": "ion-animation-controller"
+        },
+        "backdropDismiss": {
+            "type": Boolean,
+            "attr": "backdrop-dismiss"
         },
         "buttons": {
             "type": "Any",
@@ -231,18 +133,11 @@ export class Picker {
         "el": {
             "elementRef": true
         },
-        "enableBackdropDismiss": {
-            "type": Boolean,
-            "attr": "enable-backdrop-dismiss"
-        },
         "enterAnimation": {
             "type": "Any",
             "attr": "enter-animation"
         },
         "getColumn": {
-            "method": true
-        },
-        "getColumns": {
             "method": true
         },
         "keyboardClose": {
@@ -253,15 +148,19 @@ export class Picker {
             "type": "Any",
             "attr": "leave-animation"
         },
+        "mode": {
+            "type": String,
+            "attr": "mode"
+        },
         "onDidDismiss": {
             "method": true
         },
         "onWillDismiss": {
             "method": true
         },
-        "overlayId": {
+        "overlayIndex": {
             "type": Number,
-            "attr": "overlay-id"
+            "attr": "overlay-index"
         },
         "present": {
             "method": true
@@ -269,16 +168,6 @@ export class Picker {
         "showBackdrop": {
             "type": Boolean,
             "attr": "show-backdrop"
-        },
-        "showSpinner": {
-            "state": true
-        },
-        "spinner": {
-            "state": true
-        },
-        "willAnimate": {
-            "type": Boolean,
-            "attr": "will-animate"
         }
     }; }
     static get events() { return [{
@@ -327,7 +216,7 @@ export class Picker {
 }
 function buttonWrapperClass(button) {
     return {
-        [`picker-toolbar-${button.role}`]: !!button.role,
+        [`picker-toolbar-${button.role}`]: button.role !== undefined,
         'picker-toolbar-button': true
     };
 }

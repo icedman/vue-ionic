@@ -1,6 +1,6 @@
-import { EventEmitter } from '../../stencil.core';
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
 import { Color, Mode, StyleEvent } from '../../interface';
-export declare class Label {
+export declare class Label implements ComponentInterface {
     el: HTMLElement;
     /**
      * The color to use from your application's color palette.
@@ -15,17 +15,23 @@ export declare class Label {
     mode: Mode;
     /**
      * The position determines where and how the label behaves inside an item.
-     * Possible values are: 'inline' | 'fixed' | 'stacked' | 'floating'
      */
     position?: 'fixed' | 'stacked' | 'floating';
     /**
      * Emitted when the styles change.
      */
     ionStyle: EventEmitter<StyleEvent>;
-    getText(): string;
+    noAnimate: boolean;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     positionChanged(): void;
+    private emitStyle;
     hostData(): {
-        class: {};
+        class: {
+            [`label-no-animate`]: boolean;
+        } | {
+            [x: string]: boolean;
+            [`label-no-animate`]: boolean;
+        };
     };
 }

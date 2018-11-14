@@ -1,17 +1,14 @@
-import { Color, Config, Mode } from '../../interface';
-export declare class Spinner {
+import { ComponentInterface } from '../../stencil.core';
+import { Color, Config, Mode, SpinnerTypes } from '../../interface';
+export declare class Spinner implements ComponentInterface {
     config: Config;
+    mode: Mode;
     /**
      * The color to use from your application's color palette.
      * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
      * For more information on colors, see [theming](/docs/theming/basics).
      */
     color?: Color;
-    /**
-     * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
-     */
-    mode: Mode;
     /**
      * Duration of the spinner animation in milliseconds. The default varies based on the spinner.
      */
@@ -21,9 +18,9 @@ export declare class Spinner {
      * spinner will be used. Possible values are: `"lines"`, `"lines-small"`, `"dots"`, `"bubbles"`,
      * `"circles"`, `"crescent"`.
      */
-    name?: string;
+    name?: SpinnerTypes;
     /**
-     * If true, the spinner's animation will be paused. Defaults to `false`.
+     * If `true`, the spinner's animation will be paused. Defaults to `false`.
      */
     paused: boolean;
     private getName;

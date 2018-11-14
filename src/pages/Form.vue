@@ -1,13 +1,37 @@
 <template>
-  <div class="hello">
+  <div class="page">
     <h1>{{ msg }}</h1>
     <ion-list>
-      <ion-item><ion-label fixed>App Layout</ion-label></ion-item>
-      <ion-item><ion-button @click="setLayout('Full')">Full</ion-button></ion-item>
-      <ion-item><ion-button @click="setLayout('Header')">Header</ion-button></ion-item>
-      <ion-item><ion-button @click="setLayout('Menu')">Menu</ion-button></ion-item>
-      <ion-item><ion-button @click="setLayout('Tabs')">Tabs</ion-button></ion-item>
-      <ion-item><ion-button @click="setLayout('SplitPane')">SplitPane</ion-button></ion-item>
+      <ion-item>
+        <ion-label fixed>App Layout</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-button @click="setLayout('Full')">Full</ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-button @click="setLayout('Header')">Header</ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-button @click="setLayout('Menu')">Menu</ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-button @click="setLayout('Tabs')">Tabs</ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-button @click="setLayout('SplitPane')">SplitPane</ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-label fixed>Sample Controllers</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-button @click="sampleAlert()">Alert</ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-button @click="sampleActionSheet()">ActionSheet</ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-button @click="sampleToast()">Toast</ion-button>
+      </ion-item>
     </ion-list>
     <ion-searchbar :value="searched" @ionChange="searched=$event.target.value" :debounce="500"></ion-searchbar>
     searching for {{searched}}...
@@ -36,10 +60,10 @@
     </ion-list>
     <ion-card>
       <ion-card-header>
-      Card Header
+        Card Header
       </ion-card-header>
       <ion-card-content>
-      Card content
+        Card content
       </ion-card-content>
     </ion-card>
     <ion-radio-group :value="radioed" @ionChange="radioed=$event.target.value">
@@ -62,8 +86,8 @@
     <ion-item>
       <ion-label>Range [{{ranged}}]</ion-label>
       <ion-range :value="ranged" @ionChange="ranged=$event.target.value">
-          <ion-icon size="small" name="sunny" slot="start"></ion-icon>
-          <ion-icon name="sunny" slot="end"></ion-icon>
+        <ion-icon size="small" name="sunny" slot="start"></ion-icon>
+        <ion-icon name="sunny" slot="end"></ion-icon>
       </ion-range>
     </ion-item>
     <ion-list>
@@ -119,88 +143,124 @@ export default {
       msg: 'Welcome to Your Vue.js App'
     }
   },
+
+  mounted () {
+    window.$app = this
+  },
+
   methods: {
     option1 (e) {
-      Array.prototype.forEach.call(document.querySelectorAll('ion-item-sliding'), (s) => { s.closeOpened() })
+      Array.prototype.forEach.call(
+        document.querySelectorAll('ion-item-sliding'),
+        s => {
+          s.closeOpened()
+        }
+      )
     },
     setLayout (layout) {
       this.$store.commit('ui/SET_LAYOUT', layout)
+    },
+
+    sampleAlert () {
+      this.$ionic.alert
+        .create({
+          header: 'Alert',
+          subHeader: 'Subtitle',
+          message: 'This is an alert message.',
+          buttons: ['OK']
+        })
+        .then(a => {
+          a.present()
+        })
+    },
+
+    sampleActionSheet () {
+      this.$ionic.actionSheet
+        .create({
+          header: 'Albums',
+          buttons: [
+            {
+              text: 'Delete',
+              role: 'destructive',
+              icon: 'trash',
+              handler: () => {
+                console.log('Delete clicked')
+              }
+            },
+            {
+              text: 'Share',
+              icon: 'share',
+              handler: () => {
+                console.log('Share clicked')
+              }
+            },
+            {
+              text: 'Play (open modal)',
+              icon: 'arrow-dropright-circle',
+              handler: () => {
+                console.log('Play clicked')
+              }
+            },
+            {
+              text: 'Favorite',
+              icon: 'heart',
+              handler: () => {
+                console.log('Favorite clicked')
+              }
+            },
+            {
+              text: 'Cancel',
+              icon: 'close',
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked')
+              }
+            }
+          ]
+        })
+        .then(a => {
+          a.present()
+        })
+    },
+
+    sampleToast () {
+      this.$ionic.toast
+        .create({
+          message: 'Click to Close',
+          showCloseButton: true,
+          position: 'top',
+          closeButtonText: 'Done'
+        })
+        .then(a => {
+          a.present()
+        })
     }
   }
 }
-
-/**
-
-    // alert
-    alertController.create({
-      header: 'Alert',
-      subHeader: 'Subtitle',
-      message: 'This is an alert message.',
-      buttons: ['OK']
-    }).then(a=>{ a.present() })
-
-    actionSheetController.create({
-      header: "Albums",
-      buttons: [{
-        text: 'Delete',
-        role: 'destructive',
-        icon: 'trash',
-        handler: () => {
-          console.log('Delete clicked');
-        }
-      }, {
-        text: 'Share',
-        icon: 'share',
-        handler: () => {
-          console.log('Share clicked');
-        }
-      }, {
-        text: 'Play (open modal)',
-        icon: 'arrow-dropright-circle',
-        handler: () => {
-          console.log('Play clicked');
-        }
-      }, {
-        text: 'Favorite',
-        icon: 'heart',
-        handler: () => {
-          console.log('Favorite clicked');
-        }
-      }, {
-        text: 'Cancel',
-        icon: 'close',
-        role: 'cancel',
-        handler: () => {
-          console.log('Cancel clicked');
-        }
-      }]
-    }).then(a=>{ a.present() })
-
-
-  
-  toastController.create({
-    message: 'Click to Close',
-    showCloseButton: true,
-    position: 'top',
-    closeButtonText: 'Done'
-  }).then(a=>{ a.present() });
-**/
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
 }
+
 li {
   display: inline-block;
   margin: 0 10px;
 }
+
 a {
   color: #42b983;
+}
+
+.page {
+  margin: 10px;
 }
 </style>

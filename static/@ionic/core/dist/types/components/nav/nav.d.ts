@@ -1,6 +1,6 @@
 import '../../stencil.core';
 import { EventEmitter, QueueApi } from '../../stencil.core';
-import { ComponentProps, Config, FrameworkDelegate, Mode, NavComponent, NavOptions, NavOutlet, RouteID, RouteWrite, TransitionDoneFn, ViewController } from '../../interface';
+import { AnimationBuilder, ComponentProps, Config, FrameworkDelegate, Mode, NavComponent, NavOptions, NavOutlet, RouteID, RouteWrite, TransitionDoneFn, ViewController } from '../../interface';
 export declare class Nav implements NavOutlet {
     private transInstr;
     private sbTrns?;
@@ -15,17 +15,22 @@ export declare class Nav implements NavOutlet {
     config: Config;
     win: Window;
     animationCtrl: HTMLIonAnimationControllerElement;
-    /**
-     * If the nav component should allow for swipe-to-go-back
-     */
-    swipeBackEnabled?: boolean;
-    swipeBackEnabledChanged(): void;
-    /**
-     * If the nav should animate the components or not
-     */
-    animated?: boolean;
-    /** @hidden */
+    /** @internal */
     delegate?: FrameworkDelegate;
+    /**
+     * If the nav component should allow for swipe-to-go-back.
+     */
+    swipeGesture?: boolean;
+    swipeGestureChanged(): void;
+    /**
+     * If `true`, the nav should animate the transition of components. Default to `true`.
+     */
+    animated: boolean;
+    /**
+     * By default `ion-nav` animates transition between pages based in the mode (ios or material design).
+     * However, this property allows to create custom transition using `AnimateBuilder` functions.
+     */
+    animation?: AnimationBuilder;
     /**
      * Any parameters for the root component
      */
@@ -51,13 +56,13 @@ export declare class Nav implements NavOutlet {
     componentDidLoad(): Promise<void>;
     componentDidUnload(): void;
     /**
-     * Push a new component onto the current navigation stack. Pass any aditional information along as an object. This additional information is accessible through NavParams
+     * Push a new component onto the current navigation stack. Pass any additional information along as an object. This additional information is accessible through NavParams
      */
-    push(component: NavComponent, componentProps?: ComponentProps | null, opts?: NavOptions | null, done?: TransitionDoneFn): Promise<boolean>;
+    push<T extends NavComponent>(component: T, componentProps?: ComponentProps<T> | null, opts?: NavOptions | null, done?: TransitionDoneFn): Promise<boolean>;
     /**
      * Inserts a component into the nav stack at the specified index. This is useful if you need to add a component at any point in your navigation stack.
      */
-    insert(insertIndex: number, component: NavComponent, componentProps?: ComponentProps | null, opts?: NavOptions | null, done?: TransitionDoneFn): Promise<boolean>;
+    insert<T extends NavComponent>(insertIndex: number, component: T, componentProps?: ComponentProps<T> | null, opts?: NavOptions | null, done?: TransitionDoneFn): Promise<boolean>;
     /**
      * Inserts an array of components into the nav stack at the specified index. The last component in the array will become instantiated as a view, and animate in to become the active view.
      */
@@ -81,36 +86,35 @@ export declare class Nav implements NavOutlet {
     /**
      * Set the root for the current navigation stack.
      */
-    setRoot(component: NavComponent, componentProps?: ComponentProps | null, opts?: NavOptions | null, done?: TransitionDoneFn): Promise<boolean>;
+    setRoot<T extends NavComponent>(component: T, componentProps?: ComponentProps<T> | null, opts?: NavOptions | null, done?: TransitionDoneFn): Promise<boolean>;
     /**
      * Set the views of the current navigation stack and navigate to the last view. By default animations are disabled, but they can be enabled by passing options to the navigation controller.You can also pass any navigation params to the individual pages in the array.
      */
     setPages(views: any[], opts?: NavOptions | null, done?: TransitionDoneFn): Promise<boolean>;
-    /** @hidden */
-    setRouteId(id: string, params: any, direction: number): Promise<RouteWrite>;
-    /** @hidden */
-    getRouteId(): RouteID | undefined;
-    /**
-     * Returns true or false if the current view can go back
-     */
-    canGoBack(view?: ViewController | undefined): boolean;
+    /** @internal */
+    setRouteId(id: string, params: ComponentProps | undefined, direction: number): Promise<RouteWrite>;
+    /** @internal */
+    getRouteId(): Promise<RouteID | undefined>;
     /**
      * Gets the active view
      */
-    getActive(): ViewController | undefined;
+    getActive(): Promise<ViewController | undefined>;
     /**
      * Returns the view at the index
      */
-    getByIndex(index: number): ViewController | undefined;
+    getByIndex(index: number): Promise<ViewController | undefined>;
+    /**
+     * Returns `true` or false if the current view can go back
+     */
+    canGoBack(view?: ViewController): Promise<boolean>;
     /**
      * Gets the previous view
      */
-    getPrevious(view?: ViewController | undefined): ViewController | undefined;
-    /**
-     * Returns the length of navigation stack
-     */
-    isAnimating(): boolean;
-    length(): number;
+    getPrevious(view?: ViewController): Promise<ViewController | undefined>;
+    getLength(): number;
+    private getActiveSync;
+    private canGoBackSync;
+    private getPreviousSync;
     private queueTrns;
     private success;
     private failed;
@@ -129,9 +133,9 @@ export declare class Nav implements NavOutlet {
      * DOM WRITE
      */
     private cleanup;
-    private swipeBackStart;
-    private swipeBackProgress;
-    private swipeBackEnd;
-    private canSwipeBack;
+    private canStart;
+    private onStart;
+    private onMove;
+    private onEnd;
     render(): JSX.Element[];
 }

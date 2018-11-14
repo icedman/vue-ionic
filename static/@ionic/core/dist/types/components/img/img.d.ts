@@ -1,6 +1,6 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-export declare class Img {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+export declare class Img implements ComponentInterface {
     private io?;
     el: HTMLElement;
     loadSrc?: string;

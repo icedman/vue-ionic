@@ -1,6 +1,3 @@
-/**
- * iOS Loading Leave Animation
- */
 export function iosLeaveAnimation(AnimationC, baseEl) {
     const baseAnimation = new AnimationC();
     const backdropAnimation = new AnimationC();

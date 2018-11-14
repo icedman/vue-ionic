@@ -1,2 +1,1 @@
-// ionicons: ES Module
-export * from './es5/ionicons.define.js';
+export * from './es5/index.js';

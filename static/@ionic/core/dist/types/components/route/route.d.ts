@@ -1,5 +1,5 @@
-import { EventEmitter } from '../../stencil.core';
-export declare class Route {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+export declare class Route implements ComponentInterface {
     /**
      * Relative path that needs to match in order for this route to apply.
      *
@@ -12,7 +12,7 @@ export declare class Route {
      * when the route matches.
      *
      * The value of this property is not always the tagname of the component to load,
-     * in ion-tabs it actually refers to the name of the `ion-tab` to select.
+     * in `ion-tabs` it actually refers to the name of the `ion-tab` to select.
      */
     component: string;
     /**
@@ -23,7 +23,7 @@ export declare class Route {
         [key: string]: any;
     };
     /**
-     * Used internaly by `ion-router` to know when this route did change.
+     * Used internally by `ion-router` to know when this route did change.
      */
     ionRouteDataChanged: EventEmitter<any>;
     onUpdate(newValue: any): void;

@@ -1,10 +1,7 @@
 import { Animator } from './animator';
-/** @hidden */
 export class AnimationControllerImpl {
-    /**
-     * Creates an animation instance
-     */
     create(animationBuilder, baseEl, opts) {
+        Animator.animated = this.config.getBoolean('animated', true);
         if (animationBuilder) {
             return animationBuilder(Animator, baseEl, opts);
         }
@@ -12,6 +9,9 @@ export class AnimationControllerImpl {
     }
     static get is() { return "ion-animation-controller"; }
     static get properties() { return {
+        "config": {
+            "context": "config"
+        },
         "create": {
             "method": true
         }

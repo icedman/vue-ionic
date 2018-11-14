@@ -1,32 +1,12 @@
 import { createThemedClasses } from '../../utils/theme';
 export class List {
     constructor() {
-        /**
-         * If true, the list will have margin around it and rounded corners. Defaults to `false`.
-         */
         this.inset = false;
     }
-    /**
-     * Get the [Item Sliding](../../item-sliding/ItemSliding) that is currently open.
-     */
-    getOpenItem() {
-        return this.openItem;
-    }
-    /**
-     * Set an [Item Sliding](../../item-sliding/ItemSliding) as the open item.
-     */
-    setOpenItem(itemSliding) {
-        this.openItem = itemSliding;
-    }
-    /**
-     * Close the sliding items. Items can also be closed from the [Item Sliding](../../item-sliding/ItemSliding).
-     * Returns a boolean value of whether it closed an item or not.
-     */
-    closeSlidingItems() {
-        if (this.openItem) {
-            this.openItem.close();
-            this.openItem = undefined;
-            return true;
+    async closeSlidingItems() {
+        const item = this.el.querySelector('ion-item-sliding');
+        if (item && item.closeOpened) {
+            return item.closeOpened();
         }
         return false;
     }
@@ -40,8 +20,8 @@ export class List {
         "closeSlidingItems": {
             "method": true
         },
-        "getOpenItem": {
-            "method": true
+        "el": {
+            "elementRef": true
         },
         "inset": {
             "type": Boolean,
@@ -51,8 +31,9 @@ export class List {
             "type": String,
             "attr": "lines"
         },
-        "setOpenItem": {
-            "method": true
+        "mode": {
+            "type": String,
+            "attr": "mode"
         }
     }; }
     static get style() { return "/**style-placeholder:ion-list:**/"; }

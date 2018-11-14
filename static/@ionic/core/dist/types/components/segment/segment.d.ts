@@ -1,7 +1,6 @@
-import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { Color, InputChangeEvent, Mode } from '../../interface';
-export declare class Segment {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { Color, Mode, TextInputChangeEvent } from '../../interface';
+export declare class Segment implements ComponentInterface {
     el: HTMLElement;
     /**
      * The color to use from your application's color palette.
@@ -14,16 +13,19 @@ export declare class Segment {
      * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
+    /**
+     * If `true`, the user cannot interact with the segment. Defaults to `false`.
+     */
     disabled: boolean;
     /**
      * the value of the segment.
      */
-    value?: string;
+    value?: string | null;
     protected valueChanged(value: string | undefined): void;
     /**
      * Emitted when the value property has changed.
      */
-    ionChange: EventEmitter<InputChangeEvent>;
+    ionChange: EventEmitter<TextInputChangeEvent>;
     segmentClick(ev: CustomEvent): void;
     componentDidLoad(): void;
     private updateButtons;
@@ -31,13 +33,8 @@ export declare class Segment {
     hostData(): {
         class: {
             'segment-disabled': boolean;
-            'in-toolbar': boolean;
-            'in-color-toolbar': boolean;
         } | {
             'segment-disabled': boolean;
-            'in-toolbar': boolean;
-            'in-color-toolbar': boolean;
         };
     };
-    render(): JSX.Element;
 }

@@ -1,21 +1,25 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { Mode, SelectInputChangeEvent, SelectInterface, StyleEvent } from '../../interface';
-export declare class Select {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { Mode, OverlaySelect, SelectInputChangeEvent, SelectInterface, StyleEvent } from '../../interface';
+export declare class Select implements ComponentInterface {
     private childOpts;
     private inputId;
     private labelId?;
     private overlay?;
-    mode: Mode;
     el: HTMLIonSelectElement;
     actionSheetCtrl: HTMLIonActionSheetControllerElement;
     alertCtrl: HTMLIonAlertControllerElement;
     popoverCtrl: HTMLIonPopoverControllerElement;
     isExpanded: boolean;
     keyFocus: boolean;
-    text?: string;
+    text: string;
     /**
-     * If true, the user cannot interact with the select. Defaults to `false`.
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
+     */
+    mode: Mode;
+    /**
+     * If `true`, the user cannot interact with the select. Defaults to `false`.
      */
     disabled: boolean;
     /**
@@ -29,7 +33,7 @@ export declare class Select {
     /**
      * The text to display when the select is empty.
      */
-    placeholder?: string;
+    placeholder?: string | null;
     /**
      * The name of the control, which is submitted with the form data.
      */
@@ -37,9 +41,9 @@ export declare class Select {
     /**
      * The text to display instead of the selected option's value.
      */
-    selectedText?: string;
+    selectedText?: string | null;
     /**
-     * If true, the select can accept multiple values.
+     * If `true`, the select can accept multiple values.
      */
     multiple: boolean;
     /**
@@ -57,7 +61,7 @@ export declare class Select {
     /**
      * the value of the select.
      */
-    value?: any;
+    value?: any | null;
     /**
      * Emitted when the value has changed.
      */
@@ -85,8 +89,12 @@ export declare class Select {
     onSelect(ev: CustomEvent): void;
     componentWillLoad(): void;
     componentDidLoad(): void;
+    /**
+     * Opens the select overlay, it could be an alert, action-sheet or popover,
+     * based in `ion-select` settings.
+     */
+    open(ev?: UIEvent): Promise<OverlaySelect>;
     private getLabel;
-    private open;
     private openPopover;
     private openActionSheet;
     private openAlert;
@@ -94,9 +102,9 @@ export declare class Select {
      * Close the select interface.
      */
     private close;
-    onKeyUp(): void;
-    onFocus(): void;
-    onBlur(): void;
+    private onKeyUp;
+    private onFocus;
+    private onBlur;
     hasValue(): boolean;
     private emitStyle;
     hostData(): {

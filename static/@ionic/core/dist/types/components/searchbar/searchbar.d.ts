@@ -1,13 +1,15 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { Color, InputChangeEvent, Mode } from '../../interface';
-export declare class Searchbar {
-    private nativeInput;
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { Color, Config, Mode, TextInputChangeEvent } from '../../interface';
+export declare class Searchbar implements ComponentInterface {
+    private nativeInput?;
     private isCancelVisible;
     private shouldAlignLeft;
     el: HTMLElement;
+    config: Config;
     doc: Document;
     focused: boolean;
+    noAnimate: boolean;
     /**
      * The color to use from your application's color palette.
      * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
@@ -20,17 +22,17 @@ export declare class Searchbar {
      */
     mode: Mode;
     /**
-     * If true, enable searchbar animation. Default `false`.
+     * If `true`, enable searchbar animation. Defaults to `false`.
      */
     animated: boolean;
     /**
-     * Set the input's autocomplete property. Values: `"on"`, `"off"`. Default `"off"`.
+     * Set the input's autocomplete property. Default `"off"`.
      */
-    autocomplete: string;
+    autocomplete: 'on' | 'off';
     /**
-     * Set the input's autocorrect property. Values: `"on"`, `"off"`. Default `"off"`.
+     * Set the input's autocorrect property. Default `"off"`.
      */
-    autocorrect: string;
+    autocorrect: 'on' | 'off';
     /**
      * Set the cancel button icon. Only applies to `md` mode. Defaults to `"md-arrow-back"`.
      */
@@ -57,11 +59,11 @@ export declare class Searchbar {
      */
     searchIcon?: string;
     /**
-     * If true, show the cancel button. Default `false`.
+     * If `true`, show the cancel button. Defaults to `false`.
      */
     showCancelButton: boolean;
     /**
-     * If true, enable spellcheck on the input. Default `false`.
+     * If `true`, enable spellcheck on the input. Defaults to `false`.
      */
     spellcheck: boolean;
     /**
@@ -71,7 +73,7 @@ export declare class Searchbar {
     /**
      * the value of the searchbar.
      */
-    value: string;
+    value?: string | null;
     /**
      * Emitted when a keyboard input ocurred.
      */
@@ -79,7 +81,7 @@ export declare class Searchbar {
     /**
      * Emitted when the value has changed.
      */
-    ionChange: EventEmitter<InputChangeEvent>;
+    ionChange: EventEmitter<TextInputChangeEvent>;
     /**
      * Emitted when the cancel button is clicked.
      */
@@ -99,15 +101,20 @@ export declare class Searchbar {
     protected valueChanged(): void;
     componentDidLoad(): void;
     /**
+     * Sets focus on the specified `ion-searchbar`. Use this method instead of the global
+     * `input.focus()`.
+     */
+    setFocus(): void;
+    /**
      * Clears the input field and triggers the control change.
      */
-    private clearInput;
+    private onClearInput;
     /**
      * Clears the input field and tells the input to blur since
      * the clearInput function doesn't want the input to blur
      * then calls the custom cancel function if the user passed one in.
      */
-    private cancelSearchbar;
+    private onCancelSearchbar;
     /**
      * Update the Searchbar input value when the input changes
      */
@@ -134,20 +141,23 @@ export declare class Searchbar {
      * Show the iOS Cancel button on focus, hide it offscreen otherwise
      */
     private positionCancelButton;
+    private getValue;
     hostData(): {
         class: {
             'searchbar-animated': boolean;
+            'searchbar-no-animate': boolean;
             'searchbar-has-value': boolean;
             'searchbar-show-cancel': boolean;
             'searchbar-left-aligned': boolean;
             'searchbar-has-focus': boolean;
         } | {
             'searchbar-animated': boolean;
+            'searchbar-no-animate': boolean;
             'searchbar-has-value': boolean;
             'searchbar-show-cancel': boolean;
             'searchbar-left-aligned': boolean;
             'searchbar-has-focus': boolean;
         };
     };
-    render(): (JSX.Element | null)[];
+    render(): JSX.Element[];
 }

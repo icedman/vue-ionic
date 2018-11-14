@@ -1,47 +1,13 @@
-import { EventEmitter } from '../stencil.core';
-import { Animation, AnimationBuilder, Config, Mode } from '../interface';
-export declare function createOverlay<T extends HTMLIonOverlayElement, B>(element: T, opts: B): Promise<T>;
-export declare function dismissOverlay(data: any, role: string | undefined, overlays: OverlayMap, id: number): Promise<void>;
-export declare function getTopOverlay<T extends HTMLIonOverlayElement>(overlays: OverlayMap): T;
-export declare function getHighestId(overlays: OverlayMap): number;
-export declare function removeLastOverlay(overlays: OverlayMap): Promise<void>;
-export declare function present(overlay: OverlayInterface, name: string, iosEnterAnimation: AnimationBuilder, mdEnterAnimation: AnimationBuilder, opts?: any): Promise<void>;
-export declare function dismiss(overlay: OverlayInterface, data: any | undefined, role: string | undefined, name: string, iosLeaveAnimation: AnimationBuilder, mdLeaveAnimation: AnimationBuilder, opts?: any): Promise<void>;
-export declare function autoFocus(containerEl: HTMLElement): HTMLElement | null;
-export declare function eventMethod<T>(element: HTMLElement, eventName: string, callback?: (detail: T) => void): Promise<T>;
+import { AnimationBuilder, HTMLIonOverlayElement, IonicConfig, OverlayInterface } from '../interface';
+export declare function createOverlay<T extends HTMLIonOverlayElement>(element: T, opts: object | undefined): Promise<T>;
+export declare function connectListeners(doc: Document): void;
+export declare function dismissOverlay(doc: Document, data: any, role: string | undefined, overlayTag: string, id?: string): Promise<boolean>;
+export declare function getOverlays(doc: Document, overlayTag?: string): HTMLIonOverlayElement[];
+export declare function getOverlay(doc: Document, overlayTag?: string, id?: string): HTMLIonOverlayElement | undefined;
+export declare function present(overlay: OverlayInterface, name: keyof IonicConfig, iosEnterAnimation: AnimationBuilder, mdEnterAnimation: AnimationBuilder, opts?: any): Promise<void>;
+export declare function dismiss(overlay: OverlayInterface, data: any | undefined, role: string | undefined, name: keyof IonicConfig, iosLeaveAnimation: AnimationBuilder, mdLeaveAnimation: AnimationBuilder, opts?: any): Promise<boolean>;
+export declare function autoFocus(containerEl: HTMLElement): HTMLElement | undefined;
+export declare function eventMethod<T>(element: HTMLElement, eventName: string): Promise<T>;
 export declare function onceEvent(element: HTMLElement, eventName: string, callback: (ev: Event) => void): void;
 export declare function isCancel(role: string | undefined): boolean;
-export interface OverlayEventDetail<T = any> {
-    data?: T;
-    role?: string;
-}
-export interface OverlayInterface {
-    mode: Mode;
-    el: HTMLElement;
-    willAnimate: boolean;
-    keyboardClose: boolean;
-    config: Config;
-    overlayId: number;
-    presented: boolean;
-    animation?: Animation;
-    animationCtrl: HTMLIonAnimationControllerElement;
-    enterAnimation?: AnimationBuilder;
-    leaveAnimation?: AnimationBuilder;
-    didPresent: EventEmitter<void>;
-    willPresent: EventEmitter<void>;
-    willDismiss: EventEmitter<OverlayEventDetail>;
-    didDismiss: EventEmitter<OverlayEventDetail>;
-    present(): Promise<void>;
-    dismiss(data?: any, role?: string): Promise<void>;
-}
-export interface OverlayController {
-    create(opts?: any): Promise<HTMLElement>;
-    dismiss(data?: any, role?: string, alertId?: number): Promise<void>;
-    getTop(): HTMLElement;
-}
-export interface HTMLIonOverlayElement extends HTMLStencilElement {
-    overlayId: number;
-    dismiss(data?: any, role?: string): Promise<void>;
-}
-export declare type OverlayMap = Map<number, HTMLIonOverlayElement>;
 export declare const BACKDROP = "backdrop";

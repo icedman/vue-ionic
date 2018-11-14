@@ -1,2 +1,6 @@
-:host ::slotted(ion-list) {
+:host ion-list {
   margin: -1px 0; }
+
+:host ion-list-header,
+:host ion-label {
+  margin: 0; }

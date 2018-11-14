@@ -1,6 +1,7 @@
 import { attachComponent, detachComponent } from '../../utils/framework-delegate';
 import { BACKDROP, dismiss, eventMethod, present } from '../../utils/overlays';
-import { createThemedClasses, getClassMap } from '../../utils/theme';
+import { getClassMap } from '../../utils/theme';
+import { deepReady } from '../../utils/transition';
 import { iosEnterAnimation } from './animations/ios.enter';
 import { iosLeaveAnimation } from './animations/ios.leave';
 import { mdEnterAnimation } from './animations/md.enter';
@@ -9,22 +10,10 @@ export class Popover {
     constructor() {
         this.presented = false;
         this.keyboardClose = true;
-        /**
-         * If true, the popover will be dismissed when the backdrop is clicked. Defaults to `true`.
-         */
-        this.enableBackdropDismiss = true;
-        /**
-         * If true, a backdrop will be displayed behind the popover. Defaults to `true`.
-         */
+        this.backdropDismiss = true;
         this.showBackdrop = true;
-        /**
-         * If true, the popover will be translucent. Defaults to `false`.
-         */
         this.translucent = false;
-        /**
-         * If true, the popover will animate. Defaults to `true`.
-         */
-        this.willAnimate = true;
+        this.animated = true;
     }
     componentDidLoad() {
         this.ionPopoverDidLoad.emit();
@@ -38,7 +27,7 @@ export class Popover {
         this.dismiss();
     }
     onBackdropTap() {
-        this.dismiss(null, BACKDROP);
+        this.dismiss(undefined, BACKDROP);
     }
     lifecycle(modalEvent) {
         const el = this.usersElement;
@@ -52,9 +41,6 @@ export class Popover {
             el.dispatchEvent(event);
         }
     }
-    /**
-     * Present the popover overlay after it has been created.
-     */
     async present() {
         if (this.presented) {
             return;
@@ -64,59 +50,53 @@ export class Popover {
             throw new Error('container is undefined');
         }
         const data = Object.assign({}, this.componentProps, { popover: this.el });
-        this.usersElement = await attachComponent(this.delegate, container, this.component, ['popover-viewport'], data);
-        return present(this, 'popoverEnter', iosEnterAnimation, mdEnterAnimation, this.ev);
+        this.usersElement = await attachComponent(this.delegate, container, this.component, ['popover-viewport', this.el['s-sc']], data);
+        await deepReady(this.usersElement);
+        return present(this, 'popoverEnter', iosEnterAnimation, mdEnterAnimation, this.event);
     }
-    /**
-     * Dismiss the popover overlay after it has been presented.
-     */
     async dismiss(data, role) {
-        await dismiss(this, data, role, 'popoverLeave', iosLeaveAnimation, mdLeaveAnimation, this.ev);
-        await detachComponent(this.delegate, this.usersElement);
+        const shouldDismiss = await dismiss(this, data, role, 'popoverLeave', iosLeaveAnimation, mdLeaveAnimation, this.event);
+        if (shouldDismiss) {
+            await detachComponent(this.delegate, this.usersElement);
+        }
+        return shouldDismiss;
     }
-    /**
-     * Returns a promise that resolves when the popover did dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
-     */
-    onDidDismiss(callback) {
-        return eventMethod(this.el, 'ionPopoverDidDismiss', callback);
+    onDidDismiss() {
+        return eventMethod(this.el, 'ionPopoverDidDismiss');
     }
-    /**
-     * Returns a promise that resolves when the popover will dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
-     */
-    onWillDismiss(callback) {
-        return eventMethod(this.el, 'ionPopoverWillDismiss', callback);
+    onWillDismiss() {
+        return eventMethod(this.el, 'ionPopoverWillDismiss');
     }
     hostData() {
-        const themedClasses = this.translucent ? createThemedClasses(this.mode, 'popover-translucent') : {};
         return {
             style: {
-                zIndex: 10000 + this.overlayId,
+                zIndex: 20000 + this.overlayIndex,
             },
             'no-router': true,
-            class: Object.assign({}, createThemedClasses(this.mode, 'popover'), getClassMap(this.cssClass), themedClasses)
+            class: Object.assign({ 'popover-translucent': this.translucent }, getClassMap(this.cssClass))
         };
     }
     render() {
-        const wrapperClasses = createThemedClasses(this.mode, 'popover-wrapper');
         return [
-            h("ion-backdrop", { tappable: this.enableBackdropDismiss }),
-            h("div", { class: wrapperClasses },
+            h("ion-backdrop", { tappable: this.backdropDismiss, visible: this.showBackdrop }),
+            h("div", { class: "popover-wrapper" },
                 h("div", { class: "popover-arrow" }),
                 h("div", { class: "popover-content" }))
         ];
     }
     static get is() { return "ion-popover"; }
+    static get encapsulation() { return "scoped"; }
     static get properties() { return {
+        "animated": {
+            "type": Boolean,
+            "attr": "animated"
+        },
         "animationCtrl": {
             "connect": "ion-animation-controller"
         },
-        "color": {
-            "type": String,
-            "attr": "color"
+        "backdropDismiss": {
+            "type": Boolean,
+            "attr": "backdrop-dismiss"
         },
         "component": {
             "type": String,
@@ -143,17 +123,13 @@ export class Popover {
         "el": {
             "elementRef": true
         },
-        "enableBackdropDismiss": {
-            "type": Boolean,
-            "attr": "enable-backdrop-dismiss"
-        },
         "enterAnimation": {
             "type": "Any",
             "attr": "enter-animation"
         },
-        "ev": {
+        "event": {
             "type": "Any",
-            "attr": "ev"
+            "attr": "event"
         },
         "keyboardClose": {
             "type": Boolean,
@@ -173,9 +149,9 @@ export class Popover {
         "onWillDismiss": {
             "method": true
         },
-        "overlayId": {
+        "overlayIndex": {
             "type": Number,
-            "attr": "overlay-id"
+            "attr": "overlay-index"
         },
         "present": {
             "method": true
@@ -187,10 +163,6 @@ export class Popover {
         "translucent": {
             "type": Boolean,
             "attr": "translucent"
-        },
-        "willAnimate": {
-            "type": Boolean,
-            "attr": "will-animate"
         }
     }; }
     static get events() { return [{
@@ -255,20 +227,6 @@ export class Popover {
 const LIFECYCLE_MAP = {
     'ionPopoverDidPresent': 'ionViewDidEnter',
     'ionPopoverWillPresent': 'ionViewWillEnter',
-    'ionPopoverWillDismiss': 'ionViewWillDismiss',
-    'ionPopoverDidDismiss': 'ionViewDidDismiss',
-};
-export const POPOVER_POSITION_PROPERTIES = {
-    ios: {
-        padding: 2,
-        unit: '%',
-        showArrow: true,
-        centerTarget: true
-    },
-    md: {
-        padding: 12,
-        unit: 'px',
-        showArrow: false,
-        centerTarget: false
-    }
+    'ionPopoverWillDismiss': 'ionViewWillLeave',
+    'ionPopoverDidDismiss': 'ionViewDidLeave',
 };

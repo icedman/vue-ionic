@@ -1,23 +1,15 @@
 import { isEndSide } from '../../utils/helpers';
 export class ItemOptions {
     constructor() {
-        /**
-         * The side the option button should be on. Possible values: `"start"` and `"end"`. Defaults to `"end"`. If you have multiple `ion-item-options`, a side must be provided for each.
-         *
-         */
         this.side = 'end';
     }
-    isEndSide() {
-        return isEndSide(this.win, this.side);
-    }
-    width() {
-        return this.el.offsetWidth;
-    }
     fireSwipeEvent() {
-        this.ionSwipe.emit();
+        this.ionSwipe.emit({
+            side: this.side
+        });
     }
     hostData() {
-        const isEnd = this.isEndSide();
+        const isEnd = isEndSide(this.win, this.side);
         return {
             class: {
                 'item-options-start': !isEnd,
@@ -33,15 +25,9 @@ export class ItemOptions {
         "fireSwipeEvent": {
             "method": true
         },
-        "isEndSide": {
-            "method": true
-        },
         "side": {
             "type": String,
             "attr": "side"
-        },
-        "width": {
-            "method": true
         },
         "win": {
             "context": "window"

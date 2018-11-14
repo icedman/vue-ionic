@@ -1,7 +1,7 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { CheckboxInput, CheckedInputChangeEvent, Color, Mode, StyleEvent } from '../../interface';
-export declare class Checkbox implements CheckboxInput {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { CheckedInputChangeEvent, Color, Mode, StyleEvent } from '../../interface';
+export declare class Checkbox implements ComponentInterface {
     private inputId;
     private labelId;
     el: HTMLElement;
@@ -22,15 +22,20 @@ export declare class Checkbox implements CheckboxInput {
      */
     name: string;
     /**
-     * If true, the checkbox is selected. Defaults to `false`.
+     * If `true`, the checkbox is selected. Defaults to `false`.
      */
     checked: boolean;
     /**
-     * If true, the user cannot interact with the checkbox. Defaults to `false`.
+     * If `true`, the user cannot interact with the checkbox. Defaults to `false`.
      */
     disabled: boolean;
     /**
-     * The value of the checkbox.
+     * The value of the toggle does not mean if it's checked or not, use the `checked`
+     * property for that.
+     *
+     * The value of a toggle is analogous to the value of a `<input type="checkbox">`,
+     * it's only used when the toggle participates in a native `<form>`.
+     * Defaults to `on`.
      */
     value: string;
     /**
@@ -50,13 +55,12 @@ export declare class Checkbox implements CheckboxInput {
      */
     ionStyle: EventEmitter<StyleEvent>;
     componentWillLoad(): void;
-    componentDidLoad(): void;
     checkedChanged(isChecked: boolean): void;
     emitStyle(): void;
-    onChange(): void;
-    onKeyUp(): void;
-    onFocus(): void;
-    onBlur(): void;
+    private onChange;
+    private onKeyUp;
+    private onFocus;
+    private onBlur;
     hostData(): {
         class: {
             'in-item': boolean;

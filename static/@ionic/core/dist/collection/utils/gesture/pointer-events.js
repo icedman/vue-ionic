@@ -1,110 +1,111 @@
 import { addEventListener } from './listener';
 const MOUSE_WAIT = 2000;
-export class PointerEvents {
-    constructor(el, pointerDown, pointerMove, pointerUp, options) {
-        this.el = el;
-        this.pointerDown = pointerDown;
-        this.pointerMove = pointerMove;
-        this.pointerUp = pointerUp;
-        this.options = options;
-        this.lastTouchEvent = 0;
-        this.bindTouchEnd = this.handleTouchEnd.bind(this);
-        this.bindMouseUp = this.handleMouseUp.bind(this);
-    }
-    set disabled(disabled) {
-        if (disabled) {
-            if (this.rmTouchStart) {
-                this.rmTouchStart();
-            }
-            if (this.rmMouseStart) {
-                this.rmMouseStart();
-            }
-            this.rmTouchStart = this.rmMouseStart = undefined;
-            this.stop();
-        }
-        else {
-            if (!this.rmTouchStart) {
-                this.rmTouchStart = addEventListener(this.el, 'touchstart', this.handleTouchStart.bind(this), this.options);
-            }
-            if (!this.rmMouseStart) {
-                this.rmMouseStart = addEventListener(this.el, 'mousedown', this.handleMouseDown.bind(this), this.options);
-            }
-        }
-    }
-    stop() {
-        this.stopTouch();
-        this.stopMouse();
-    }
-    destroy() {
-        this.disabled = true;
-        this.pointerUp = this.pointerMove = this.pointerDown = undefined;
-    }
-    handleTouchStart(ev) {
-        this.lastTouchEvent = Date.now() + MOUSE_WAIT;
-        if (!this.pointerDown(ev, POINTER_EVENT_TYPE_TOUCH)) {
+export function createPointerEvents(el, pointerDown, pointerMove, pointerUp, options) {
+    let rmTouchStart;
+    let rmTouchMove;
+    let rmTouchEnd;
+    let rmTouchCancel;
+    let rmMouseStart;
+    let rmMouseMove;
+    let rmMouseUp;
+    let lastTouchEvent = 0;
+    function handleTouchStart(ev) {
+        lastTouchEvent = Date.now() + MOUSE_WAIT;
+        if (!pointerDown(ev)) {
             return;
         }
-        if (!this.rmTouchMove && this.pointerMove) {
-            this.rmTouchMove = addEventListener(this.el, 'touchmove', this.pointerMove, this.options);
+        if (!rmTouchMove && pointerMove) {
+            rmTouchMove = addEventListener(el, 'touchmove', pointerMove, options);
         }
-        if (!this.rmTouchEnd) {
-            this.rmTouchEnd = addEventListener(this.el, 'touchend', this.bindTouchEnd, this.options);
+        if (!rmTouchEnd) {
+            rmTouchEnd = addEventListener(el, 'touchend', handleTouchEnd, options);
         }
-        if (!this.rmTouchCancel) {
-            this.rmTouchCancel = addEventListener(this.el, 'touchcancel', this.bindTouchEnd, this.options);
+        if (!rmTouchCancel) {
+            rmTouchCancel = addEventListener(el, 'touchcancel', handleTouchEnd, options);
         }
     }
-    handleMouseDown(ev) {
-        if (this.lastTouchEvent > Date.now()) {
+    function handleMouseDown(ev) {
+        if (lastTouchEvent > Date.now()) {
             console.debug('mousedown event dropped because of previous touch');
             return;
         }
-        if (!this.pointerDown(ev, POINTER_EVENT_TYPE_MOUSE)) {
+        if (!pointerDown(ev)) {
             return;
         }
-        if (!this.rmMouseMove && this.pointerMove) {
-            this.rmMouseMove = addEventListener(getDocument(this.el), 'mousemove', this.pointerMove, this.options);
+        if (!rmMouseMove && pointerMove) {
+            rmMouseMove = addEventListener(getDocument(el), 'mousemove', pointerMove, options);
         }
-        if (!this.rmMouseUp) {
-            this.rmMouseUp = addEventListener(getDocument(this.el), 'mouseup', this.bindMouseUp, this.options);
-        }
-    }
-    handleTouchEnd(ev) {
-        this.stopTouch();
-        if (this.pointerUp) {
-            this.pointerUp(ev, POINTER_EVENT_TYPE_TOUCH);
+        if (!rmMouseUp) {
+            rmMouseUp = addEventListener(getDocument(el), 'mouseup', handleMouseUp, options);
         }
     }
-    handleMouseUp(ev) {
-        this.stopMouse();
-        if (this.pointerUp) {
-            this.pointerUp(ev, POINTER_EVENT_TYPE_MOUSE);
+    function handleTouchEnd(ev) {
+        stopTouch();
+        if (pointerUp) {
+            pointerUp(ev);
         }
     }
-    stopTouch() {
-        if (this.rmTouchMove) {
-            this.rmTouchMove();
+    function handleMouseUp(ev) {
+        stopMouse();
+        if (pointerUp) {
+            pointerUp(ev);
         }
-        if (this.rmTouchEnd) {
-            this.rmTouchEnd();
-        }
-        if (this.rmTouchCancel) {
-            this.rmTouchCancel();
-        }
-        this.rmTouchMove = this.rmTouchEnd = this.rmTouchCancel = undefined;
     }
-    stopMouse() {
-        if (this.rmMouseMove) {
-            this.rmMouseMove();
+    function stopTouch() {
+        if (rmTouchMove) {
+            rmTouchMove();
         }
-        if (this.rmMouseUp) {
-            this.rmMouseUp();
+        if (rmTouchEnd) {
+            rmTouchEnd();
         }
-        this.rmMouseMove = this.rmMouseUp = undefined;
+        if (rmTouchCancel) {
+            rmTouchCancel();
+        }
+        rmTouchMove = rmTouchEnd = rmTouchCancel = undefined;
     }
+    function stopMouse() {
+        if (rmMouseMove) {
+            rmMouseMove();
+        }
+        if (rmMouseUp) {
+            rmMouseUp();
+        }
+        rmMouseMove = rmMouseUp = undefined;
+    }
+    function stop() {
+        stopTouch();
+        stopMouse();
+    }
+    function setDisabled(disabled) {
+        if (disabled) {
+            if (rmTouchStart) {
+                rmTouchStart();
+            }
+            if (rmMouseStart) {
+                rmMouseStart();
+            }
+            rmTouchStart = rmMouseStart = undefined;
+            stop();
+        }
+        else {
+            if (!rmTouchStart) {
+                rmTouchStart = addEventListener(el, 'touchstart', handleTouchStart, options);
+            }
+            if (!rmMouseStart) {
+                rmMouseStart = addEventListener(el, 'mousedown', handleMouseDown, options);
+            }
+        }
+    }
+    function destroy() {
+        setDisabled(true);
+        pointerUp = pointerMove = pointerDown = undefined;
+    }
+    return {
+        setDisabled,
+        stop,
+        destroy
+    };
 }
 function getDocument(node) {
     return node instanceof Document ? node : node.ownerDocument;
 }
-export const POINTER_EVENT_TYPE_MOUSE = 1;
-export const POINTER_EVENT_TYPE_TOUCH = 2;

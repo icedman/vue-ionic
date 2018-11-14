@@ -1,19 +1,26 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { AlertButton, AlertInput, Animation, AnimationBuilder, Color, Config, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
-export declare class Alert implements OverlayInterface {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { AlertButton, AlertInput, Animation, AnimationBuilder, Config, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
+export declare class Alert implements ComponentInterface, OverlayInterface {
     private activeId?;
     private inputType?;
     private processedInputs;
     private processedButtons;
     presented: boolean;
     animation?: Animation;
-    color: Color;
-    mode: Mode;
     el: HTMLStencilElement;
     animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
-    overlayId: number;
+    /** @internal */
+    overlayIndex: number;
+    /**
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
+     */
+    mode: Mode;
+    /**
+     * If `true`, the keyboard will be automatically dismissed when the overlay is presented.
+     */
     keyboardClose: boolean;
     /**
      * Animation to use when the alert is presented.
@@ -49,17 +56,17 @@ export declare class Alert implements OverlayInterface {
      */
     inputs: AlertInput[];
     /**
-     * If true, the alert will be dismissed when the backdrop is clicked. Defaults to `true`.
+     * If `true`, the alert will be dismissed when the backdrop is clicked. Defaults to `true`.
      */
-    enableBackdropDismiss: boolean;
+    backdropDismiss: boolean;
     /**
-     * If true, the alert will be translucent. Defaults to `false`.
+     * If `true`, the alert will be translucent. Defaults to `false`.
      */
     translucent: boolean;
     /**
-     * If true, the alert will animate. Defaults to `true`.
+     * If `true`, the alert will animate. Defaults to `true`.
      */
-    willAnimate: boolean;
+    animated: boolean;
     /**
      * Emitted after the alert has presented.
      */
@@ -98,19 +105,17 @@ export declare class Alert implements OverlayInterface {
     /**
      * Dismiss the alert overlay after it has been presented.
      */
-    dismiss(data?: any, role?: string): Promise<void>;
+    dismiss(data?: any, role?: string): Promise<boolean>;
     /**
-     * Returns a promise that resolves when the alert did dismiss. It also accepts a callback
-     * that is called in the same circumstances.
+     * Returns a promise that resolves when the alert did dismiss.
      *
      */
-    onDidDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onDidDismiss(): Promise<OverlayEventDetail>;
     /**
-     * Returns a promise that resolves when the alert will dismiss. It also accepts a callback
-     * that is called in the same circumstances.
+     * Returns a promise that resolves when the alert will dismiss.
      *
      */
-    onWillDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onWillDismiss(): Promise<OverlayEventDetail>;
     private rbClick;
     private cbClick;
     private buttonClick;
@@ -126,8 +131,6 @@ export declare class Alert implements OverlayInterface {
             zIndex: number;
         };
         class: {
-            'alert-translucent': boolean;
-        } | {
             'alert-translucent': boolean;
         };
     };

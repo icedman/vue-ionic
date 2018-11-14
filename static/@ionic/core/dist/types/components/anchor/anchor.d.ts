@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Color, RouterDirection } from '../../interface';
-export declare class Anchor {
+export declare class Anchor implements ComponentInterface {
     win: Window;
     /**
      * The color to use from your application's color palette.
@@ -19,7 +20,8 @@ export declare class Anchor {
      */
     routerDirection?: RouterDirection;
     hostData(): {
-        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap | null;
+        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap | undefined;
+        'ion-activatable': boolean;
     };
     render(): JSX.Element;
 }

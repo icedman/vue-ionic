@@ -2,57 +2,38 @@ import { transition } from '../../utils';
 import { attachComponent, detachComponent } from '../../utils/framework-delegate';
 export class RouterOutlet {
     constructor() {
-        this.isTransitioning = false;
+        this.animated = true;
     }
     componentWillLoad() {
-        if (this.animated === undefined) {
-            this.animated = this.config.getBoolean('animate', true);
-        }
         this.ionNavWillLoad.emit();
     }
     componentDidUnload() {
         this.activeEl = this.activeComponent = undefined;
     }
-    /**
-     * Set the root component for the given navigation stack
-     */
     async setRoot(component, params, opts) {
-        if (this.isTransitioning || this.activeComponent === component) {
+        if (this.activeComponent === component) {
             return false;
         }
-        this.activeComponent = component;
-        // attach entering view to DOM
-        const enteringEl = await attachComponent(this.delegate, this.el, component, ['ion-page', 'ion-page-invisible'], params);
         const leavingEl = this.activeEl;
-        // commit animation
-        await this.commit(enteringEl, leavingEl, opts);
-        // remove leaving view
+        const enteringEl = await attachComponent(this.delegate, this.el, component, ['ion-page', 'ion-page-invisible'], params);
+        this.activeComponent = component;
         this.activeEl = enteringEl;
-        detachComponent(this.delegate, leavingEl);
+        await this.commit(enteringEl, leavingEl, opts);
+        await detachComponent(this.delegate, leavingEl);
         return true;
     }
-    /** @hidden */
     async commit(enteringEl, leavingEl, opts) {
-        // isTransitioning acts as a lock to prevent reentering
-        if (this.isTransitioning || leavingEl === enteringEl) {
-            return false;
+        const unlock = await this.lock();
+        let changed = false;
+        try {
+            changed = await this.transition(enteringEl, leavingEl, opts);
         }
-        this.isTransitioning = true;
-        // emit nav will change event
-        this.ionNavWillChange.emit();
-        opts = opts || {};
-        const { mode, queue, animated, animationCtrl, win, el } = this;
-        await transition(Object.assign({ mode,
-            queue,
-            animated,
-            animationCtrl, window: win, enteringEl,
-            leavingEl, baseEl: el }, opts));
-        this.isTransitioning = false;
-        // emit nav changed event
-        this.ionNavDidChange.emit();
-        return true;
+        catch (e) {
+            console.error(e);
+        }
+        unlock();
+        return changed;
     }
-    /** @hidden */
     async setRouteId(id, params, direction) {
         const changed = await this.setRoot(id, params, {
             duration: direction === 0 ? 0 : undefined,
@@ -63,13 +44,39 @@ export class RouterOutlet {
             element: this.activeEl
         };
     }
-    /** Returns the ID for the current route */
-    getRouteId() {
+    async getRouteId() {
         const active = this.activeEl;
         return active ? {
             id: active.tagName,
             element: active,
         } : undefined;
+    }
+    async lock() {
+        const p = this.waitPromise;
+        let resolve;
+        this.waitPromise = new Promise(r => resolve = r);
+        if (p !== undefined) {
+            await p;
+        }
+        return resolve;
+    }
+    async transition(enteringEl, leavingEl, opts) {
+        if (leavingEl === enteringEl) {
+            return false;
+        }
+        this.ionNavWillChange.emit();
+        opts = opts || {};
+        const { mode, queue, animationCtrl, win, el } = this;
+        const animated = this.animated && this.config.getBoolean('animated', true);
+        const animationBuilder = this.animation || opts.animationBuilder || this.config.get('navAnimation');
+        await transition(Object.assign({ mode,
+            queue,
+            animated,
+            animationCtrl,
+            animationBuilder, window: win, enteringEl,
+            leavingEl, baseEl: el }, opts));
+        this.ionNavDidChange.emit();
+        return true;
     }
     render() {
         return [
@@ -82,12 +89,11 @@ export class RouterOutlet {
     static get properties() { return {
         "animated": {
             "type": Boolean,
-            "attr": "animated",
-            "mutable": true
+            "attr": "animated"
         },
-        "animationBuilder": {
+        "animation": {
             "type": "Any",
-            "attr": "animation-builder"
+            "attr": "animation"
         },
         "animationCtrl": {
             "connect": "ion-animation-controller"

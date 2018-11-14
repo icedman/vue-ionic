@@ -1,6 +1,3 @@
-/**
- * MD Toast Enter Animation
- */
 export function mdEnterAnimation(AnimationC, baseEl, position) {
     const baseAnimation = new AnimationC();
     const wrapperAnimation = new AnimationC();

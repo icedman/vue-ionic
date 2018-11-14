@@ -1,8 +1,9 @@
 import '../../stencil.core';
-export declare class FabList {
+import { ComponentInterface } from '../../stencil.core';
+export declare class FabList implements ComponentInterface {
     el: HTMLIonFabElement;
     /**
-     * If true, the fab list will be show all fab buttons in the list. Defaults to `false`.
+     * If `true`, the fab list will be show all fab buttons in the list. Defaults to `false`.
      */
     activated: boolean;
     protected activatedChanged(activated: boolean): void;
@@ -12,7 +13,7 @@ export declare class FabList {
     side: 'start' | 'end' | 'top' | 'bottom';
     hostData(): {
         class: {
-            [x: string]: boolean | "start" | "end" | "top" | "bottom";
+            [x: string]: boolean;
             'fab-list-active': boolean;
         };
     };

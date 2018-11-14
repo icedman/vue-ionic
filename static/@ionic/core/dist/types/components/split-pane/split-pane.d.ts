@@ -1,6 +1,6 @@
-import { EventEmitter } from '../../stencil.core';
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
 import { Mode } from '../../interface';
-export declare class SplitPane {
+export declare class SplitPane implements ComponentInterface {
     private rmL;
     mode: Mode;
     el: HTMLElement;
@@ -8,7 +8,7 @@ export declare class SplitPane {
     isServer: boolean;
     win: Window;
     /**
-     * If true, the split pane will be hidden. Defaults to `false`.
+     * If `true`, the split pane will be hidden. Defaults to `false`.
      */
     disabled: boolean;
     /**
@@ -26,16 +26,13 @@ export declare class SplitPane {
     /**
      * Expression to be called when the split-pane visibility has changed
      */
-    protected ionSplitPaneVisible: EventEmitter;
+    ionSplitPaneVisible: EventEmitter;
     visibleChanged(visible: boolean): void;
     componentDidLoad(): void;
     componentDidUnload(): void;
-    protected whenChanged(): void;
-    /** Returns if the split pane is toggled or not */
-    isVisible(): boolean;
-    /** @hidden */
-    isPane(element: HTMLElement): boolean;
-    private _styleChildren;
+    protected updateState(): void;
+    private isPane;
+    private styleChildren;
     hostData(): {
         class: {
             'split-pane-visible': boolean;

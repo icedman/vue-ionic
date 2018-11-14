@@ -16,17 +16,16 @@ export function startInputShims(doc, config) {
     const scrollAssistMap = new WeakMap();
     function registerInput(componentEl) {
         const inputEl = (componentEl.shadowRoot || componentEl).querySelector('input');
-        const contentEl = componentEl.closest('ion-content');
-        const scrollEl = contentEl && contentEl.getScrollElement();
+        const scrollEl = componentEl.closest('ion-content');
         if (!inputEl) {
             return;
         }
-        if (HIDE_CARET && scrollEl && hideCaret && !hideCaretMap.has(componentEl)) {
+        if (HIDE_CARET && !!scrollEl && hideCaret && !hideCaretMap.has(componentEl)) {
             const rmFn = enableHideCaretOnScroll(componentEl, inputEl, scrollEl);
             hideCaretMap.set(componentEl, rmFn);
         }
-        if (SCROLL_ASSIST && contentEl && scrollAssist && !scrollAssistMap.has(componentEl)) {
-            const rmFn = enableScrollAssist(componentEl, inputEl, contentEl, keyboardHeight);
+        if (SCROLL_ASSIST && !!scrollEl && scrollAssist && !scrollAssistMap.has(componentEl)) {
+            const rmFn = enableScrollAssist(componentEl, inputEl, scrollEl, keyboardHeight);
             scrollAssistMap.set(componentEl, rmFn);
         }
     }
@@ -52,9 +51,6 @@ export function startInputShims(doc, config) {
     if (scrollPadding && SCROLL_PADDING) {
         enableScrollPadding(doc, keyboardHeight);
     }
-    // Input might be already loaded in the DOM before ion-device-hacks did.
-    // At this point we need to look for all the ion-inputs not registered yet
-    // and register them.
     const inputs = Array.from(doc.querySelectorAll('ion-input'));
     for (const input of inputs) {
         registerInput(input);

@@ -1,4 +1,6 @@
-// Ionic: Custom Elements Define Library, ES Module/ES5 Target
+
+// Ionic: Custom Elements Define Library, ES Module/es5 Target
+
 import { defineCustomElement } from './ionic.core.js';
 import {
   ActionSheet,
@@ -32,7 +34,6 @@ import {
   Footer,
   Grid,
   Header,
-  HideWhen,
   Icon,
   Img,
   InfiniteScroll,
@@ -68,7 +69,6 @@ import {
   Radio,
   RadioGroup,
   Range,
-  RangeKnob,
   Refresher,
   RefresherContent,
   Reorder,
@@ -79,22 +79,20 @@ import {
   Router,
   RouterOutlet,
   Row,
-  Scroll,
   Searchbar,
   Segment,
   SegmentButton,
   Select,
   SelectOption,
   SelectPopover,
-  ShowWhen,
   SkeletonText,
   Slide,
   Slides,
   Spinner,
   SplitPane,
   Tab,
+  TabBar,
   TabButton,
-  Tabbar,
   Tabs,
   Text,
   Textarea,
@@ -107,8 +105,8 @@ import {
   VirtualScroll
 } from './ionic.components.js';
 
-export function defineCustomElements(window, opts) {
-  defineCustomElement(window, [
+export function defineCustomElements(win, opts) {
+  return defineCustomElement(win, [
     ActionSheet,
     ActionSheetController,
     Alert,
@@ -140,7 +138,6 @@ export function defineCustomElements(window, opts) {
     Footer,
     Grid,
     Header,
-    HideWhen,
     Icon,
     Img,
     InfiniteScroll,
@@ -176,7 +173,6 @@ export function defineCustomElements(window, opts) {
     Radio,
     RadioGroup,
     Range,
-    RangeKnob,
     Refresher,
     RefresherContent,
     Reorder,
@@ -187,22 +183,20 @@ export function defineCustomElements(window, opts) {
     Router,
     RouterOutlet,
     Row,
-    Scroll,
     Searchbar,
     Segment,
     SegmentButton,
     Select,
     SelectOption,
     SelectPopover,
-    ShowWhen,
     SkeletonText,
     Slide,
     Slides,
     Spinner,
     SplitPane,
     Tab,
+    TabBar,
     TabButton,
-    Tabbar,
     Tabs,
     Text,
     Textarea,

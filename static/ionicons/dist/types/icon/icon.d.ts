@@ -50,21 +50,18 @@ export declare class Icon {
     size?: string;
     /**
      * If enabled, ion-icon will be loaded lazily when it's visible in the viewport.
-     * Default, `true`.
+     * Default, `false`.
      */
     lazy: boolean;
     componentWillLoad(): void;
     componentDidUnload(): void;
-    waitUntilVisible(el: HTMLElement, rootMargin: string, cb: Function): void;
+    private waitUntilVisible;
     loadIcon(): void;
     getUrl(): string | null;
-    getNamedUrl(name: string): string;
+    private getNamedUrl;
     hostData(): {
         'role': string;
         class: {};
     };
     render(): JSX.Element;
 }
-export declare function getName(name: string | undefined, mode: string | undefined, ios: string | undefined, md: string | undefined): string | null;
-export declare function getSrc(src: string | undefined): string | null;
-export declare function isValid(elm: HTMLElement): boolean;

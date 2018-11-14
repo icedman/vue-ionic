@@ -1,43 +1,30 @@
-import { isMatch } from '../../utils/media';
-const SUPPORTS_VARS = !!(CSS && CSS.supports && CSS.supports('--a', '0'));
+import { matchBreakpoint } from '../../utils/media';
+const win = window;
+const SUPPORTS_VARS = !!(win.CSS && win.CSS.supports && win.CSS.supports('--a: 0'));
 const BREAKPOINTS = ['', 'xs', 'sm', 'md', 'lg', 'xl'];
 export class Col {
     onResize() {
         this.el.forceUpdate();
     }
-    // Loop through all of the breakpoints to see if the media query
-    // matches and grab the column value from the relevant prop if so
     getColumns(property) {
         let matched;
         for (const breakpoint of BREAKPOINTS) {
-            const matches = isMatch(breakpoint);
-            // Grab the value of the property, if it exists and our
-            // media query matches we return the value
+            const matches = matchBreakpoint(this.win, breakpoint);
             const columns = this[property + breakpoint.charAt(0).toUpperCase() + breakpoint.slice(1)];
             if (matches && columns !== undefined) {
                 matched = columns;
             }
         }
-        // Return the last matched columns since the breakpoints
-        // increase in size and we want to return the largest match
         return matched;
     }
     calculateSize() {
         const columns = this.getColumns('size');
-        // If size wasn't set for any breakpoint
-        // or if the user set the size without a value
-        // it means we need to stick with the default and return
-        // e.g. <ion-col size-md>
         if (!columns || columns === '') {
             return;
         }
-        // If the size is set to auto then don't calculate a size
         const colSize = (columns === 'auto')
             ? 'auto'
-            // If CSS supports variables we should use the grid columns var
             : SUPPORTS_VARS ? `calc(calc(${columns} / var(--ion-grid-columns, 12)) * 100%)`
-                // Convert the columns to a percentage by dividing by the total number
-                // of columns (12) and then multiplying by 100
                 : ((columns / 12) * 100) + '%';
         return {
             'flex': `0 0 ${colSize}`,
@@ -45,19 +32,13 @@ export class Col {
             'max-width': `${colSize}`
         };
     }
-    // Called by push, pull, and offset since they use the same calculations
     calculatePosition(property, modifier) {
         const columns = this.getColumns(property);
         if (!columns) {
             return;
         }
-        // If the number of columns passed are greater than 0 and less than
-        // 12 we can position the column, else default to auto
         const amount = SUPPORTS_VARS
-            // If CSS supports variables we should use the grid columns var
             ? `calc(calc(${columns} / var(--ion-grid-columns, 12)) * 100%)`
-            // Convert the columns to a percentage by dividing by the total number
-            // of columns (12) and then multiplying by 100
             : (columns > 0 && columns < 12) ? (columns / 12 * 100) + '%' : 'auto';
         return {
             [modifier]: amount
@@ -181,6 +162,9 @@ export class Col {
         "sizeXs": {
             "type": String,
             "attr": "size-xs"
+        },
+        "win": {
+            "context": "window"
         }
     }; }
     static get listeners() { return [{

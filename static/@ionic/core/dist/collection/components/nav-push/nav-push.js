@@ -2,10 +2,9 @@ export class NavPush {
     push() {
         const nav = this.el.closest('ion-nav');
         const toPush = this.component;
-        if (nav && toPush && !nav.isAnimating()) {
-            return nav.push(toPush, this.componentProps);
+        if (nav && toPush !== undefined) {
+            nav.push(toPush, this.componentProps, { skipIfBusy: true });
         }
-        return Promise.resolve(null);
     }
     static get is() { return "ion-nav-push"; }
     static get properties() { return {

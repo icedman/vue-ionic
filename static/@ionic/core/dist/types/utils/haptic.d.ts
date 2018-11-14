@@ -1,6 +1,6 @@
 /**
  * Check to see if the Haptic Plugin is available
- * @return Returns true or false if the plugin is available
+ * @return Returns `true` or false if the plugin is available
  */
 export declare function hapticAvailable(): boolean;
 /**
@@ -26,12 +26,12 @@ export declare function hapticSelectionEnd(): void;
  * options should be of the type `{ type: 'success' }` (or `warning`/`error`)
  */
 export declare function hapticNotification(options: {
-    type: string;
+    type: 'success' | 'warning' | 'error';
 }): void;
 /**
  * Use this to indicate success/failure/warning to the user.
  * options should be of the type `{ style: 'light' }` (or `medium`/`heavy`)
  */
 export declare function hapticImpact(options: {
-    style: string;
+    style: 'light' | 'medium' | 'heavy';
 }): void;

@@ -1,7 +1,7 @@
 import '../../stencil.core';
-import { EventEmitter, QueueApi } from '../../stencil.core';
-import { CheckboxInput, CheckedInputChangeEvent, Color, Mode, StyleEvent } from '../../interface';
-export declare class Toggle implements CheckboxInput {
+import { ComponentInterface, EventEmitter, QueueApi } from '../../stencil.core';
+import { CheckedInputChangeEvent, Color, Mode, StyleEvent } from '../../interface';
+export declare class Toggle implements ComponentInterface {
     private inputId;
     private nativeInput;
     private pivotX;
@@ -11,29 +11,37 @@ export declare class Toggle implements CheckboxInput {
     activated: boolean;
     keyFocus: boolean;
     /**
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
+     */
+    mode: Mode;
+    /**
      * The color to use from your application's color palette.
      * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
      * For more information on colors, see [theming](/docs/theming/basics).
      */
     color?: Color;
     /**
-     * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
-     */
-    mode: Mode;
-    /**
      * The name of the control, which is submitted with the form data.
      */
     name: string;
     /**
-     * If true, the toggle is selected. Defaults to `false`.
+     * If `true`, the toggle is selected. Defaults to `false`.
      */
     checked: boolean;
+    /**
+     * If `true`, the user cannot interact with the toggle. Defaults to `false`.
+     */
     disabled: boolean;
     /**
-     * the value of the toggle.
+     * The value of the toggle does not mean if it's checked or not, use the `checked`
+     * property for that.
+     *
+     * The value of a toggle is analogous to the value of a `<input type="checkbox">`,
+     * it's only used when the toggle participates in a native `<form>`.
+     * Defaults to `on`.
      */
-    value: string;
+    value?: string | null;
     /**
      * Emitted when the value property has changed.
      */
@@ -54,13 +62,15 @@ export declare class Toggle implements CheckboxInput {
     disabledChanged(): void;
     componentWillLoad(): void;
     componentDidLoad(): Promise<void>;
-    private onDragStart;
-    private onDragMove;
-    private onDragEnd;
+    private emitStyle;
+    private onStart;
+    private onMove;
+    private onEnd;
     private onChange;
     private onKeyUp;
     private onFocus;
     private onBlur;
+    private getValue;
     hostData(): {
         class: {
             'in-item': boolean;

@@ -1,19 +1,26 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
 import { Animation, AnimationBuilder, Color, Config, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
-export declare class Toast implements OverlayInterface {
+export declare class Toast implements ComponentInterface, OverlayInterface {
     private durationTimeout;
     presented: boolean;
     el: HTMLElement;
-    mode: Mode;
-    color?: Color;
     animation: Animation | undefined;
     animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
-    /** @hidden */
-    overlayId: number;
-    /** @hidden */
-    keyboardClose: boolean;
+    /** @internal */
+    overlayIndex: number;
+    /**
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
+     */
+    mode: Mode;
+    /**
+     * The color to use from your application's color palette.
+     * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
+     * For more information on colors, see [theming](/docs/theming/basics).
+     */
+    color?: Color;
     /**
      * Animation to use when the toast is presented.
      */
@@ -35,27 +42,31 @@ export declare class Toast implements OverlayInterface {
      * How many milliseconds to wait before hiding the toast. By default, it will show
      * until `dismiss()` is called.
      */
-    duration?: number;
+    duration: number;
     /**
      * Message to be shown in the toast.
      */
     message?: string;
     /**
+     * If `true`, the keyboard will be automatically dismissed when the overlay is presented.
+     */
+    keyboardClose: boolean;
+    /**
      * The position of the toast on the screen. Possible values: "top", "middle", "bottom".
      */
-    position?: string;
+    position: 'top' | 'bottom' | 'middle';
     /**
-     * If true, the close button will be displayed. Defaults to `false`.
+     * If `true`, the close button will be displayed. Defaults to `false`.
      */
     showCloseButton: boolean;
     /**
-     * If true, the toast will be translucent. Defaults to `false`.
+     * If `true`, the toast will be translucent. Defaults to `false`.
      */
     translucent: boolean;
     /**
-     * If true, the toast will animate. Defaults to `true`.
+     * If `true`, the toast will animate. Defaults to `true`.
      */
-    willAnimate: boolean;
+    animated: boolean;
     /**
      * Emitted after the toast has loaded.
      */
@@ -82,7 +93,6 @@ export declare class Toast implements OverlayInterface {
     ionToastDidUnload: EventEmitter<void>;
     componentDidLoad(): void;
     componentDidUnload(): void;
-    protected onDismiss(ev: UIEvent): void;
     /**
      * Present the toast overlay after it has been created.
      */
@@ -90,22 +100,23 @@ export declare class Toast implements OverlayInterface {
     /**
      * Dismiss the toast overlay after it has been presented.
      */
-    dismiss(data?: any, role?: string): Promise<void>;
+    dismiss(data?: any, role?: string): Promise<boolean>;
     /**
-     * Returns a promise that resolves when the toast did dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
+     * Returns a promise that resolves when the toast did dismiss.
      */
-    onDidDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onDidDismiss(): Promise<OverlayEventDetail>;
     /**
-     * Returns a promise that resolves when the toast will dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
+     * Returns a promise that resolves when the toast will dismiss.
      */
-    onWillDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onWillDismiss(): Promise<OverlayEventDetail>;
     hostData(): {
+        style: {
+            zIndex: number;
+        };
         class: {
-            [x: string]: boolean;
+            'toast-translucent': boolean;
+        } | {
+            'toast-translucent': boolean;
         };
     };
     render(): JSX.Element;

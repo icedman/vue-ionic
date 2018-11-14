@@ -5,19 +5,12 @@ export class GestureController {
         this.requestedStart = new Map();
         this.disabledGestures = new Map();
         this.disabledScroll = new Set();
-        this.capturedId = null;
     }
-    /**
-     * Creates a gesture delegate based on the GestureConfig passed
-     */
     createGesture(config) {
-        return new GestureDelegate(this, this.newID(), config.name, config.priority ? config.priority : 0, !!config.disableScroll);
+        return new GestureDelegate(this, this.newID(), config.name, config.priority || 0, !!config.disableScroll);
     }
-    /**
-     * Creates a blocker that will block any other gesture events from firing. Set in the ion-gesture component.
-     */
     createBlocker(opts = {}) {
-        return new BlockerDelegate(this.newID(), this, opts.disable, !!opts.disableScroll);
+        return new BlockerDelegate(this, this.newID(), opts.disable, !!opts.disableScroll);
     }
     start(gestureName, id, priority) {
         if (!this.canStart(gestureName)) {
@@ -48,13 +41,13 @@ export class GestureController {
     }
     release(id) {
         this.requestedStart.delete(id);
-        if (this.capturedId && id === this.capturedId) {
-            this.capturedId = null;
+        if (this.capturedId === id) {
+            this.capturedId = undefined;
         }
     }
     disableGesture(gestureName, id) {
         let set = this.disabledGestures.get(gestureName);
-        if (!set) {
+        if (set === undefined) {
             set = new Set();
             this.disabledGestures.set(gestureName, set);
         }
@@ -62,19 +55,24 @@ export class GestureController {
     }
     enableGesture(gestureName, id) {
         const set = this.disabledGestures.get(gestureName);
-        if (set) {
+        if (set !== undefined) {
             set.delete(id);
         }
     }
     disableScroll(id) {
         this.disabledScroll.add(id);
+        if (this.disabledScroll.size === 1) {
+            this.doc.body.classList.add(BACKDROP_NO_SCROLL);
+        }
     }
     enableScroll(id) {
         this.disabledScroll.delete(id);
+        if (this.disabledScroll.size === 0) {
+            this.doc.body.classList.remove(BACKDROP_NO_SCROLL);
+        }
     }
     canStart(gestureName) {
-        if (this.capturedId) {
-            // a gesture already captured
+        if (this.capturedId !== undefined) {
             return false;
         }
         if (this.isDisabled(gestureName)) {
@@ -83,7 +81,7 @@ export class GestureController {
         return true;
     }
     isCaptured() {
-        return !!this.capturedId;
+        return this.capturedId !== undefined;
     }
     isScrollDisabled() {
         return this.disabledScroll.size > 0;
@@ -144,7 +142,7 @@ export class GestureDelegate {
     }
 }
 export class BlockerDelegate {
-    constructor(id, ctrl, disable, disableScroll) {
+    constructor(ctrl, id, disable, disableScroll) {
         this.id = id;
         this.disable = disable;
         this.disableScroll = disableScroll;
@@ -181,4 +179,5 @@ export class BlockerDelegate {
         this.ctrl = undefined;
     }
 }
-export const gestureController = new GestureController(document);
+const BACKDROP_NO_SCROLL = 'backdrop-no-scroll';
+export const GESTURE_CONTROLLER = new GestureController(document);

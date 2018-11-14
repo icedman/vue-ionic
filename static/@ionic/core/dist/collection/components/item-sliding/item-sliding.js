@@ -1,135 +1,117 @@
 const SWIPE_MARGIN = 30;
 const ELASTIC_FACTOR = 0.55;
+let openSlidingItem;
 export class ItemSliding {
     constructor() {
         this.item = null;
-        this.list = null;
         this.openAmount = 0;
         this.initialOpenAmount = 0;
         this.optsWidthRightSide = 0;
         this.optsWidthLeftSide = 0;
-        this.sides = 0 /* None */;
+        this.sides = 0;
         this.optsDirty = true;
-        this.state = 2 /* Disabled */;
+        this.state = 2;
+        this.disabled = false;
+    }
+    disabledChanged() {
+        if (this.gesture) {
+            this.gesture.setDisabled(this.disabled);
+        }
     }
     async componentDidLoad() {
         this.item = this.el.querySelector('ion-item');
-        this.list = this.el.closest('ion-list');
-        this.updateOptions();
-        this.gesture = (await import('../../utils/gesture/gesture')).create({
+        await this.updateOptions();
+        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
             el: this.el,
             queue: this.queue,
             gestureName: 'item-swipe',
-            gesturePriority: -10,
+            gesturePriority: 100,
             threshold: 5,
-            canStart: this.canStart.bind(this),
-            onStart: this.onDragStart.bind(this),
-            onMove: this.onDragMove.bind(this),
-            onEnd: this.onDragEnd.bind(this),
+            canStart: () => this.canStart(),
+            onStart: () => this.onStart(),
+            onMove: ev => this.onMove(ev),
+            onEnd: ev => this.onEnd(ev),
         });
-        this.gesture.disabled = false;
+        this.disabledChanged();
     }
     componentDidUnload() {
         if (this.gesture) {
             this.gesture.destroy();
         }
-        this.item = this.list = null;
+        this.item = null;
         this.leftOptions = this.rightOptions = undefined;
     }
-    /**
-     * Get the amount the item is open in pixels.
-     */
     getOpenAmount() {
-        return this.openAmount;
+        return Promise.resolve(this.openAmount);
     }
-    /**
-     * Get the ratio of the open amount of the item compared to the width of the options.
-     * If the number returned is positive, then the options on the right side are open.
-     * If the number returned is negative, then the options on the left side are open.
-     * If the absolute value of the number is greater than 1, the item is open more than
-     * the width of the options.
-     */
     getSlidingRatio() {
-        if (this.openAmount > 0) {
-            return this.openAmount / this.optsWidthRightSide;
-        }
-        else if (this.openAmount < 0) {
-            return this.openAmount / this.optsWidthLeftSide;
-        }
-        else {
-            return 0;
-        }
+        return Promise.resolve(this.getSlidingRatioSync());
     }
-    /**
-     * Close the sliding item. Items can also be closed from the [List](../../list/List).
-     */
-    close() {
+    async close() {
         this.setOpenAmount(0, true);
     }
-    /**
-     * Close all of the sliding items in the list. Items can also be closed from the [List](../../list/List).
-     */
-    closeOpened() {
-        return !!(this.list && this.list.closeSlidingItems());
+    async closeOpened() {
+        if (openSlidingItem !== undefined) {
+            openSlidingItem.close();
+            return true;
+        }
+        return false;
     }
-    updateOptions() {
+    async updateOptions() {
         const options = this.el.querySelectorAll('ion-item-options');
         let sides = 0;
-        // Reset left and right options in case they were removed
         this.leftOptions = this.rightOptions = undefined;
         for (let i = 0; i < options.length; i++) {
-            const option = options.item(i);
-            if (option.isEndSide()) {
-                this.rightOptions = option;
-                sides |= 2 /* End */;
+            const option = await options.item(i).componentOnReady();
+            if (option.side === 'start') {
+                this.leftOptions = option;
+                sides |= 1;
             }
             else {
-                this.leftOptions = option;
-                sides |= 1 /* Start */;
+                this.rightOptions = option;
+                sides |= 2;
             }
         }
         this.optsDirty = true;
         this.sides = sides;
     }
     canStart() {
-        const selected = this.list && this.list.getOpenItem();
+        const selected = openSlidingItem;
         if (selected && selected !== this.el) {
             this.closeOpened();
             return false;
         }
-        return true;
+        return !!(this.rightOptions || this.leftOptions);
     }
-    onDragStart() {
-        if (this.list) {
-            this.list.setOpenItem(this.el);
-        }
-        if (this.tmr) {
+    onStart() {
+        openSlidingItem = this.el;
+        if (this.tmr !== undefined) {
             clearTimeout(this.tmr);
             this.tmr = undefined;
         }
         if (this.openAmount === 0) {
             this.optsDirty = true;
-            this.state = 4 /* Enabled */;
+            this.state = 4;
         }
         this.initialOpenAmount = this.openAmount;
         if (this.item) {
             this.item.style.transition = 'none';
         }
     }
-    onDragMove(gesture) {
+    onMove(gesture) {
         if (this.optsDirty) {
             this.calculateOptsWidth();
         }
         let openAmount = this.initialOpenAmount - gesture.deltaX;
         switch (this.sides) {
-            case 2 /* End */:
+            case 2:
                 openAmount = Math.max(0, openAmount);
                 break;
-            case 1 /* Start */:
+            case 1:
                 openAmount = Math.min(0, openAmount);
                 break;
-            case 3 /* Both */: break;
-            case 0 /* None */: return;
+            case 3: break;
+            case 0: return;
             default:
                 console.warn('invalid ItemSideFlags value', this.sides);
                 break;
@@ -145,40 +127,39 @@ export class ItemSliding {
         }
         this.setOpenAmount(openAmount, false);
     }
-    onDragEnd(gesture) {
+    onEnd(gesture) {
         const velocity = gesture.velocityX;
         let restingPoint = (this.openAmount > 0)
             ? this.optsWidthRightSide
             : -this.optsWidthLeftSide;
-        // Check if the drag didn't clear the buttons mid-point
-        // and we aren't moving fast enough to swipe open
         const isResetDirection = (this.openAmount > 0) === !(velocity < 0);
         const isMovingFast = Math.abs(velocity) > 0.3;
         const isOnCloseZone = Math.abs(this.openAmount) < Math.abs(restingPoint / 2);
         if (swipeShouldReset(isResetDirection, isMovingFast, isOnCloseZone)) {
             restingPoint = 0;
         }
+        const state = this.state;
         this.setOpenAmount(restingPoint, true);
-        if (this.state & 32 /* SwipeEnd */ && this.rightOptions) {
+        if ((state & 32) !== 0 && this.rightOptions) {
             this.rightOptions.fireSwipeEvent();
         }
-        else if (this.state & 64 /* SwipeStart */ && this.leftOptions) {
+        else if ((state & 64) !== 0 && this.leftOptions) {
             this.leftOptions.fireSwipeEvent();
         }
     }
     calculateOptsWidth() {
         this.optsWidthRightSide = 0;
         if (this.rightOptions) {
-            this.optsWidthRightSide = this.rightOptions.width();
+            this.optsWidthRightSide = this.rightOptions.offsetWidth;
         }
         this.optsWidthLeftSide = 0;
         if (this.leftOptions) {
-            this.optsWidthLeftSide = this.leftOptions.width();
+            this.optsWidthLeftSide = this.leftOptions.offsetWidth;
         }
         this.optsDirty = false;
     }
     setOpenAmount(openAmount, isFinal) {
-        if (this.tmr) {
+        if (this.tmr !== undefined) {
             clearTimeout(this.tmr);
             this.tmr = undefined;
         }
@@ -192,39 +173,48 @@ export class ItemSliding {
         }
         if (openAmount > 0) {
             this.state = (openAmount >= (this.optsWidthRightSide + SWIPE_MARGIN))
-                ? 8 /* End */ | 32 /* SwipeEnd */
-                : 8 /* End */;
+                ? 8 | 32
+                : 8;
         }
         else if (openAmount < 0) {
             this.state = (openAmount <= (-this.optsWidthLeftSide - SWIPE_MARGIN))
-                ? 16 /* Start */ | 64 /* SwipeStart */
-                : 16 /* Start */;
+                ? 16 | 64
+                : 16;
         }
         else {
             this.tmr = window.setTimeout(() => {
-                this.state = 2 /* Disabled */;
+                this.state = 2;
                 this.tmr = undefined;
             }, 600);
-            if (this.list) {
-                this.list.setOpenItem(undefined);
-            }
+            openSlidingItem = undefined;
             style.transform = '';
             return;
         }
         style.transform = `translate3d(${-openAmount}px,0,0)`;
         this.ionDrag.emit({
-            amount: openAmount
+            amount: openAmount,
+            ratio: this.getSlidingRatioSync()
         });
+    }
+    getSlidingRatioSync() {
+        if (this.openAmount > 0) {
+            return this.openAmount / this.optsWidthRightSide;
+        }
+        else if (this.openAmount < 0) {
+            return this.openAmount / this.optsWidthLeftSide;
+        }
+        else {
+            return 0;
+        }
     }
     hostData() {
         return {
             class: {
-                'item-sliding': true,
-                'item-sliding-active-slide': (this.state !== 2 /* Disabled */),
-                'item-sliding-active-options-end': !!(this.state & 8 /* End */),
-                'item-sliding-active-options-start': !!(this.state & 16 /* Start */),
-                'item-sliding-active-swipe-end': !!(this.state & 32 /* SwipeEnd */),
-                'item-sliding-active-swipe-start': !!(this.state & 64 /* SwipeStart */)
+                'item-sliding-active-slide': (this.state !== 2),
+                'item-sliding-active-options-end': (this.state & 8) !== 0,
+                'item-sliding-active-options-start': (this.state & 16) !== 0,
+                'item-sliding-active-swipe-end': (this.state & 32) !== 0,
+                'item-sliding-active-swipe-start': (this.state & 64) !== 0
             }
         };
     }
@@ -235,6 +225,11 @@ export class ItemSliding {
         },
         "closeOpened": {
             "method": true
+        },
+        "disabled": {
+            "type": Boolean,
+            "attr": "disabled",
+            "watchCallbacks": ["disabledChanged"]
         },
         "el": {
             "elementRef": true
@@ -261,21 +256,6 @@ export class ItemSliding {
         }]; }
     static get style() { return "/**style-placeholder:ion-item-sliding:**/"; }
 }
-/** @hidden */
-export function swipeShouldReset(isResetDirection, isMovingFast, isOnResetZone) {
-    // The logic required to know when the sliding item should close (openAmount=0)
-    // depends on three booleans (isCloseDirection, isMovingFast, isOnCloseZone)
-    // and it ended up being too complicated to be written manually without errors
-    // so the truth table is attached below: (0=false, 1=true)
-    // isCloseDirection | isMovingFast | isOnCloseZone || shouldClose
-    //         0        |       0      |       0       ||    0
-    //         0        |       0      |       1       ||    1
-    //         0        |       1      |       0       ||    0
-    //         0        |       1      |       1       ||    0
-    //         1        |       0      |       0       ||    0
-    //         1        |       0      |       1       ||    1
-    //         1        |       1      |       0       ||    1
-    //         1        |       1      |       1       ||    1
-    // The resulting expression was generated by resolving the K-map (Karnaugh map):
+function swipeShouldReset(isResetDirection, isMovingFast, isOnResetZone) {
     return (!isMovingFast && isOnResetZone) || (isResetDirection && isMovingFast);
 }

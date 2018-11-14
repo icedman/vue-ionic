@@ -1,149 +1,114 @@
+import { rIC } from '../../utils/helpers.js';
 import { createThemedClasses } from '../../utils/theme.js';
-import { Swiper } from './vendor/swiper.js';
 export class Slides {
     constructor() {
-        /**
-         * If true, show the pagination. Defaults to `false`.
-         */
+        this.didInit = false;
+        this.swiper = new Promise(resolve => { this.readySwiper = resolve; });
+        this.options = {};
         this.pager = false;
-        /**
-         * If true, show the scrollbar. Defaults to `false`.
-         */
         this.scrollbar = false;
     }
-    updateSwiperOptions() {
-        const newOptions = this.normalizeOptions();
-        this.swiper.params = Object.assign({}, this.swiper.params, newOptions);
-        this.update();
+    async optionsChanged() {
+        if (this.didInit) {
+            const swiper = await this.getSwiper();
+            Object.assign(swiper.params, this.options);
+            await this.update();
+        }
     }
     componentDidLoad() {
-        setTimeout(this.initSlides.bind(this), 10);
+        rIC(() => this.initSwiper());
     }
-    componentDidUnload() {
-        this.swiper.destroy(true, true);
+    async componentDidUnload() {
+        const swiper = await this.getSwiper();
+        swiper.destroy(true, true);
     }
-    initSlides() {
-        this.container = (this.el.shadowRoot || this.el).querySelector('.swiper-container');
+    onSlideChanged() {
+        if (this.didInit) {
+            this.update();
+        }
+    }
+    async update() {
+        const swiper = await this.getSwiper();
+        swiper.update();
+    }
+    async slideTo(index, speed, runCallbacks) {
+        const swiper = await this.getSwiper();
+        swiper.slideTo(index, speed, runCallbacks);
+    }
+    async slideNext(speed, runCallbacks) {
+        const swiper = await this.getSwiper();
+        swiper.slideNext(speed, runCallbacks);
+    }
+    async slidePrev(speed, runCallbacks) {
+        const swiper = await this.getSwiper();
+        swiper.slidePrev(speed, runCallbacks);
+    }
+    async getActiveIndex() {
+        const swiper = await this.getSwiper();
+        return swiper.activeIndex;
+    }
+    async getPreviousIndex() {
+        const swiper = await this.getSwiper();
+        return swiper.previousIndex;
+    }
+    async length() {
+        const swiper = await this.getSwiper();
+        return swiper.slides.length;
+    }
+    async isEnd() {
+        const swiper = await this.getSwiper();
+        return swiper.isEnd;
+    }
+    async isBeginning() {
+        const swiper = await this.getSwiper();
+        return swiper.isBeginning;
+    }
+    async startAutoplay() {
+        const swiper = await this.getSwiper();
+        if (swiper.autoplay) {
+            swiper.autoplay.start();
+        }
+    }
+    async stopAutoplay() {
+        const swiper = await this.getSwiper();
+        if (swiper.autoplay) {
+            swiper.autoplay.stop();
+        }
+    }
+    async lockSwipeToNext(shouldLockSwipeToNext) {
+        const swiper = await this.getSwiper();
+        swiper.allowSlideNext = !shouldLockSwipeToNext;
+    }
+    async lockSwipeToPrev(shouldLockSwipeToPrev) {
+        const swiper = await this.getSwiper();
+        swiper.allowSlidePrev = !shouldLockSwipeToPrev;
+    }
+    async lockSwipes(shouldLockSwipes) {
+        const swiper = await this.getSwiper();
+        swiper.allowSlideNext = !shouldLockSwipes;
+        swiper.allowSlidePrev = !shouldLockSwipes;
+        swiper.allowTouchMove = !shouldLockSwipes;
+    }
+    async initSwiper() {
         const finalOptions = this.normalizeOptions();
-        // init swiper core
-        this.swiper = new Swiper(this.container, finalOptions);
+        const { Swiper } = await import('./swiper/swiper.bundle.js');
+        const swiper = new Swiper(this.el, finalOptions);
+        this.didInit = true;
+        this.readySwiper(swiper);
     }
-    /**
-     * Update the underlying slider implementation. Call this if you've added or removed
-     * child slides.
-     */
-    update() {
-        this.swiper.update();
-    }
-    /**
-     * Transition to the specified slide.
-     */
-    slideTo(index, speed, runCallbacks) {
-        this.swiper.slideTo(index, speed, runCallbacks);
-    }
-    /**
-     * Transition to the next slide.
-     */
-    slideNext(speed, runCallbacks) {
-        this.swiper.slideNext(runCallbacks, speed);
-    }
-    /**
-     * Transition to the previous slide.
-     */
-    slidePrev(speed, runCallbacks) {
-        this.swiper.slidePrev(runCallbacks, speed);
-    }
-    /**
-     * Get the index of the active slide.
-     */
-    getActiveIndex() {
-        return this.swiper.activeIndex;
-    }
-    /**
-     * Get the index of the previous slide.
-     */
-    getPreviousIndex() {
-        return this.swiper.previousIndex;
-    }
-    /**
-     * Get the total number of slides.
-     */
-    length() {
-        return this.swiper.slides.length;
-    }
-    /**
-     * Get whether or not the current slide is the last slide.
-     *
-     */
-    isEnd() {
-        return this.swiper.isEnd;
-    }
-    /**
-     * Get whether or not the current slide is the first slide.
-     */
-    isBeginning() {
-        return this.swiper.isBeginning;
-    }
-    /**
-     * Start auto play.
-     */
-    startAutoplay() {
-        this.swiper.autoplay.start();
-    }
-    /**
-     * Stop auto play.
-     */
-    stopAutoplay() {
-        this.swiper.autoplay.stop();
-    }
-    /**
-     * Lock or unlock the ability to slide to the next slides.
-     */
-    lockSwipeToNext(shouldLockSwipeToNext) {
-        if (shouldLockSwipeToNext) {
-            return this.swiper.lockSwipeToNext();
-        }
-        this.swiper.unlockSwipeToNext();
-    }
-    /**
-     * Lock or unlock the ability to slide to the previous slides.
-     */
-    lockSwipeToPrev(shouldLockSwipeToPrev) {
-        if (shouldLockSwipeToPrev) {
-            return this.swiper.lockSwipeToPrev();
-        }
-        this.swiper.unlockSwipeToPrev();
-    }
-    /**
-     * Lock or unlock the ability to slide to change slides.
-     */
-    lockSwipes(shouldLockSwipes) {
-        if (shouldLockSwipes) {
-            return this.swiper.lockSwipes();
-        }
-        this.swiper.unlockSwipes();
+    getSwiper() {
+        return this.swiper;
     }
     normalizeOptions() {
-        // Base options, can be changed
         const swiperOptions = {
             effect: 'slide',
             direction: 'horizontal',
             initialSlide: 0,
             loop: false,
-            pager: false,
-            pagination: {
-                el: '.swiper-pagination',
-                type: 'bullets',
-            },
             parallax: false,
-            scrollbar: {
-                el: this.scrollbar ? '.swiper-scrollbar' : null,
-                hide: true,
-            },
             slidesPerView: 1,
             spaceBetween: 0,
             speed: 300,
-            zoom: false,
             slidesPerColumn: 1,
             slidesPerColumnFill: 'column',
             slidesPerGroup: 1,
@@ -151,8 +116,7 @@ export class Slides {
             slidesOffsetBefore: 0,
             slidesOffsetAfter: 0,
             touchEventsTarget: 'container',
-            autoplayDisableOnInteraction: true,
-            autoplayStopOnLast: false,
+            autoplay: false,
             freeMode: false,
             freeModeMomentum: true,
             freeModeMomentumRatio: 1,
@@ -163,9 +127,11 @@ export class Slides {
             freeModeMinimumVelocity: 0.02,
             autoHeight: false,
             setWrapperSize: false,
-            zoomMax: 3,
-            zoomMin: 1,
-            zoomToggle: true,
+            zoom: {
+                maxRatio: 3,
+                minRatio: 1,
+                toggle: true,
+            },
             touchRatio: 1,
             touchAngle: 45,
             simulateTouch: true,
@@ -174,14 +140,11 @@ export class Slides {
             longSwipesRatio: 0.5,
             longSwipesMs: 300,
             followFinger: true,
-            onlyExternal: false,
             threshold: 0,
             touchMoveStopPropagation: true,
             touchReleaseOnEdges: false,
             iOSEdgeSwipeDetection: false,
             iOSEdgeSwipeThreshold: 20,
-            paginationClickable: false,
-            paginationHide: false,
             resistance: true,
             resistanceRatio: 0.85,
             watchSlidesProgress: false,
@@ -192,35 +155,47 @@ export class Slides {
             loopAdditionalSlides: 0,
             noSwiping: true,
             runCallbacksOnInit: true,
-            controlBy: 'slide',
-            controlInverse: false,
-            coverflow: {
+            coverflowEffect: {
                 rotate: 50,
                 stretch: 0,
                 depth: 100,
                 modifier: 1,
                 slideShadows: true
             },
-            flip: {
+            flipEffect: {
                 slideShadows: true,
                 limitRotation: true
             },
-            cube: {
+            cubeEffect: {
                 slideShadows: true,
                 shadow: true,
                 shadowOffset: 20,
                 shadowScale: 0.94
             },
-            fade: {
-                crossFade: false
+            fadeEffect: {
+                crossfade: false
             },
-            prevSlideMessage: 'Previous slide',
-            nextSlideMessage: 'Next slide',
-            firstSlideMessage: 'This is the first slide',
-            lastSlideMessage: 'This is the last slide'
+            a11y: {
+                prevSlideMessage: 'Previous slide',
+                nextSlideMessage: 'Next slide',
+                firstSlideMessage: 'This is the first slide',
+                lastSlideMessage: 'This is the last slide'
+            }
         };
-        // Keep the event options separate, we dont want users
-        // overwriting these
+        if (this.pager) {
+            swiperOptions.pagination = {
+                el: this.paginationEl,
+                type: 'bullets',
+                clickable: false,
+                hideOnClick: false,
+            };
+        }
+        if (this.scrollbar) {
+            swiperOptions.scrollbar = {
+                el: this.scrollbarEl,
+                hide: true,
+            };
+        }
         const eventOptions = {
             on: {
                 init: () => {
@@ -245,23 +220,22 @@ export class Slides {
                 doubleTap: this.ionSlideDoubleTap.emit
             }
         };
-        // Merge the base, user options, and events together then pas to swiper
         return Object.assign({}, swiperOptions, this.options, eventOptions);
     }
     hostData() {
         return {
-            class: createThemedClasses(this.mode, 'slides')
+            class: Object.assign({}, createThemedClasses(this.mode, 'slides'), { 'swiper-container': true })
         };
     }
     render() {
-        return (h("div", { class: "swiper-container", ref: el => this.container = el },
+        return [
             h("div", { class: "swiper-wrapper" },
                 h("slot", null)),
-            this.pager ? h("div", { class: "swiper-pagination" }) : null,
-            this.scrollbar ? h("div", { class: "swiper-scrollbar" }) : null));
+            this.pager && h("div", { class: "swiper-pagination", ref: el => this.paginationEl = el }),
+            this.scrollbar && h("div", { class: "swiper-scrollbar", ref: el => this.scrollbarEl = el })
+        ];
     }
     static get is() { return "ion-slides"; }
-    static get encapsulation() { return "shadow"; }
     static get properties() { return {
         "el": {
             "elementRef": true
@@ -290,10 +264,14 @@ export class Slides {
         "lockSwipeToPrev": {
             "method": true
         },
+        "mode": {
+            "type": String,
+            "attr": "mode"
+        },
         "options": {
             "type": "Any",
             "attr": "options",
-            "watchCallbacks": ["updateSwiperOptions"]
+            "watchCallbacks": ["optionsChanged"]
         },
         "pager": {
             "type": Boolean,
@@ -418,6 +396,10 @@ export class Slides {
             "bubbles": true,
             "cancelable": true,
             "composed": true
+        }]; }
+    static get listeners() { return [{
+            "name": "ionSlideChanged",
+            "method": "onSlideChanged"
         }]; }
     static get style() { return "/**style-placeholder:ion-slides:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-slides:**/"; }

@@ -2,6 +2,9 @@
   transition: transform 300ms;
   will-change: transform; }
 
+.reorder-enabled {
+  user-select: none; }
+
 .reorder-enabled ion-reorder {
   display: block;
   cursor: grab;

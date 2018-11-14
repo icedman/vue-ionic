@@ -9,7 +9,9 @@
   bottom: 0;
   display: block;
   position: fixed;
+  font-family: var(--ion-font-family, inherit);
   touch-action: none;
+  user-select: none;
   z-index: 1000; }
 
 .action-sheet-wrapper {
@@ -62,12 +64,10 @@
   flex-shrink: 0;
   overflow: hidden; }
 
-:host {
-  font-family: var(--ion-font-family, inherit); }
-
 .action-sheet-title {
-  padding: 11px 16px 17px;
-  color: var(--ion-text-color-step-400, #666666);
+  padding: 20px 16px 17px;
+  height: 60px;
+  color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.54);
   font-size: 16px;
   text-align: start; }
 
@@ -76,18 +76,18 @@
   font-size: 14px; }
 
 .action-sheet-group {
-  background-color: var(--ion-overlay-background-color, #fafafa); }
+  background-color: var(--ion-overlay-background-color, #fff); }
 
 .action-sheet-group:first-child {
-  padding-top: 8px; }
+  padding-top: 0; }
 
 .action-sheet-group:last-child {
-  padding-bottom: 8px; }
+  padding-bottom: 0; }
 
 .action-sheet-button {
   padding: 0 16px;
   position: relative;
-  height: 48px;
+  height: 52px;
   background: transparent;
   color: var(--ion-text-color-step-150, #262626);
   font-size: 16px;
@@ -99,7 +99,9 @@
   background: var(--ion-background-color-step-50, #f2f2f2); }
 
 .action-sheet-icon {
+  padding-bottom: 4px;
   margin: 0 32px 0 0;
+  color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.54);
   font-size: 24px; }
 
 .action-sheet-button-inner {

@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Color, Config, Mode } from '../../interface';
-export declare class BackButton {
+export declare class BackButton implements ComponentInterface {
     el: HTMLElement;
     config: Config;
     win: Window;
@@ -22,13 +23,14 @@ export declare class BackButton {
     /**
      * The icon name to use for the back button.
      */
-    icon?: string;
+    icon?: string | null;
     /**
      * The text to display in the back button.
      */
-    text?: string;
-    private onClick;
+    text?: string | null;
+    onClick(ev: Event): Promise<boolean>;
     hostData(): {
+        'ion-activatable': boolean;
         class: {
             'button': boolean;
             'show-back-button': boolean;
@@ -36,7 +38,6 @@ export declare class BackButton {
             'button': boolean;
             'show-back-button': boolean;
         };
-        'tappable': boolean;
     };
     render(): JSX.Element;
 }

@@ -9,8 +9,10 @@ ion-loading {
   position: fixed;
   align-items: center;
   justify-content: center;
+  font-family: var(--ion-font-family, inherit);
   contain: strict;
   touch-action: none;
+  user-select: none;
   z-index: 1000; }
 
 ion-loading-controller {
@@ -23,7 +25,6 @@ ion-loading-controller {
   z-index: 10; }
 
 .loading-ios {
-  font-family: var(--ion-font-family, inherit);
   font-size: 14px; }
 
 .loading-ios .loading-wrapper {

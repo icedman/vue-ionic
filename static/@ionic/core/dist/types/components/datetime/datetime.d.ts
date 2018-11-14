@@ -1,20 +1,28 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { PickerOptions, StyleEvent } from '../../interface';
-import { DatetimeData, LocaleData } from './datetime-util';
-export declare class Datetime {
-    [key: string]: any;
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { DatetimeOptions, InputChangeEvent, Mode, StyleEvent } from '../../interface';
+export declare class Datetime implements ComponentInterface {
     private inputId;
     private labelId;
     private picker?;
-    locale: LocaleData;
-    datetimeMin: DatetimeData;
-    datetimeMax: DatetimeData;
-    datetimeValue: DatetimeData;
-    text: any;
+    private locale;
+    private datetimeMin;
+    private datetimeMax;
+    private datetimeValue;
+    el: HTMLIonDatetimeElement;
+    text?: string | null;
     pickerCtrl: HTMLIonPickerControllerElement;
     /**
-     * If true, the user cannot interact with the datetime. Defaults to `false`.
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
+     */
+    mode: Mode;
+    /**
+     * The name of the control, which is submitted with the form data.
+     */
+    name: string;
+    /**
+     * If `true`, the user cannot interact with the datetime. Defaults to `false`.
      */
     disabled: boolean;
     protected disabledChanged(): void;
@@ -26,7 +34,7 @@ export declare class Datetime {
      * datetime. For example, the minimum could just be the year, such as `1994`.
      * Defaults to the beginning of the year, 100 years ago from today.
      */
-    min: string | undefined;
+    min?: string;
     /**
      * The maximum datetime allowed. Value must be a date string
      * following the
@@ -35,7 +43,7 @@ export declare class Datetime {
      * datetime. For example, the maximum could just be the year, such as `1994`.
      * Defaults to the end of this year.
      */
-    max: string | undefined;
+    max?: string;
     /**
      * The display format of the date and time as text that shows
      * within the item. When the `pickerFormat` input is not used, then the
@@ -96,7 +104,7 @@ export declare class Datetime {
     hourValues?: number[] | number | string;
     /**
      * Values used to create the list of selectable minutes. By default
-     * the mintues range from `0` to `59`. However, to control exactly which minutes to display,
+     * the minutes range from `0` to `59`. However, to control exactly which minutes to display,
      * the `minuteValues` input can take a number, an array of numbers, or a string of comma
      * separated numbers. For example, if the minute selections should only be every 15 minutes,
      * then this input value would be `minuteValues="0,15,30,45"`.
@@ -126,16 +134,16 @@ export declare class Datetime {
      * Any additional options that the picker interface can accept.
      * See the [Picker API docs](../../picker/Picker) for the picker options.
      */
-    pickerOptions: PickerOptions;
+    pickerOptions?: DatetimeOptions;
     /**
      * The text to display when there's no date selected yet.
      * Using lowercase to match the input attribute
      */
-    placeholder?: string;
+    placeholder?: string | null;
     /**
-     * the value of the datetime.
+     * The value of the datetime as a valid ISO 8601 datetime string.
      */
-    value?: string;
+    value?: string | null;
     /**
      * Update the datetime value when the value changes
      */
@@ -145,29 +153,32 @@ export declare class Datetime {
      */
     ionCancel: EventEmitter<void>;
     /**
+     * Emitted when the value (selected date) has changed.
+     */
+    ionChange: EventEmitter<InputChangeEvent>;
+    /**
      * Emitted when the styles change.
      */
     ionStyle: EventEmitter<StyleEvent>;
     componentWillLoad(): void;
-    componentDidLoad(): void;
+    /**
+     * Opens the datetime overlay.
+     */
+    open(): Promise<void>;
     private emitStyle;
-    private updateValue;
-    private buildPicker;
-    private open;
+    private updateDatetimeValue;
+    private generatePickerOptions;
     private generateColumns;
     private validate;
     private calcMinMax;
     private validateColumn;
-    private divyColumns;
-    /**
-     */
     private updateText;
-    /**
-     */
-    hasValue(): boolean;
+    private hasValue;
     hostData(): {
         class: {
             'datetime-disabled': boolean;
+            'datetime-placeholder': boolean;
+            'in-item': boolean;
         };
     };
     render(): JSX.Element[];

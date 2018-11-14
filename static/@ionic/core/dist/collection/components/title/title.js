@@ -1,8 +1,13 @@
 import { createColorClasses } from '../../utils/theme';
 export class ToolbarTitle {
+    getMode() {
+        const toolbar = this.el.closest('ion-toolbar');
+        return (toolbar && toolbar.mode) || this.mode;
+    }
     hostData() {
+        const mode = this.getMode();
         return {
-            class: createColorClasses(this.color)
+            class: Object.assign({}, createColorClasses(this.color), { [`title-${mode}`]: true })
         };
     }
     render() {
@@ -18,11 +23,9 @@ export class ToolbarTitle {
             "type": String,
             "attr": "color"
         },
-        "mode": {
-            "type": String,
-            "attr": "mode"
+        "el": {
+            "elementRef": true
         }
     }; }
     static get style() { return "/**style-placeholder:ion-title:**/"; }
-    static get styleMode() { return "/**style-id-placeholder:ion-title:**/"; }
 }

@@ -7,14 +7,13 @@
 :host {
   --clear-button-color: #{$searchbar-ios-input-clear-icon-color};
   --cancel-button-color: #{$searchbar-ios-cancel-button-color};
+  --color: #{$searchbar-ios-input-text-color};
+  --icon-color: #{$searchbar-ios-input-search-icon-color};
+  --background: #{$searchbar-ios-input-background-color};
 
   @include padding($searchbar-ios-padding-top, $searchbar-ios-padding-end, $searchbar-ios-padding-bottom, $searchbar-ios-padding-start);
 
   height: $searchbar-ios-input-height + $searchbar-ios-padding-top + $searchbar-ios-padding-bottom;
-
-  color: $searchbar-ios-input-text-color;
-
-  font-family: $searchbar-ios-font-family;
 
   contain: strict;
 }
@@ -38,8 +37,6 @@
   width: $searchbar-ios-input-search-icon-size;
   height: 100%;
 
-  color: $searchbar-ios-input-search-icon-color;
-
   contain: strict;
 }
 
@@ -52,8 +49,6 @@
   @include border-radius($searchbar-ios-input-border-radius);
 
   height: 100%;
-
-  background-color: $searchbar-ios-input-background-color;
 
   font-size: 14px;
   font-weight: 400;
@@ -148,6 +143,11 @@
   pointer-events: none;
 }
 
+:host(.searchbar-no-animate) .searchbar-search-icon,
+:host(.searchbar-no-animate) .searchbar-input,
+:host(.searchbar-no-animate) .searchbar-cancel-button {
+  transition-duration: 0ms;
+}
 
 // Searchbar Color
 // -----------------------------------------
@@ -156,12 +156,18 @@
   color: #{current-color(base)};
 }
 
-:host(.ion-color) .searchbar-cancel-button:hover {
-  color: #{current-color(tint)};
+@media (any-hover: hover) {
+  :host(.ion-color) .searchbar-cancel-button:hover {
+    color: #{current-color(tint)};
+  }
 }
 
 // Searchbar in Toolbar Color
 // -----------------------------------------
+
+:host-context(ion-toolbar.ion-color) {
+  color: inherit;
+}
 
 :host-context(ion-toolbar.ion-color) .searchbar-cancel-button {
   color: currentColor;

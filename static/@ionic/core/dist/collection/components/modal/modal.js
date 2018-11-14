@@ -1,6 +1,7 @@
 import { attachComponent, detachComponent } from '../../utils/framework-delegate';
 import { BACKDROP, dismiss, eventMethod, present } from '../../utils/overlays';
 import { createThemedClasses, getClassMap } from '../../utils/theme';
+import { deepReady } from '../../utils/transition';
 import { iosEnterAnimation } from './animations/ios.enter';
 import { iosLeaveAnimation } from './animations/ios.leave';
 import { mdEnterAnimation } from './animations/md.enter';
@@ -9,18 +10,9 @@ export class Modal {
     constructor() {
         this.presented = false;
         this.keyboardClose = true;
-        /**
-         * If true, the modal will be dismissed when the backdrop is clicked. Defaults to `true`.
-         */
-        this.enableBackdropDismiss = true;
-        /**
-         * If true, a backdrop will be displayed behind the modal. Defaults to `true`.
-         */
+        this.backdropDismiss = true;
         this.showBackdrop = true;
-        /**
-         * If true, the modal will animate. Defaults to `true`.
-         */
-        this.willAnimate = true;
+        this.animated = true;
     }
     componentDidLoad() {
         this.ionModalDidLoad.emit();
@@ -34,23 +26,20 @@ export class Modal {
         this.dismiss();
     }
     onBackdropTap() {
-        this.dismiss(null, BACKDROP);
+        this.dismiss(undefined, BACKDROP);
     }
     lifecycle(modalEvent) {
         const el = this.usersElement;
         const name = LIFECYCLE_MAP[modalEvent.type];
         if (el && name) {
-            const event = new CustomEvent(name, {
+            const ev = new CustomEvent(name, {
                 bubbles: false,
                 cancelable: false,
                 detail: modalEvent.detail
             });
-            el.dispatchEvent(event);
+            el.dispatchEvent(ev);
         }
     }
-    /**
-     * Present the modal overlay after it has been created.
-     */
     async present() {
         if (this.presented) {
             return;
@@ -61,51 +50,50 @@ export class Modal {
         }
         const componentProps = Object.assign({}, this.componentProps, { modal: this.el });
         this.usersElement = await attachComponent(this.delegate, container, this.component, ['ion-page'], componentProps);
+        await deepReady(this.usersElement);
         return present(this, 'modalEnter', iosEnterAnimation, mdEnterAnimation);
     }
-    /**
-     * Dismiss the modal overlay after it has been presented.
-     */
     async dismiss(data, role) {
-        await dismiss(this, data, role, 'modalLeave', iosLeaveAnimation, mdLeaveAnimation);
-        await detachComponent(this.delegate, this.usersElement);
+        const dismissed = await dismiss(this, data, role, 'modalLeave', iosLeaveAnimation, mdLeaveAnimation);
+        if (dismissed) {
+            await detachComponent(this.delegate, this.usersElement);
+        }
+        return dismissed;
     }
-    /**
-     * Returns a promise that resolves when the modal did dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
-     */
-    onDidDismiss(callback) {
-        return eventMethod(this.el, 'ionModalDidDismiss', callback);
+    onDidDismiss() {
+        return eventMethod(this.el, 'ionModalDidDismiss');
     }
-    /**
-     * Returns a promise that resolves when the modal will dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
-     */
-    onWillDismiss(callback) {
-        return eventMethod(this.el, 'ionModalWillDismiss', callback);
+    onWillDismiss() {
+        return eventMethod(this.el, 'ionModalWillDismiss');
     }
     hostData() {
         return {
             'no-router': true,
             class: Object.assign({}, createThemedClasses(this.mode, 'modal'), getClassMap(this.cssClass)),
             style: {
-                zIndex: 20000 + this.overlayId,
+                zIndex: 20000 + this.overlayIndex,
             }
         };
     }
     render() {
         const dialogClasses = createThemedClasses(this.mode, 'modal-wrapper');
         return [
-            h("ion-backdrop", { visible: this.showBackdrop, tappable: this.enableBackdropDismiss }),
+            h("ion-backdrop", { visible: this.showBackdrop, tappable: this.backdropDismiss }),
             h("div", { role: "dialog", class: dialogClasses })
         ];
     }
     static get is() { return "ion-modal"; }
     static get properties() { return {
+        "animated": {
+            "type": Boolean,
+            "attr": "animated"
+        },
         "animationCtrl": {
             "connect": "ion-animation-controller"
+        },
+        "backdropDismiss": {
+            "type": Boolean,
+            "attr": "backdrop-dismiss"
         },
         "component": {
             "type": String,
@@ -132,10 +120,6 @@ export class Modal {
         "el": {
             "elementRef": true
         },
-        "enableBackdropDismiss": {
-            "type": Boolean,
-            "attr": "enable-backdrop-dismiss"
-        },
         "enterAnimation": {
             "type": "Any",
             "attr": "enter-animation"
@@ -148,15 +132,19 @@ export class Modal {
             "type": "Any",
             "attr": "leave-animation"
         },
+        "mode": {
+            "type": String,
+            "attr": "mode"
+        },
         "onDidDismiss": {
             "method": true
         },
         "onWillDismiss": {
             "method": true
         },
-        "overlayId": {
+        "overlayIndex": {
             "type": Number,
-            "attr": "overlay-id"
+            "attr": "overlay-index"
         },
         "present": {
             "method": true
@@ -164,10 +152,6 @@ export class Modal {
         "showBackdrop": {
             "type": Boolean,
             "attr": "show-backdrop"
-        },
-        "willAnimate": {
-            "type": Boolean,
-            "attr": "will-animate"
         }
     }; }
     static get events() { return [{
@@ -232,6 +216,6 @@ export class Modal {
 const LIFECYCLE_MAP = {
     'ionModalDidPresent': 'ionViewDidEnter',
     'ionModalWillPresent': 'ionViewWillEnter',
-    'ionModalWillDismiss': 'ionViewWillDismiss',
-    'ionModalDidDismiss': 'ionViewDidDismiss',
+    'ionModalWillDismiss': 'ionViewWillLeave',
+    'ionModalDidDismiss': 'ionViewDidLeave',
 };

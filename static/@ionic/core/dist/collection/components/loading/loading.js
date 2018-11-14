@@ -7,31 +7,15 @@ import { mdLeaveAnimation } from './animations/md.leave';
 export class Loading {
     constructor() {
         this.presented = false;
-        /** If true, the loading will blur any inputs and hide the keyboard */
         this.keyboardClose = true;
-        /**
-         * If true, the loading indicator will dismiss when the page changes. Defaults to `false`.
-         */
-        this.dismissOnPageChange = false;
-        /**
-         * If true, the loading indicator will be dismissed when the backdrop is clicked. Defaults to `false`.
-         */
-        this.enableBackdropDismiss = false;
-        /**
-         * If true, a backdrop will be displayed behind the loading indicator. Defaults to `true`.
-         */
+        this.duration = 0;
+        this.backdropDismiss = false;
         this.showBackdrop = true;
-        /**
-         * If true, the loading indicator will be translucent. Defaults to `false`.
-         */
         this.translucent = false;
-        /**
-         * If true, the loading indicator will animate. Defaults to `true`.
-         */
-        this.willAnimate = true;
+        this.animated = true;
     }
     componentWillLoad() {
-        if (!this.spinner) {
+        if (this.spinner === undefined) {
             this.spinner = this.config.get('loadingSpinner', this.mode === 'ios' ? 'lines' : 'crescent');
         }
     }
@@ -42,39 +26,25 @@ export class Loading {
         this.ionLoadingDidUnload.emit();
     }
     onBackdropTap() {
-        this.dismiss(null, BACKDROP);
+        this.dismiss(undefined, BACKDROP);
     }
-    /**
-     * Present the loading overlay after it has been created.
-     */
     async present() {
         await present(this, 'loadingEnter', iosEnterAnimation, mdEnterAnimation, undefined);
-        if (this.duration) {
+        if (this.duration > 0) {
             this.durationTimeout = setTimeout(() => this.dismiss(), this.duration + 10);
         }
     }
-    /**
-     * Dismiss the loading overlay after it has been presented.
-     */
     dismiss(data, role) {
         if (this.durationTimeout) {
             clearTimeout(this.durationTimeout);
         }
         return dismiss(this, data, role, 'loadingLeave', iosLeaveAnimation, mdLeaveAnimation);
     }
-    /**
-     * Returns a promise that resolves when the loading did dismiss. It also accepts a callback
-     * that is called in the same circumstances.
-     */
-    onDidDismiss(callback) {
-        return eventMethod(this.el, 'ionLoadingDidDismiss', callback);
+    onDidDismiss() {
+        return eventMethod(this.el, 'ionLoadingDidDismiss');
     }
-    /**
-     * Returns a promise that resolves when the loading will dismiss. It also accepts a callback
-     * that is called in the same circumstances.
-     */
-    onWillDismiss(callback) {
-        return eventMethod(this.el, 'ionLoadingWillDismiss', callback);
+    onWillDismiss() {
+        return eventMethod(this.el, 'ionLoadingWillDismiss');
     }
     hostData() {
         const themedClasses = this.translucent
@@ -82,7 +52,7 @@ export class Loading {
             : {};
         return {
             style: {
-                zIndex: 20000 + this.overlayId
+                zIndex: 40000 + this.overlayIndex
             },
             class: Object.assign({}, createThemedClasses(this.mode, 'loading'), themedClasses, getClassMap(this.cssClass))
         };
@@ -93,20 +63,24 @@ export class Loading {
             h("div", { class: "loading-wrapper", role: "dialog" },
                 this.spinner !== 'hide' && (h("div", { class: "loading-spinner" },
                     h("ion-spinner", { name: this.spinner }))),
-                this.content && h("div", { class: "loading-content" }, this.content))
+                this.message && h("div", { class: "loading-content" }, this.message))
         ];
     }
     static get is() { return "ion-loading"; }
     static get properties() { return {
+        "animated": {
+            "type": Boolean,
+            "attr": "animated"
+        },
         "animationCtrl": {
             "connect": "ion-animation-controller"
         },
+        "backdropDismiss": {
+            "type": Boolean,
+            "attr": "backdrop-dismiss"
+        },
         "config": {
             "context": "config"
-        },
-        "content": {
-            "type": String,
-            "attr": "content"
         },
         "cssClass": {
             "type": String,
@@ -115,20 +89,12 @@ export class Loading {
         "dismiss": {
             "method": true
         },
-        "dismissOnPageChange": {
-            "type": Boolean,
-            "attr": "dismiss-on-page-change"
-        },
         "duration": {
             "type": Number,
             "attr": "duration"
         },
         "el": {
             "elementRef": true
-        },
-        "enableBackdropDismiss": {
-            "type": Boolean,
-            "attr": "enable-backdrop-dismiss"
         },
         "enterAnimation": {
             "type": "Any",
@@ -142,15 +108,23 @@ export class Loading {
             "type": "Any",
             "attr": "leave-animation"
         },
+        "message": {
+            "type": String,
+            "attr": "message"
+        },
+        "mode": {
+            "type": String,
+            "attr": "mode"
+        },
         "onDidDismiss": {
             "method": true
         },
         "onWillDismiss": {
             "method": true
         },
-        "overlayId": {
+        "overlayIndex": {
             "type": Number,
-            "attr": "overlay-id"
+            "attr": "overlay-index"
         },
         "present": {
             "method": true
@@ -167,10 +141,6 @@ export class Loading {
         "translucent": {
             "type": Boolean,
             "attr": "translucent"
-        },
-        "willAnimate": {
-            "type": Boolean,
-            "attr": "will-animate"
         }
     }; }
     static get events() { return [{

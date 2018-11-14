@@ -1,7 +1,8 @@
 import '../../stencil.core';
-import { EventListenerEnable, QueueApi } from '../../stencil.core';
+import { ComponentInterface, EventListenerEnable, QueueApi } from '../../stencil.core';
 import { DomRenderFn, HeaderFn, ItemHeightFn, ItemRenderFn } from '../../interface';
-export declare class VirtualScroll {
+export declare class VirtualScroll implements ComponentInterface {
+    private contentEl?;
     private scrollEl?;
     private range;
     private timerUpdate;
@@ -78,20 +79,65 @@ export declare class VirtualScroll {
      * should be avoided if possible.
      */
     items?: any[];
+    /**
+     * An optional function that maps each item within their height.
+     * When this function is provides, heavy optimizations and fast path can be taked by
+     * `ion-virtual-scroll` leading to massive performance improvements.
+     *
+     * This function allows to skip all DOM reads, which can be Doing so leads
+     * to massive performance
+     */
     itemHeight?: ItemHeightFn;
-    renderItem?: (item: any, index: number) => JSX.Element;
-    renderHeader?: (item: any, index: number) => JSX.Element;
-    renderFooter?: (item: any, index: number) => JSX.Element;
+    /**
+     * NOTE: only JSX API for stencil.
+     *
+     * Provide a render function for the items to be rendered. Returns a JSX virtual-dom.
+     */
+    renderItem?: (item: any, index: number) => any;
+    /**
+     * NOTE: only JSX API for stencil.
+     *
+     * Provide a render function for the header to be rendered. Returns a JSX virtual-dom.
+     */
+    renderHeader?: (item: any, index: number) => any;
+    /**
+     * NOTE: only JSX API for stencil.
+     *
+     * Provide a render function for the footer to be rendered. Returns a JSX virtual-dom.
+     */
+    renderFooter?: (item: any, index: number) => any;
+    /**
+     * NOTE: only Vanilla JS API.
+     */
     nodeRender?: ItemRenderFn;
+    /** @internal */
     domRender?: DomRenderFn;
     itemsChanged(): void;
-    componentDidLoad(): void;
+    componentDidLoad(): Promise<void>;
     componentDidUpdate(): void;
     componentDidUnload(): void;
     onScroll(): void;
     onResize(): void;
-    positionForItem(index: number): number;
+    /**
+     * Returns the position of the virtual item at the given index.
+     */
+    positionForItem(index: number): Promise<number>;
+    /**
+     * This method marks a subset of items as dirty, so they can be re-rendered. Items should be marked as
+     * dirty any time the content or their style changes.
+     *
+     * The subset of items to be updated can are specifing by an offset and a length.
+     */
     markDirty(offset: number, len?: number): void;
+    /**
+     * This method marks the tail the items array as dirty, so they can be re-rendered.
+     *
+     * It's equivalent to calling:
+     *
+     * ```
+     * virtualScroll.markDirty(lastItemLen, items.length - lastItemLen);
+     * ```
+     */
     markDirtyTail(): void;
     private updateVirtualScroll;
     private readVS;
@@ -110,5 +156,5 @@ export declare class VirtualScroll {
             height: string;
         };
     };
-    render(): any[] | undefined;
+    render(): JSX.Element | undefined;
 }

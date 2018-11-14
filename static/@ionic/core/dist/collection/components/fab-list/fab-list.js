@@ -1,17 +1,10 @@
 export class FabList {
     constructor() {
-        /**
-         * If true, the fab list will be show all fab buttons in the list. Defaults to `false`.
-         */
         this.activated = false;
-        /**
-         * The side the fab list will show on relative to the main fab button. Defaults to `'bottom'`.
-         */
         this.side = 'bottom';
     }
     activatedChanged(activated) {
         const fabs = Array.from(this.el.querySelectorAll('ion-fab-button'));
-        // if showing the fabs add a timeout, else show immediately
         const timeout = activated ? 30 : 0;
         fabs.forEach((fab, i) => {
             setTimeout(() => fab.show = activated, i * timeout);
@@ -21,7 +14,7 @@ export class FabList {
         return {
             class: {
                 'fab-list-active': this.activated,
-                [`fab-list-side-${this.side}`]: this.side
+                [`fab-list-side-${this.side}`]: true
             }
         };
     }

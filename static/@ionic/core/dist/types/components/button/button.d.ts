@@ -1,7 +1,7 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
 import { Color, Mode, RouterDirection } from '../../interface';
-export declare class Button {
+export declare class Button implements ComponentInterface {
     el: HTMLElement;
     win: Window;
     keyFocus: boolean;
@@ -22,7 +22,7 @@ export declare class Button {
      */
     buttonType: string;
     /**
-     * If true, the user cannot interact with the button. Defaults to `false`.
+     * If `true`, the user cannot interact with the button. Defaults to `false`.
      */
     disabled: boolean;
     /**
@@ -57,7 +57,7 @@ export declare class Button {
      */
     size?: 'small' | 'default' | 'large';
     /**
-     * If true, activates a button with a heavier font weight.
+     * If `true`, activates a button with a heavier font weight.
      */
     strong: boolean;
     /**
@@ -75,15 +75,20 @@ export declare class Button {
      */
     ionBlur: EventEmitter<void>;
     componentWillLoad(): void;
-    onFocus(): void;
-    onKeyUp(): void;
-    onBlur(): void;
-    onClick(ev: Event): void;
+    private onFocus;
+    private onKeyUp;
+    private onBlur;
+    private onClick;
     hostData(): {
+        'ion-activatable': boolean;
         class: {
             'focused': boolean;
+            'button-disabled': boolean;
+        } | {
+            [x: string]: boolean;
+            'focused': boolean;
+            'button-disabled': boolean;
         };
-        'tappable': boolean;
     };
-    protected render(): JSX.Element;
+    render(): JSX.Element;
 }

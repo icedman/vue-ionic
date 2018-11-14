@@ -1,34 +1,13 @@
-import { createOverlay, dismissOverlay, getTopOverlay, removeLastOverlay } from '../../utils/overlays';
+import { createOverlay, dismissOverlay, getOverlay } from '../../utils/overlays';
 export class ModalController {
-    constructor() {
-        this.modals = new Map();
-    }
-    modalWillPresent(ev) {
-        this.modals.set(ev.target.overlayId, ev.target);
-    }
-    modalWillDismiss(ev) {
-        this.modals.delete(ev.target.overlayId);
-    }
-    escapeKeyUp() {
-        removeLastOverlay(this.modals);
-    }
-    /**
-     * Create a modal overlay with modal options.
-     */
     create(opts) {
         return createOverlay(this.doc.createElement('ion-modal'), opts);
     }
-    /**
-     * Dismiss the open modal overlay.
-     */
-    dismiss(data, role, modalId = -1) {
-        return dismissOverlay(data, role, this.modals, modalId);
+    dismiss(data, role, id) {
+        return dismissOverlay(this.doc, data, role, 'ion-modal', id);
     }
-    /**
-     * Get the most recently opened modal overlay.
-     */
-    getTop() {
-        return getTopOverlay(this.modals);
+    async getTop() {
+        return getOverlay(this.doc, 'ion-modal');
     }
     static get is() { return "ion-modal-controller"; }
     static get properties() { return {
@@ -45,17 +24,4 @@ export class ModalController {
             "method": true
         }
     }; }
-    static get listeners() { return [{
-            "name": "body:ionModalWillPresent",
-            "method": "modalWillPresent"
-        }, {
-            "name": "body:ionModalWillDismiss",
-            "method": "modalWillDismiss"
-        }, {
-            "name": "body:ionModalDidUnload",
-            "method": "modalWillDismiss"
-        }, {
-            "name": "body:keyup.escape",
-            "method": "escapeKeyUp"
-        }]; }
 }

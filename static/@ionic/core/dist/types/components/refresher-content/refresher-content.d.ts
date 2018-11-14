@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Config } from '../../interface';
-export declare class RefresherContent {
+export declare class RefresherContent implements ComponentInterface {
     config: Config;
     /**
      * A static icon to display when you begin to pull down
@@ -18,6 +19,6 @@ export declare class RefresherContent {
      * The text you want to display when performing a refresh
      */
     refreshingText?: string;
-    protected componentDidLoad(): void;
-    protected render(): JSX.Element[];
+    componentDidLoad(): void;
+    render(): JSX.Element[];
 }

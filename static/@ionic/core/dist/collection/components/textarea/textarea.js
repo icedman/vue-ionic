@@ -1,53 +1,38 @@
-import { debounceEvent, deferEvent, renderHiddenInput } from '../../utils/helpers';
+import { debounceEvent, renderHiddenInput } from '../../utils/helpers';
+import { createColorClasses } from '../../utils/theme';
 export class Textarea {
     constructor() {
         this.inputId = `ion-input-${textareaIds++}`;
         this.didBlurAfterEdit = false;
         this.hasFocus = false;
-        /**
-         * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user. Defaults to `"none"`.
-         */
         this.autocapitalize = 'none';
-        /**
-         * Indicates whether the value of the control can be automatically completed by the browser. Defaults to `"off"`.
-         */
-        this.autocomplete = 'off';
-        /**
-         * This Boolean attribute lets you specify that a form control should have input focus when the page loads. Defaults to `false`.
-         */
         this.autofocus = false;
-        /**
-         * If true, the value will be cleared after focus upon edit. Defaults to `true` when `type` is `"password"`, `false` for all other types.
-         */
         this.clearOnEdit = false;
-        /**
-         * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `0`.
-         */
         this.debounce = 0;
-        /**
-         * If true, the user cannot interact with the textarea. Defaults to `false`.
-         */
         this.disabled = false;
-        /**
-         * The name of the control, which is submitted with the form data.
-         */
         this.name = this.inputId;
-        /**
-         * If true, the user cannot modify the value. Defaults to `false`.
-         */
         this.readonly = false;
-        /**
-         * If true, the user must fill in a value before submitting a form.
-         */
         this.required = false;
-        /**
-         * If true, the element will have its spelling and grammar checked. Defaults to `false`.
-         */
         this.spellcheck = false;
-        /**
-         * The value of the textarea.
-         */
         this.value = '';
+        this.onInput = (ev) => {
+            this.value = this.nativeInput.value;
+            this.emitStyle();
+            this.ionInput.emit(ev);
+        };
+        this.onFocus = () => {
+            this.hasFocus = true;
+            this.focusChange();
+            this.ionFocus.emit();
+        };
+        this.onBlur = () => {
+            this.hasFocus = false;
+            this.focusChange();
+            this.ionBlur.emit();
+        };
+        this.onKeyDown = () => {
+            this.checkClearOnEdit();
+        };
     }
     debounceChanged() {
         this.ionChange = debounceEvent(this.ionChange, this.debounce);
@@ -55,20 +40,24 @@ export class Textarea {
     disabledChanged() {
         this.emitStyle();
     }
-    /**
-     * Update the native input element when the value changes
-     */
     valueChanged() {
-        const { inputEl, value } = this;
-        if (inputEl.value !== value) {
-            inputEl.value = value;
+        const nativeInput = this.nativeInput;
+        const value = this.getValue();
+        if (nativeInput.value !== value) {
+            nativeInput.value = value;
         }
         this.ionChange.emit({ value });
     }
-    componentDidLoad() {
-        this.ionStyle = deferEvent(this.ionStyle);
-        this.debounceChanged();
+    componentWillLoad() {
         this.emitStyle();
+    }
+    componentDidLoad() {
+        this.debounceChanged();
+    }
+    setFocus() {
+        if (this.nativeInput) {
+            this.nativeInput.focus();
+        }
     }
     emitStyle() {
         this.ionStyle.emit({
@@ -80,54 +69,36 @@ export class Textarea {
             'has-focus': this.hasFocus
         });
     }
-    onInput(ev) {
-        this.value = this.inputEl.value;
-        this.emitStyle();
-        this.ionInput.emit(ev);
-    }
-    onFocus() {
-        this.hasFocus = true;
-        this.focusChange();
-        this.ionFocus.emit();
-    }
-    onBlur() {
-        this.hasFocus = false;
-        this.focusChange();
-        this.ionBlur.emit();
-    }
-    onKeyDown() {
-        this.checkClearOnEdit();
-    }
-    /**
-     * Check if we need to clear the text input if clearOnEdit is enabled
-     */
     checkClearOnEdit() {
         if (!this.clearOnEdit) {
             return;
         }
-        // Did the input value change after it was blurred and edited?
         if (this.didBlurAfterEdit && this.hasValue()) {
-            // Clear the input
             this.value = '';
         }
-        // Reset the flag
         this.didBlurAfterEdit = false;
     }
     focusChange() {
-        // If clearOnEdit is enabled and the input blurred but has a value, set a flag
         if (this.clearOnEdit && !this.hasFocus && this.hasValue()) {
             this.didBlurAfterEdit = true;
         }
         this.emitStyle();
     }
     hasValue() {
-        return this.value !== '';
+        return this.getValue() !== '';
+    }
+    getValue() {
+        return this.value || '';
+    }
+    hostData() {
+        return {
+            class: Object.assign({}, createColorClasses(this.color))
+        };
     }
     render() {
-        renderHiddenInput(this.el, this.name, this.value, this.disabled);
-        return (h("textarea", { class: "native-textarea", ref: el => this.inputEl = el, autoCapitalize: this.autocapitalize, 
-            // autoComplete={this.autocomplete}
-            autoFocus: this.autofocus, disabled: this.disabled, maxLength: this.maxlength, minLength: this.minlength, name: this.name, placeholder: this.placeholder, readOnly: this.readonly, required: this.required, spellCheck: this.spellcheck, cols: this.cols, rows: this.rows, wrap: this.wrap, onInput: this.onInput.bind(this), onBlur: this.onBlur.bind(this), onFocus: this.onFocus.bind(this), onKeyDown: this.onKeyDown.bind(this) }, this.value));
+        const value = this.getValue();
+        renderHiddenInput(this.el, this.name, value, this.disabled);
+        return (h("textarea", { class: "native-textarea", ref: el => this.nativeInput = el, autoCapitalize: this.autocapitalize, autoFocus: this.autofocus, disabled: this.disabled, maxLength: this.maxlength, minLength: this.minlength, name: this.name, placeholder: this.placeholder, readOnly: this.readonly, required: this.required, spellCheck: this.spellcheck, cols: this.cols, rows: this.rows, wrap: this.wrap, onInput: this.onInput, onBlur: this.onBlur, onFocus: this.onFocus, onKeyDown: this.onKeyDown }, value));
     }
     static get is() { return "ion-textarea"; }
     static get encapsulation() { return "shadow"; }
@@ -135,10 +106,6 @@ export class Textarea {
         "autocapitalize": {
             "type": String,
             "attr": "autocapitalize"
-        },
-        "autocomplete": {
-            "type": String,
-            "attr": "autocomplete"
         },
         "autofocus": {
             "type": Boolean,
@@ -204,6 +171,9 @@ export class Textarea {
         "rows": {
             "type": Number,
             "attr": "rows"
+        },
+        "setFocus": {
+            "method": true
         },
         "spellcheck": {
             "type": Boolean,

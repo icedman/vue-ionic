@@ -1,54 +1,41 @@
-import { createColorClasses } from '../../utils/theme';
+import { createColorClasses, hostContext, openURL } from '../../utils/theme';
 export class FabButton {
     constructor() {
-        this.inList = false;
-        /**
-         * If true, the fab button will be show a close icon. Defaults to `false`.
-         */
+        this.keyFocus = false;
         this.activated = false;
-        /**
-         * If true, the user cannot interact with the fab button. Defaults to `false`.
-         */
         this.disabled = false;
-        /**
-         * If true, the fab button will be translucent. Defaults to `false`.
-         */
-        this.translucent = false;
-        /**
-         * If true, the fab button will show when in a fab-list.
-         */
         this.show = false;
-    }
-    componentWillLoad() {
-        const parentNode = this.el.parentNode;
-        const parentTag = parentNode ? parentNode.nodeName : null;
-        this.inList = parentTag === 'ION-FAB-LIST';
-    }
-    /**
-     * Get the classes for fab buttons in lists
-     */
-    getFabClassMap() {
-        return {
-            'fab-button-in-list': this.inList,
-            'fab-button-translucent-in-list': this.inList && this.translucent,
-            'fab-button-close-active': this.activated,
-            'fab-button-show': this.show
+        this.translucent = false;
+        this.type = 'button';
+        this.onFocus = () => {
+            this.ionFocus.emit();
+        };
+        this.onKeyUp = () => {
+            this.keyFocus = true;
+        };
+        this.onBlur = () => {
+            this.keyFocus = false;
+            this.ionBlur.emit();
         };
     }
     hostData() {
+        const inList = hostContext('ion-fab-list', this.el);
         return {
-            'tappable': !this.disabled,
-            class: Object.assign({}, createColorClasses(this.color), this.getFabClassMap(), { 'fab-button-translucent': this.translucent })
+            'ion-activatable': true,
+            class: Object.assign({}, createColorClasses(this.color), { 'fab-button-in-list': inList, 'fab-button-translucent-in-list': inList && this.translucent, 'fab-button-close-active': this.activated, 'fab-button-show': this.show, 'fab-button-disabled': this.disabled, 'fab-button-translucent': this.translucent, 'focused': this.keyFocus })
         };
     }
     render() {
-        const TagType = this.href ? 'a' : 'button';
-        return (h(TagType, { class: "fab-button-native", disabled: this.disabled, href: this.href },
-            h("span", { class: "fab-button-close-icon" },
+        const TagType = this.href === undefined ? 'button' : 'a';
+        const attrs = (TagType === 'button')
+            ? { type: this.type }
+            : { href: this.href };
+        return (h(TagType, Object.assign({}, attrs, { class: "button-native", disabled: this.disabled, onFocus: this.onFocus, onKeyUp: this.onKeyUp, onBlur: this.onBlur, onClick: ev => openURL(this.win, this.href, ev, this.routerDirection) }),
+            h("span", { class: "close-icon" },
                 h("ion-icon", { name: "close", lazy: false })),
-            h("span", { class: "fab-button-inner" },
+            h("span", { class: "button-inner" },
                 h("slot", null)),
-            this.mode === 'md' && h("ion-ripple-effect", { tapClick: true, parent: this.el })));
+            this.mode === 'md' && h("ion-ripple-effect", null)));
     }
     static get is() { return "ion-fab-button"; }
     static get encapsulation() { return "shadow"; }
@@ -72,9 +59,16 @@ export class FabButton {
             "type": String,
             "attr": "href"
         },
+        "keyFocus": {
+            "state": true
+        },
         "mode": {
             "type": String,
             "attr": "mode"
+        },
+        "routerDirection": {
+            "type": String,
+            "attr": "router-direction"
         },
         "show": {
             "type": Boolean,
@@ -83,8 +77,28 @@ export class FabButton {
         "translucent": {
             "type": Boolean,
             "attr": "translucent"
+        },
+        "type": {
+            "type": String,
+            "attr": "type"
+        },
+        "win": {
+            "context": "window"
         }
     }; }
+    static get events() { return [{
+            "name": "ionFocus",
+            "method": "ionFocus",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "ionBlur",
+            "method": "ionBlur",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }]; }
     static get style() { return "/**style-placeholder:ion-fab-button:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-fab-button:**/"; }
 }

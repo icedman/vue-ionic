@@ -10,7 +10,6 @@ export function enableInputBlurring(doc) {
         focused = true;
     }
     function onTouchend(ev) {
-        // if app did scroll return early
         if (didScroll) {
             didScroll = false;
             return;
@@ -19,11 +18,9 @@ export function enableInputBlurring(doc) {
         if (!active) {
             return;
         }
-        // only blur if the active element is a text-input or a textarea
         if (active.matches(SKIP_SELECTOR)) {
             return;
         }
-        // if the selected target is the active element, do not blur
         const tapped = ev.target;
         if (tapped === active) {
             return;
@@ -31,12 +28,10 @@ export function enableInputBlurring(doc) {
         if (tapped.matches(SKIP_SELECTOR) || tapped.closest(SKIP_SELECTOR)) {
             return;
         }
-        // skip if div is a cover
         if (tapped.classList.contains('input-cover')) {
             return;
         }
         focused = false;
-        // TODO: find a better way, why 50ms?
         setTimeout(() => {
             if (!focused) {
                 active.blur();

@@ -1,7 +1,7 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { CheckedInputChangeEvent, Color, Mode, RadioButtonInput, StyleEvent } from '../../interface';
-export declare class Radio implements RadioButtonInput {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { CheckedInputChangeEvent, Color, Mode, StyleEvent } from '../../interface';
+export declare class Radio implements ComponentInterface {
     private inputId;
     private nativeInput;
     keyFocus: boolean;
@@ -21,15 +21,18 @@ export declare class Radio implements RadioButtonInput {
      * The name of the control, which is submitted with the form data.
      */
     name: string;
+    /**
+     * If `true`, the user cannot interact with the radio. Defaults to `false`.
+     */
     disabled: boolean;
     /**
-     * If true, the radio is selected. Defaults to `false`.
+     * If `true`, the radio is selected. Defaults to `false`.
      */
     checked: boolean;
     /**
      * the value of the radio.
      */
-    value: string;
+    value?: any | null;
     /**
      * Emitted when the radio loads.
      */
@@ -60,12 +63,12 @@ export declare class Radio implements RadioButtonInput {
     colorChanged(): void;
     checkedChanged(isChecked: boolean): void;
     disabledChanged(isDisabled: boolean): void;
-    emitStyle(): void;
-    onClick(): void;
-    onChange(): void;
-    onKeyUp(): void;
-    onFocus(): void;
-    onBlur(): void;
+    private emitStyle;
+    private onClick;
+    private onChange;
+    private onKeyUp;
+    private onFocus;
+    private onBlur;
     hostData(): {
         class: {
             'in-item': boolean;

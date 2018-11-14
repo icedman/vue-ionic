@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Color, Mode } from '../../interface';
-export declare class Note {
+export declare class Note implements ComponentInterface {
     /**
      * The color to use from your application's color palette.
      * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
@@ -13,7 +14,7 @@ export declare class Note {
      */
     mode: Mode;
     hostData(): {
-        class: {};
+        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap | undefined;
     };
     render(): JSX.Element;
 }

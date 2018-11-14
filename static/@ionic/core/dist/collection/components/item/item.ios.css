@@ -1,38 +1,79 @@
 :host {
+  /**
+   * @prop --background: Background of the item
+   * @prop --background-activated: Background of the activated item
+   * @prop --border-color: Color of the item border
+   * @prop --border-radius: Radius of the item border
+   * @prop --border-style: Style of the item border
+   * @prop --border-width: Width of the item border
+   * @prop --box-shadow: Box shadow of the item
+   * @prop --color: Color of the item
+   *
+   * @prop --detail-icon-color: Color of the item detail icon
+   * @prop --detail-icon-opacity: Opacity of the item detail icon
+   * @prop --detail-icon-font-size: Font size of the item detail icon
+   * @prop --inner-border-width: Width of the item inner border
+   * @prop --inner-box-shadow: Box shadow of the item inner
+   * @prop --inner-padding-bottom: Bottom padding of the item inner
+   * @prop --inner-padding-end: End padding of the item inner
+   * @prop --inner-padding-start: Start padding of the item inner
+   * @prop --inner-padding-top: Top padding of the item inner
+   *
+   * @prop --min-height: Minimum height of the item
+   * @prop --padding-bottom: Bottom padding of the item
+   * @prop --padding-end: End padding of the item
+   * @prop --padding-start: Start padding of the item
+   * @prop --padding-top: Top padding of the item
+   * @prop --transition: Transition of the item
+   *
+   * @prop --highlight-height: The height of the highlight on the item
+   * @prop --highlight-color-focused: The color of the highlight on the item when focused
+   * @prop --highlight-color-valid: The color of the highlight on the item when valid
+   * @prop --highlight-color-invalid: The color of the highlight on the item when invalid
+   */
   --min-height: 44px;
-  --background: var(--ion-color-base);
-  --background-active: var(--ion-color-tint);
-  --color: var(--ion-color-contrast);
-  --detail-push-color: var(--ion-color-shade);
-  --border-radius: 0;
-  --border-width: 0;
+  --border-radius: 0px;
+  --border-width: 0px;
   --border-style: solid;
-  --border-color: var(--ion-color-shade);
-  --inner-border-width: 0;
-  --padding-top: 0;
-  --padding-bottom: 0;
-  --padding-end: 0;
-  --padding-start: 0;
-  --inner-padding-top: 0;
-  --inner-padding-bottom: 0;
-  --inner-padding-start: 0;
-  --inner-padding-end: 0;
+  --padding-top: 0px;
+  --padding-bottom: 0px;
+  --padding-end: 0px;
+  --padding-start: 0px;
   --box-shadow: none;
+  --inner-border-width: 0px;
+  --inner-padding-top: 0px;
+  --inner-padding-bottom: 0px;
+  --inner-padding-start: 0px;
+  --inner-padding-end: 0px;
   --inner-box-shadow: none;
-  --highlight-color-focus: var(--ion-color-primary, #3880ff);
-  --highlight-color-valid: var(--ion-color-success, #10dc60);
-  --highlight-color-invalid: var(--ion-color-danger, #f04141);
-  --highlight-height: 2px;
+  --show-full-highlight: 0;
+  --show-inset-highlight: 0;
+  --detail-icon-color: initial;
+  --detail-icon-font-size: 20px;
+  --detail-icon-opacity: 0.25;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   display: block;
-  color: var(--ion-color-contrast);
+  position: relative;
+  color: var(--color);
+  font-family: var(--ion-font-family, inherit);
   text-align: initial;
   text-decoration: none;
   box-sizing: border-box; }
 
-:host(.activated) {
-  --background: var(--background-active); }
+:host(.ion-color) .item-native {
+  background: var(--ion-color-base);
+  color: var(--ion-color-contrast); }
+
+:host(.ion-color) .item-native,
+:host(.ion-color) .item-inner {
+  border-color: var(--ion-color-shade); }
+
+:host(.activated) .item-native {
+  background: var(--background-activated); }
+
+:host(.ion-color.activated) .item-native {
+  background: var(--ion-color-tint); }
 
 :host(.item-disabled) {
   cursor: default;
@@ -40,11 +81,12 @@
   pointer-events: none; }
 
 .item-native {
-  padding: var(--padding-top) var(--padding-end) var(--padding-bottom) var(--padding-start);
   border-radius: var(--border-radius);
   margin: 0;
+  padding: var(--padding-top) var(--padding-end) var(--padding-bottom) calc(var(--padding-start) + var(--ion-safe-area-left, 0px));
   font-family: inherit;
   font-size: inherit;
+  font-style: inherit;
   font-weight: inherit;
   letter-spacing: inherit;
   text-decoration: inherit;
@@ -64,25 +106,21 @@
   border-style: var(--border-style);
   border-color: var(--border-color);
   outline: none;
-  background-color: var(--background);
+  background: var(--background);
   box-shadow: var(--box-shadow);
   overflow: hidden;
   box-sizing: border-box; }
 
 button, a {
-  cursor: pointer; }
-
-.item-state {
-  left: 0;
-  right: 0;
-  bottom: 0;
-  position: absolute;
-  height: var(--highlight-height); }
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none; }
 
 .item-inner {
   margin: 0;
-  padding: var(--inner-padding-top) var(--inner-padding-end) var(--inner-padding-bottom) var(--inner-padding-start);
+  padding: var(--inner-padding-top) calc(var(--ion-safe-area-right, 0px) + var(--inner-padding-end)) var(--inner-padding-bottom) var(--inner-padding-start);
   display: flex;
+  position: relative;
   flex: 1;
   flex-direction: inherit;
   align-items: inherit;
@@ -95,19 +133,10 @@ button, a {
   overflow: hidden;
   box-sizing: border-box; }
 
-.input-wrapper {
-  display: flex;
-  flex: 1;
-  flex-direction: inherit;
-  align-items: inherit;
-  align-self: stretch;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  box-sizing: border-box; }
-
-:host([vertical-align-top]),
-:host(.item-input) {
-  align-items: flex-start; }
+.item-detail-icon {
+  color: var(--detail-icon-color);
+  font-size: var(--detail-icon-font-size);
+  opacity: var(--detail-icon-opacity); }
 
 ::slotted(ion-icon) {
   font-size: 1.6em; }
@@ -119,65 +148,114 @@ button, a {
   --margin-end: 0;
   z-index: 1; }
 
+:host([vertical-align-top]),
+:host(.item-input) {
+  align-items: flex-start; }
+
+.input-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: inherit;
+  align-items: inherit;
+  align-self: stretch;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  box-sizing: border-box; }
+
 :host(.item-label-stacked) .input-wrapper,
 :host(.item-label-floating) .input-wrapper {
   flex: 1;
   flex-direction: column; }
 
-:host(.item-label-stacked)::slotted(ion-select),
-:host(.item-label-floating)::slotted(ion-select) {
-  align-self: stretch;
-  max-width: 100%; }
+.item-highlight,
+.item-inner-highlight {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  background: var(--highlight-background); }
 
-:host(.item-textarea) {
-  align-items: stretch; }
+.item-highlight {
+  height: var(--full-highlight-height); }
 
-:host(.item-multiple-inputs) ::slotted(ion-select) {
-  position: relative; }
+.item-inner-highlight {
+  height: var(--inset-highlight-height); }
+
+:host(.item-interactive.item-has-focus) {
+  --highlight-background: var(--highlight-color-focused);
+  --full-highlight-height: calc(var(--highlight-height) * var(--show-full-highlight));
+  --inset-highlight-height: calc(var(--highlight-height) * var(--show-inset-highlight)); }
+
+:host(.item-interactive.ion-valid) {
+  --highlight-background: var(--highlight-color-valid); }
+
+:host(.item-interactive.ion-invalid) {
+  --highlight-background: var(--highlight-color-invalid); }
 
 :host(.item-label-stacked) ::slotted(ion-select),
 :host(.item-label-floating) ::slotted(ion-select) {
+  --padding-start: 0;
+  align-self: stretch;
+  width: 100%;
   max-width: 100%; }
+
+:host(.item-label-stacked) ::slotted(ion-datetime),
+:host(.item-label-floating) ::slotted(ion-datetime) {
+  --padding-start: 0;
+  width: 100%; }
+
+:host(.item-multiple-inputs) ::slotted(ion-datetime),
+:host(.item-multiple-inputs) ::slotted(ion-select) {
+  position: relative; }
+
+:host(.item-textarea) {
+  align-items: stretch; }
 
 ::slotted(ion-reorder[slot]) {
   margin-top: 0;
   margin-bottom: 0; }
 
 :host {
-  --ion-color-base: var(--ion-item-background, transparent);
-  --ion-color-contrast: var(--ion-item-text-color, var(--ion-text-color, #000));
-  --ion-color-tint: var(--ion-item-background-color-active, #d9d9d9);
-  --ion-color-shade: var(--ion-item-border-color, #c8c7cc);
   --transition: background-color 200ms linear;
   --padding-start: 16px;
   --inner-padding-end: 8px;
-  --inner-border-width: 0 0 0.55px 0;
-  font-family: var(--ion-font-family, inherit);
+  --inner-border-width: 0px 0px 0.55px 0px;
+  --background: var(--ion-item-background, var(--ion-background-color, #fff));
+  --background-activated: var(--ion-item-background-activated, #d9d9d9);
+  --border-color: var(--ion-item-border-color, var(--ion-border-color, #c8c7cc));
+  --color: var(--ion-item-color, var(--ion-text-color, #000));
+  --highlight-height: 0;
+  --highlight-color-focused: var(--ion-color-primary, #3880ff);
+  --highlight-color-valid: var(--ion-color-success, #10dc60);
+  --highlight-color-invalid: var(--ion-color-danger, #f04141);
   font-size: 17px; }
 
 :host(.activated) {
   --transition: none; }
 
-@media screen and (orientation: landscape) {
-  .item-inner {
-    padding-left: calc(constant(safe-area-inset-left) + var(--inner-padding-start));
-    padding-right: calc(constant(safe-area-inset-right) + var(--inner-padding-end));
-    padding-left: calc(env(safe-area-inset-left) + var(--inner-padding-start));
-    padding-right: calc(env(safe-area-inset-right) + var(--inner-padding-end)); } }
+:host(.item-interactive) {
+  --show-full-highlight: 0;
+  --show-inset-highlight: 1; }
 
 :host(.item-lines-full) {
-  --border-width: 0 0 0.55px 0; }
+  --border-width: 0px 0px 0.55px 0px;
+  --show-full-highlight: 1;
+  --show-inset-highlight: 0; }
 
 :host(.item-lines-inset) {
-  --inner-border-width: 0 0 0.55px 0; }
+  --inner-border-width: 0px 0px 0.55px 0px;
+  --show-full-highlight: 0;
+  --show-inset-highlight: 1; }
 
 :host(.item-lines-inset),
 :host(.item-lines-none) {
-  --border-width: 0; }
+  --border-width: 0px;
+  --show-full-highlight: 0; }
 
 :host(.item-lines-full),
 :host(.item-lines-none) {
-  --inner-border-width: 0; }
+  --inner-border-width: 0px;
+  --show-inset-highlight: 0; }
 
 ::slotted(:not(.interactive)[slot="start"]) {
   margin: 2px 16px 2px 0; }
@@ -198,8 +276,8 @@ button, a {
   margin-bottom: 7px; }
 
 ::slotted(.button-small) {
-  --padding-top: 0;
-  --padding-bottom: 0;
+  --padding-top: 0px;
+  --padding-bottom: 0px;
   --padding-start: .5em;
   --padding-end: .5em;
   --height: 24px;
@@ -217,18 +295,20 @@ button, a {
 ::slotted(ion-thumbnail[slot="end"]) {
   margin: 8px; }
 
-.item-detail-icon {
-  color: var(--detail-push-color);
-  font-size: 20px; }
-
 :host(.item-radio) ::slotted(ion-label),
 :host(.item-toggle) ::slotted(ion-label) {
-  margin-left: 0; }
+  margin-left: 0px; }
+
+:host(.item-label-floating),
+:host(.item-label-stacked) {
+  --min-height: 68px; }
 
 :host(.item-label-stacked) ::slotted(ion-input),
 :host(.item-label-floating) ::slotted(ion-input),
 :host(.item-label-stacked) ::slotted(ion-textarea),
-:host(.item-label-floating) ::slotted(ion-textarea) {
+:host(.item-label-floating) ::slotted(ion-textarea),
+:host(.item-label-stacked) ::slotted(ion-select),
+:host(.item-label-floating) ::slotted(ion-select) {
   --padding-top: 8px;
   --padding-bottom: 8px;
-  --padding-start: 0; }
+  --padding-start: 0px; }

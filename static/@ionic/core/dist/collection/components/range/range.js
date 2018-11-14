@@ -1,4 +1,4 @@
-import { clamp, debounceEvent, deferEvent } from '../../utils/helpers';
+import { clamp, debounceEvent } from '../../utils/helpers';
 import { createColorClasses, hostContext } from '../../utils/theme';
 export class Range {
     constructor() {
@@ -6,56 +6,33 @@ export class Range {
         this.hasFocus = false;
         this.ratioA = 0;
         this.ratioB = 0;
-        /**
-         * How long, in milliseconds, to wait to trigger the
-         * `ionChange` event after each change in the range value. Default `0`.
-         */
         this.debounce = 0;
-        /**
-         * The name of the control, which is submitted with the form data.
-         */
         this.name = '';
-        /**
-         * Show two knobs. Defaults to `false`.
-         */
         this.dualKnobs = false;
-        /**
-         * Minimum integer value of the range. Defaults to `0`.
-         */
         this.min = 0;
-        /**
-         * Maximum integer value of the range. Defaults to `100`.
-         */
         this.max = 100;
-        /**
-         * If true, a pin with integer value is shown when the knob
-         * is pressed. Defaults to `false`.
-         */
         this.pin = false;
-        /**
-         * If true, the knob snaps to tick marks evenly spaced based
-         * on the step property value. Defaults to `false`.
-         */
         this.snaps = false;
-        /**
-         * Specifies the value granularity. Defaults to `1`.
-         */
         this.step = 1;
-        /*
-         * If true, the user cannot interact with the range. Defaults to `false`.
-         */
         this.disabled = false;
-        /**
-         * the value of the range.
-         */
         this.value = 0;
     }
     debounceChanged() {
         this.ionChange = debounceEvent(this.ionChange, this.debounce);
     }
+    minChanged() {
+        if (!this.noUpdate) {
+            this.updateRatio();
+        }
+    }
+    maxChanged() {
+        if (!this.noUpdate) {
+            this.updateRatio();
+        }
+    }
     disabledChanged() {
         if (this.gesture) {
-            this.gesture.disabled = this.disabled;
+            this.gesture.setDisabled(this.disabled);
         }
         this.emitStyle();
     }
@@ -66,23 +43,22 @@ export class Range {
         this.ionChange.emit({ value });
     }
     componentWillLoad() {
-        this.ionStyle = deferEvent(this.ionStyle);
         this.updateRatio();
         this.debounceChanged();
         this.emitStyle();
     }
     async componentDidLoad() {
-        this.gesture = (await import('../../utils/gesture/gesture')).create({
+        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
             el: this.rangeSlider,
             queue: this.queue,
             gestureName: 'range',
-            gesturePriority: 30,
+            gesturePriority: 100,
             threshold: 0,
-            onStart: this.onDragStart.bind(this),
-            onMove: this.onDragMove.bind(this),
-            onEnd: this.onDragEnd.bind(this),
+            onStart: ev => this.onStart(ev),
+            onMove: ev => this.onMove(ev),
+            onEnd: ev => this.onEnd(ev),
         });
-        this.gesture.disabled = this.disabled;
+        this.gesture.setDisabled(this.disabled);
     }
     keyChng(ev) {
         let step = this.step;
@@ -97,6 +73,22 @@ export class Range {
         else {
             this.ratioB += step;
         }
+        this.updateValue();
+    }
+    handleKeyboard(knob, isIncrease) {
+        let step = this.step;
+        step = step > 0 ? step : 1;
+        step = step / (this.max - this.min);
+        if (!isIncrease) {
+            step *= -1;
+        }
+        if (knob === 'A') {
+            this.ratioA += step;
+        }
+        else {
+            this.ratioB += step;
+        }
+        this.updateValue();
     }
     getValue() {
         const value = this.value || 0;
@@ -135,46 +127,39 @@ export class Range {
             this.emitStyle();
         }
     }
-    onDragStart(detail) {
+    onStart(detail) {
         this.fireFocus();
         const rect = this.rect = this.rangeSlider.getBoundingClientRect();
         const currentX = detail.currentX;
-        // figure out which knob they started closer to
         const ratio = clamp(0, (currentX - rect.left) / rect.width, 1);
         this.pressedKnob =
             !this.dualKnobs ||
                 Math.abs(this.ratioA - ratio) < Math.abs(this.ratioB - ratio)
                 ? 'A'
                 : 'B';
-        // update the active knob's position
         this.update(currentX);
     }
-    onDragMove(detail) {
+    onMove(detail) {
         this.update(detail.currentX);
     }
-    onDragEnd(detail) {
+    onEnd(detail) {
         this.update(detail.currentX);
         this.pressedKnob = undefined;
         this.fireBlur();
     }
     update(currentX) {
-        // figure out where the pointer is currently at
-        // update the knob being interacted with
         const rect = this.rect;
         let ratio = clamp(0, (currentX - rect.left) / rect.width, 1);
         if (this.snaps) {
-            // snaps the ratio to the current value
             const value = ratioToValue(ratio, this.min, this.max, this.step);
             ratio = valueToRatio(value, this.min, this.max);
         }
-        // update which knob is pressed
         if (this.pressedKnob === 'A') {
             this.ratioA = ratio;
         }
         else {
             this.ratioB = ratio;
         }
-        // Update input value
         this.updateValue();
     }
     get valA() {
@@ -219,7 +204,7 @@ export class Range {
     }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('.item', this.el), 'range-disabled': this.disabled, 'range-pressed': this.pressedKnob !== undefined, 'range-has-pin': this.pin })
+            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('ion-item', this.el), 'range-disabled': this.disabled, 'range-pressed': this.pressedKnob !== undefined, 'range-has-pin': this.pin })
         };
     }
     render() {
@@ -249,8 +234,28 @@ export class Range {
                         left: barL,
                         right: barR
                     } }),
-                h("ion-range-knob", { knob: "A", pressed: this.pressedKnob === 'A', value: this.valA, ratio: this.ratioA, pin: this.pin, min: min, max: max }),
-                this.dualKnobs && (h("ion-range-knob", { knob: "B", pressed: this.pressedKnob === 'B', value: this.valB, ratio: this.ratioB, pin: this.pin, min: min, max: max }))),
+                renderKnob({
+                    knob: 'A',
+                    pressed: this.pressedKnob === 'A',
+                    value: this.valA,
+                    ratio: this.ratioA,
+                    pin: this.pin,
+                    disabled: this.disabled,
+                    handleKeyboard: this.handleKeyboard.bind(this),
+                    min,
+                    max
+                }),
+                this.dualKnobs && renderKnob({
+                    knob: 'B',
+                    pressed: this.pressedKnob === 'B',
+                    value: this.valB,
+                    ratio: this.ratioB,
+                    pin: this.pin,
+                    disabled: this.disabled,
+                    handleKeyboard: this.handleKeyboard.bind(this),
+                    min,
+                    max
+                })),
             h("slot", { name: "end" })
         ];
     }
@@ -280,11 +285,13 @@ export class Range {
         },
         "max": {
             "type": Number,
-            "attr": "max"
+            "attr": "max",
+            "watchCallbacks": ["maxChanged"]
         },
         "min": {
             "type": Number,
-            "attr": "min"
+            "attr": "min",
+            "watchCallbacks": ["minChanged"]
         },
         "mode": {
             "type": String,
@@ -319,7 +326,7 @@ export class Range {
             "attr": "step"
         },
         "value": {
-            "type": "Any",
+            "type": Number,
             "attr": "value",
             "mutable": true,
             "watchCallbacks": ["valueChanged"]
@@ -360,13 +367,37 @@ export class Range {
     static get style() { return "/**style-placeholder:ion-range:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-range:**/"; }
 }
-export function ratioToValue(ratio, min, max, step) {
+function renderKnob({ knob, value, ratio, min, max, disabled, pressed, pin, handleKeyboard }) {
+    return (h("div", { onKeyDown: (ev) => {
+            const key = ev.key;
+            if (key === 'ArrowLeft' || key === 'ArrowDown') {
+                handleKeyboard(knob, false);
+                ev.preventDefault();
+                ev.stopPropagation();
+            }
+            else if (key === 'ArrowRight' || key === 'ArrowUp') {
+                handleKeyboard(knob, true);
+                ev.preventDefault();
+                ev.stopPropagation();
+            }
+        }, class: {
+            'range-knob-handle': true,
+            'range-knob-pressed': pressed,
+            'range-knob-min': value === min,
+            'range-knob-max': value === max
+        }, style: {
+            'left': `${ratio * 100}%`
+        }, role: "slider", tabindex: disabled ? -1 : 0, "aria-valuemin": min, "aria-valuemax": max, "aria-disabled": disabled ? 'true' : null, "aria-valuenow": value },
+        pin && h("div", { class: "range-pin", role: "presentation" }, Math.round(value)),
+        h("div", { class: "range-knob", role: "presentation" })));
+}
+function ratioToValue(ratio, min, max, step) {
     let value = (max - min) * ratio;
     if (step > 0) {
         value = Math.round(value / step) * step + min;
     }
     return clamp(min, value, max);
 }
-export function valueToRatio(value, min, max) {
+function valueToRatio(value, min, max) {
     return clamp(0, (value - min) / (max - min), 1);
 }

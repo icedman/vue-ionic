@@ -1,5 +1,6 @@
 import '../../stencil.core';
-export declare class Fab {
+import { ComponentInterface } from '../../stencil.core';
+export declare class Fab implements ComponentInterface {
     el: HTMLElement;
     /**
      * Where to align the fab horizontally in the viewport.
@@ -12,11 +13,15 @@ export declare class Fab {
      */
     vertical?: 'top' | 'bottom' | 'center';
     /**
-     * If true, the fab will display on the edge of the header if
+     * If `true`, the fab will display on the edge of the header if
      * `vertical` is `"top"`, and on the edge of the footer if
      * it is `"bottom"`. Should be used with a `fixed` slot.
      */
     edge: boolean;
+    /**
+     * If `true`, both the `ion-fab-button` and all `ion-fab-list` inside `ion-fab` will become active.
+     * That means `ion-fab-button` will become a `close` icon and `ion-fab-list` will become visible.
+     */
     activated: boolean;
     activatedChanged(): void;
     componentDidLoad(): void;
@@ -28,7 +33,7 @@ export declare class Fab {
     hostData(): {
         class: {
             [x: string]: boolean;
-            ['fab-edge']: boolean;
+            'fab-edge': boolean;
         };
     };
     render(): JSX.Element;

@@ -1,6 +1,7 @@
+import { ComponentProps } from '../../../interface';
 export interface NavOutlet {
-    setRouteId(id: string, data: any, direction: number): Promise<RouteWrite>;
-    getRouteId(): RouteID | undefined;
+    setRouteId(id: string, params: ComponentProps | undefined, direction: number): Promise<RouteWrite>;
+    getRouteId(): Promise<RouteID | undefined>;
 }
 export interface RouterEventDetail {
     from: string | null;
@@ -19,12 +20,16 @@ export interface RouteWrite {
 export interface RouteID {
     id: string;
     element: HTMLElement | undefined;
-    params?: any;
+    params?: {
+        [key: string]: any;
+    };
 }
 export interface RouteEntry {
     id: string;
     path: string[];
-    params: any | undefined;
+    params: {
+        [key: string]: any;
+    } | undefined;
 }
 export interface RouteNode extends RouteEntry {
     children: RouteTree;

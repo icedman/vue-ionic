@@ -23,6 +23,16 @@
       },
       "props": [
         {
+          "name": "animated",
+          "type": "Boolean",
+          "attr": "animated"
+        },
+        {
+          "name": "backdropDismiss",
+          "type": "Boolean",
+          "attr": "backdrop-dismiss"
+        },
+        {
           "name": "buttons",
           "attr": "buttons"
         },
@@ -30,11 +40,6 @@
           "name": "cssClass",
           "type": "String",
           "attr": "css-class"
-        },
-        {
-          "name": "enableBackdropDismiss",
-          "type": "Boolean",
-          "attr": "enable-backdrop-dismiss"
         },
         {
           "name": "enterAnimation",
@@ -55,9 +60,14 @@
           "attr": "leave-animation"
         },
         {
-          "name": "overlayId",
+          "name": "mode",
+          "type": "String",
+          "attr": "mode"
+        },
+        {
+          "name": "overlayIndex",
           "type": "Number",
-          "attr": "overlay-id"
+          "attr": "overlay-index"
         },
         {
           "name": "subHeader",
@@ -68,11 +78,6 @@
           "name": "translucent",
           "type": "Boolean",
           "attr": "translucent"
-        },
-        {
-          "name": "willAnimate",
-          "type": "Boolean",
-          "attr": "will-animate"
         }
       ],
       "listeners": [
@@ -152,32 +157,6 @@
       "componentClass": "ActionSheetController",
       "componentPath": "components/action-sheet-controller/action-sheet-controller.js",
       "styles": {},
-      "listeners": [
-        {
-          "event": "body:ionActionSheetDidUnload",
-          "method": "actionSheetWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionActionSheetWillDismiss",
-          "method": "actionSheetWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionActionSheetWillPresent",
-          "method": "actionSheetWillPresent",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:keyup.escape",
-          "method": "escapeKeyUp",
-          "passive": false,
-          "capture": false
-        }
-      ],
       "methods": [
         {
           "name": "create"
@@ -219,6 +198,16 @@
       },
       "props": [
         {
+          "name": "animated",
+          "type": "Boolean",
+          "attr": "animated"
+        },
+        {
+          "name": "backdropDismiss",
+          "type": "Boolean",
+          "attr": "backdrop-dismiss"
+        },
+        {
           "name": "buttons",
           "attr": "buttons",
           "watch": [
@@ -229,11 +218,6 @@
           "name": "cssClass",
           "type": "String",
           "attr": "css-class"
-        },
-        {
-          "name": "enableBackdropDismiss",
-          "type": "Boolean",
-          "attr": "enable-backdrop-dismiss"
         },
         {
           "name": "enterAnimation",
@@ -272,9 +256,9 @@
           "attr": "mode"
         },
         {
-          "name": "overlayId",
+          "name": "overlayIndex",
           "type": "Number",
-          "attr": "overlay-id"
+          "attr": "overlay-index"
         },
         {
           "name": "subHeader",
@@ -285,11 +269,6 @@
           "name": "translucent",
           "type": "Boolean",
           "attr": "translucent"
-        },
-        {
-          "name": "willAnimate",
-          "type": "Boolean",
-          "attr": "will-animate"
         }
       ],
       "listeners": [
@@ -369,32 +348,6 @@
       "componentClass": "AlertController",
       "componentPath": "components/alert-controller/alert-controller.js",
       "styles": {},
-      "listeners": [
-        {
-          "event": "body:ionAlertDidUnload",
-          "method": "alertWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionAlertWillDismiss",
-          "method": "alertWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionAlertWillPresent",
-          "method": "alertWillPresent",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:keyup.escape",
-          "method": "escapeKeyUp",
-          "passive": false,
-          "capture": false
-        }
-      ],
       "methods": [
         {
           "name": "create"
@@ -460,6 +413,12 @@
         {
           "name": "create"
         }
+      ],
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
       ]
     },
     {
@@ -468,14 +427,9 @@
       "componentClass": "App",
       "componentPath": "components/app/app.js",
       "styles": {
-        "ios": {
+        "$": {
           "stylePaths": [
-            "components/app/app.ios.scss"
-          ]
-        },
-        "md": {
-          "stylePaths": [
-            "components/app/app.md.scss"
+            "components/app/app.scss"
           ]
         }
       },
@@ -614,6 +568,11 @@
       ],
       "listeners": [
         {
+          "event": "click",
+          "method": "onMouseDown",
+          "passive": false
+        },
+        {
           "event": "mousedown",
           "method": "onMouseDown",
           "passive": false
@@ -702,17 +661,20 @@
         {
           "name": "disabled",
           "type": "Boolean",
+          "reflectToAttr": true,
           "attr": "disabled"
         },
         {
           "name": "expand",
           "type": "String",
+          "reflectToAttr": true,
           "attr": "expand"
         },
         {
           "name": "fill",
           "type": "String",
           "mutable": true,
+          "reflectToAttr": true,
           "attr": "fill"
         },
         {
@@ -733,11 +695,13 @@
         {
           "name": "shape",
           "type": "String",
+          "reflectToAttr": true,
           "attr": "shape"
         },
         {
           "name": "size",
           "type": "String",
+          "reflectToAttr": true,
           "attr": "size"
         },
         {
@@ -1126,6 +1090,11 @@
           "attr": "color"
         },
         {
+          "name": "fill",
+          "type": "String",
+          "attr": "fill"
+        },
+        {
           "name": "mode",
           "type": "String",
           "attr": "mode"
@@ -1134,6 +1103,11 @@
           "name": "name",
           "type": "String",
           "attr": "name"
+        },
+        {
+          "name": "src",
+          "type": "String",
+          "attr": "src"
         }
       ],
       "shadow": true
@@ -1279,6 +1253,12 @@
           "capture": false
         }
       ],
+      "context": [
+        {
+          "name": "win",
+          "id": "window"
+        }
+      ],
       "hostElement": {
         "name": "el"
       },
@@ -1286,20 +1266,13 @@
     },
     {
       "tag": "ion-content",
-      "dependencies": [
-        "ion-scroll"
-      ],
+      "dependencies": [],
       "componentClass": "Content",
       "componentPath": "components/content/content.js",
       "styles": {
-        "ios": {
+        "$": {
           "stylePaths": [
-            "components/content/content.ios.scss"
-          ]
-        },
-        "md": {
-          "stylePaths": [
-            "components/content/content.md.scss"
+            "components/content/content.scss"
           ]
         }
       },
@@ -1312,6 +1285,7 @@
         {
           "name": "forceOverscroll",
           "type": "Boolean",
+          "mutable": true,
           "attr": "force-overscroll"
         },
         {
@@ -1320,14 +1294,19 @@
           "attr": "fullscreen"
         },
         {
-          "name": "scrollEnabled",
-          "type": "Boolean",
-          "attr": "scroll-enabled"
-        },
-        {
           "name": "scrollEvents",
           "type": "Boolean",
           "attr": "scroll-events"
+        },
+        {
+          "name": "scrollX",
+          "type": "Boolean",
+          "attr": "scroll-x"
+        },
+        {
+          "name": "scrollY",
+          "type": "Boolean",
+          "attr": "scroll-y"
         }
       ],
       "listeners": [
@@ -1341,6 +1320,18 @@
       "methods": [
         {
           "name": "getScrollElement"
+        },
+        {
+          "name": "scrollByPoint"
+        },
+        {
+          "name": "scrollToBottom"
+        },
+        {
+          "name": "scrollToPoint"
+        },
+        {
+          "name": "scrollToTop"
         }
       ],
       "context": [
@@ -1351,18 +1342,32 @@
         {
           "name": "queue",
           "id": "queue"
+        },
+        {
+          "name": "win",
+          "id": "window"
         }
       ],
       "hostElement": {
         "name": "el"
       },
+      "events": [
+        {
+          "event": "ionScroll"
+        },
+        {
+          "event": "ionScrollEnd"
+        },
+        {
+          "event": "ionScrollStart"
+        }
+      ],
       "shadow": true
     },
     {
       "tag": "ion-datetime",
       "dependencies": [
-        "ion-picker-controller",
-        "ion-ripple-effect"
+        "ion-picker-controller"
       ],
       "componentClass": "Datetime",
       "componentPath": "components/datetime/datetime.js",
@@ -1440,6 +1445,11 @@
           "attr": "minute-values"
         },
         {
+          "name": "mode",
+          "type": "String",
+          "attr": "mode"
+        },
+        {
           "name": "monthNames",
           "type": "String",
           "attr": "month-names"
@@ -1453,6 +1463,11 @@
           "name": "monthValues",
           "type": "Any",
           "attr": "month-values"
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "attr": "name"
         },
         {
           "name": "pickerFormat",
@@ -1488,20 +1503,32 @@
           "name": "text"
         }
       ],
+      "methods": [
+        {
+          "name": "open"
+        }
+      ],
       "connect": [
         {
           "name": "pickerCtrl",
           "tag": "ion-picker-controller"
         }
       ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionCancel"
         },
         {
+          "event": "ionChange"
+        },
+        {
           "event": "ionStyle"
         }
-      ]
+      ],
+      "shadow": true
     },
     {
       "tag": "ion-fab",
@@ -1606,6 +1633,11 @@
           "attr": "mode"
         },
         {
+          "name": "routerDirection",
+          "type": "String",
+          "attr": "router-direction"
+        },
+        {
           "name": "show",
           "type": "Boolean",
           "attr": "show"
@@ -1614,11 +1646,35 @@
           "name": "translucent",
           "type": "Boolean",
           "attr": "translucent"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        }
+      ],
+      "states": [
+        {
+          "name": "keyFocus"
+        }
+      ],
+      "context": [
+        {
+          "name": "win",
+          "id": "window"
         }
       ],
       "hostElement": {
         "name": "el"
       },
+      "events": [
+        {
+          "event": "ionBlur"
+        },
+        {
+          "event": "ionFocus"
+        }
+      ],
       "shadow": true
     },
     {
@@ -1735,76 +1791,6 @@
       ]
     },
     {
-      "tag": "ion-hide-when",
-      "dependencies": [],
-      "componentClass": "HideWhen",
-      "componentPath": "components/hide-when/hide-when.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/hide-when/hide-when.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "mediaQuery",
-          "type": "String",
-          "attr": "media-query"
-        },
-        {
-          "name": "mode",
-          "type": "String",
-          "attr": "mode"
-        },
-        {
-          "name": "or",
-          "type": "Boolean",
-          "attr": "or"
-        },
-        {
-          "name": "orientation",
-          "type": "String",
-          "attr": "orientation"
-        },
-        {
-          "name": "platform",
-          "type": "String",
-          "attr": "platform"
-        },
-        {
-          "name": "size",
-          "type": "String",
-          "attr": "size"
-        }
-      ],
-      "states": [
-        {
-          "name": "passesTest"
-        }
-      ],
-      "listeners": [
-        {
-          "event": "window:resize",
-          "method": "onResize",
-          "capture": false
-        }
-      ],
-      "context": [
-        {
-          "name": "config",
-          "id": "config"
-        },
-        {
-          "name": "win",
-          "id": "window"
-        }
-      ],
-      "hostElement": {
-        "name": "element"
-      }
-    },
-    {
       "tag": "ion-img",
       "dependencies": [],
       "componentClass": "Img",
@@ -1897,9 +1883,6 @@
       "methods": [
         {
           "name": "complete"
-        },
-        {
-          "name": "waitFor"
         }
       ],
       "context": [
@@ -2135,6 +2118,11 @@
           "name": "hasFocus"
         }
       ],
+      "methods": [
+        {
+          "name": "setFocus"
+        }
+      ],
       "hostElement": {
         "name": "el"
       },
@@ -2230,14 +2218,14 @@
           "attr": "router-direction"
         },
         {
-          "name": "state",
-          "type": "String",
-          "attr": "state"
-        },
-        {
           "name": "type",
           "type": "String",
           "attr": "type"
+        }
+      ],
+      "states": [
+        {
+          "name": "multipleInputs"
         }
       ],
       "listeners": [
@@ -2313,7 +2301,9 @@
     },
     {
       "tag": "ion-item-option",
-      "dependencies": [],
+      "dependencies": [
+        "ion-ripple-effect"
+      ],
       "componentClass": "ItemOption",
       "componentPath": "components/item-option/item-option.js",
       "styles": {
@@ -2387,12 +2377,6 @@
       "methods": [
         {
           "name": "fireSwipeEvent"
-        },
-        {
-          "name": "isEndSide"
-        },
-        {
-          "name": "width"
         }
       ],
       "context": [
@@ -2422,6 +2406,16 @@
           ]
         }
       },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "Boolean",
+          "attr": "disabled",
+          "watch": [
+            "disabledChanged"
+          ]
+        }
+      ],
       "states": [
         {
           "name": "state"
@@ -2493,9 +2487,9 @@
           ]
         }
       ],
-      "methods": [
+      "states": [
         {
-          "name": "getText"
+          "name": "noAnimate"
         }
       ],
       "hostElement": {
@@ -2535,19 +2529,21 @@
           "name": "lines",
           "type": "String",
           "attr": "lines"
+        },
+        {
+          "name": "mode",
+          "type": "String",
+          "attr": "mode"
         }
       ],
       "methods": [
         {
           "name": "closeSlidingItems"
-        },
-        {
-          "name": "getOpenItem"
-        },
-        {
-          "name": "setOpenItem"
         }
-      ]
+      ],
+      "hostElement": {
+        "name": "el"
+      }
     },
     {
       "tag": "ion-list-header",
@@ -2603,9 +2599,14 @@
       },
       "props": [
         {
-          "name": "content",
-          "type": "String",
-          "attr": "content"
+          "name": "animated",
+          "type": "Boolean",
+          "attr": "animated"
+        },
+        {
+          "name": "backdropDismiss",
+          "type": "Boolean",
+          "attr": "backdrop-dismiss"
         },
         {
           "name": "cssClass",
@@ -2613,19 +2614,9 @@
           "attr": "css-class"
         },
         {
-          "name": "dismissOnPageChange",
-          "type": "Boolean",
-          "attr": "dismiss-on-page-change"
-        },
-        {
           "name": "duration",
           "type": "Number",
           "attr": "duration"
-        },
-        {
-          "name": "enableBackdropDismiss",
-          "type": "Boolean",
-          "attr": "enable-backdrop-dismiss"
         },
         {
           "name": "enterAnimation",
@@ -2641,9 +2632,19 @@
           "attr": "leave-animation"
         },
         {
-          "name": "overlayId",
+          "name": "message",
+          "type": "String",
+          "attr": "message"
+        },
+        {
+          "name": "mode",
+          "type": "String",
+          "attr": "mode"
+        },
+        {
+          "name": "overlayIndex",
           "type": "Number",
-          "attr": "overlay-id"
+          "attr": "overlay-index"
         },
         {
           "name": "showBackdrop",
@@ -2660,11 +2661,6 @@
           "name": "translucent",
           "type": "Boolean",
           "attr": "translucent"
-        },
-        {
-          "name": "willAnimate",
-          "type": "Boolean",
-          "attr": "will-animate"
         }
       ],
       "listeners": [
@@ -2737,32 +2733,6 @@
       "componentClass": "LoadingController",
       "componentPath": "components/loading-controller/loading-controller.js",
       "styles": {},
-      "listeners": [
-        {
-          "event": "body:ionLoadingDidUnload",
-          "method": "loadingWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionLoadingWillDismiss",
-          "method": "loadingWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionLoadingWillPresent",
-          "method": "loadingWillPresent",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:keyup.escape",
-          "method": "escapeKeyUp",
-          "passive": false,
-          "capture": false
-        }
-      ],
       "methods": [
         {
           "name": "create"
@@ -2829,17 +2799,18 @@
         {
           "name": "side",
           "type": "String",
+          "reflectToAttr": true,
           "attr": "side",
           "watch": [
             "sideChanged"
           ]
         },
         {
-          "name": "swipeEnabled",
+          "name": "swipeGesture",
           "type": "Boolean",
-          "attr": "swipe-enabled",
+          "attr": "swipe-gesture",
           "watch": [
-            "swipeEnabledChanged"
+            "swipeGestureChanged"
           ]
         },
         {
@@ -2862,24 +2833,21 @@
       ],
       "listeners": [
         {
-          "event": "body:click",
-          "method": "onBackdropClick",
-          "passive": false,
-          "enabled": false
-        },
-        {
           "event": "body:ionSplitPaneVisible",
           "method": "onSplitPaneChanged",
           "passive": false,
           "capture": false
+        },
+        {
+          "event": "click",
+          "method": "onBackdropClick",
+          "passive": false,
+          "enabled": false
         }
       ],
       "methods": [
         {
           "name": "close"
-        },
-        {
-          "name": "getWidth"
         },
         {
           "name": "isActive"
@@ -2934,13 +2902,19 @@
       },
       "events": [
         {
-          "event": "ionClose"
+          "event": "ionDidClose"
+        },
+        {
+          "event": "ionDidOpen"
         },
         {
           "event": "ionMenuChange"
         },
         {
-          "event": "ionOpen"
+          "event": "ionWillClose"
+        },
+        {
+          "event": "ionWillOpen"
         }
       ],
       "shadow": true
@@ -2949,7 +2923,8 @@
       "tag": "ion-menu-button",
       "dependencies": [
         "ion-icon",
-        "ion-menu-toggle"
+        "ion-menu-toggle",
+        "ion-ripple-effect"
       ],
       "componentClass": "MenuButton",
       "componentPath": "components/menu-button/menu-button.js",
@@ -3002,25 +2977,19 @@
       ],
       "componentClass": "MenuController",
       "componentPath": "components/menu-controller/menu-controller.js",
-      "styles": {},
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/menu-controller/menu-controller.scss"
+          ]
+        }
+      },
       "methods": [
         {
-          "name": "_register"
-        },
-        {
-          "name": "_setActiveMenu"
-        },
-        {
-          "name": "_setOpen"
-        },
-        {
-          "name": "_unregister"
+          "name": "_getInstance"
         },
         {
           "name": "close"
-        },
-        {
-          "name": "createAnimation"
         },
         {
           "name": "enable"
@@ -3050,10 +3019,16 @@
           "name": "registerAnimation"
         },
         {
-          "name": "swipeEnable"
+          "name": "swipeGesture"
         },
         {
           "name": "toggle"
+        }
+      ],
+      "context": [
+        {
+          "name": "doc",
+          "id": "document"
         }
       ],
       "connect": [
@@ -3142,6 +3117,16 @@
       },
       "props": [
         {
+          "name": "animated",
+          "type": "Boolean",
+          "attr": "animated"
+        },
+        {
+          "name": "backdropDismiss",
+          "type": "Boolean",
+          "attr": "backdrop-dismiss"
+        },
+        {
           "name": "component",
           "type": "String",
           "attr": "component"
@@ -3160,11 +3145,6 @@
           "attr": "delegate"
         },
         {
-          "name": "enableBackdropDismiss",
-          "type": "Boolean",
-          "attr": "enable-backdrop-dismiss"
-        },
-        {
           "name": "enterAnimation",
           "attr": "enter-animation"
         },
@@ -3178,19 +3158,19 @@
           "attr": "leave-animation"
         },
         {
-          "name": "overlayId",
+          "name": "mode",
+          "type": "String",
+          "attr": "mode"
+        },
+        {
+          "name": "overlayIndex",
           "type": "Number",
-          "attr": "overlay-id"
+          "attr": "overlay-index"
         },
         {
           "name": "showBackdrop",
           "type": "Boolean",
           "attr": "show-backdrop"
-        },
-        {
-          "name": "willAnimate",
-          "type": "Boolean",
-          "attr": "will-animate"
         }
       ],
       "listeners": [
@@ -3293,32 +3273,6 @@
       "componentClass": "ModalController",
       "componentPath": "components/modal-controller/modal-controller.js",
       "styles": {},
-      "listeners": [
-        {
-          "event": "body:ionModalDidUnload",
-          "method": "modalWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionModalWillDismiss",
-          "method": "modalWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionModalWillPresent",
-          "method": "modalWillPresent",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:keyup.escape",
-          "method": "escapeKeyUp",
-          "passive": false,
-          "capture": false
-        }
-      ],
       "methods": [
         {
           "name": "create"
@@ -3355,8 +3309,11 @@
         {
           "name": "animated",
           "type": "Boolean",
-          "mutable": true,
           "attr": "animated"
+        },
+        {
+          "name": "animation",
+          "attr": "animation"
         },
         {
           "name": "delegate",
@@ -3375,12 +3332,12 @@
           "attr": "root-params"
         },
         {
-          "name": "swipeBackEnabled",
+          "name": "swipeGesture",
           "type": "Boolean",
           "mutable": true,
-          "attr": "swipe-back-enabled",
+          "attr": "swipe-gesture",
           "watch": [
-            "swipeBackEnabledChanged"
+            "swipeGestureChanged"
           ]
         }
       ],
@@ -3405,12 +3362,6 @@
         },
         {
           "name": "insertPages"
-        },
-        {
-          "name": "isAnimating"
-        },
-        {
-          "name": "length"
         },
         {
           "name": "pop"
@@ -3603,6 +3554,16 @@
       },
       "props": [
         {
+          "name": "animated",
+          "type": "Boolean",
+          "attr": "animated"
+        },
+        {
+          "name": "backdropDismiss",
+          "type": "Boolean",
+          "attr": "backdrop-dismiss"
+        },
+        {
           "name": "buttons",
           "attr": "buttons"
         },
@@ -3621,11 +3582,6 @@
           "attr": "duration"
         },
         {
-          "name": "enableBackdropDismiss",
-          "type": "Boolean",
-          "attr": "enable-backdrop-dismiss"
-        },
-        {
           "name": "enterAnimation",
           "attr": "enter-animation"
         },
@@ -3639,27 +3595,19 @@
           "attr": "leave-animation"
         },
         {
-          "name": "overlayId",
+          "name": "mode",
+          "type": "String",
+          "attr": "mode"
+        },
+        {
+          "name": "overlayIndex",
           "type": "Number",
-          "attr": "overlay-id"
+          "attr": "overlay-index"
         },
         {
           "name": "showBackdrop",
           "type": "Boolean",
           "attr": "show-backdrop"
-        },
-        {
-          "name": "willAnimate",
-          "type": "Boolean",
-          "attr": "will-animate"
-        }
-      ],
-      "states": [
-        {
-          "name": "showSpinner"
-        },
-        {
-          "name": "spinner"
         }
       ],
       "listeners": [
@@ -3672,19 +3620,10 @@
       ],
       "methods": [
         {
-          "name": "addButton"
-        },
-        {
-          "name": "addColumn"
-        },
-        {
           "name": "dismiss"
         },
         {
           "name": "getColumn"
-        },
-        {
-          "name": "getColumns"
         },
         {
           "name": "onDidDismiss"
@@ -3766,32 +3705,6 @@
       "componentClass": "PickerController",
       "componentPath": "components/picker-controller/picker-controller.js",
       "styles": {},
-      "listeners": [
-        {
-          "event": "body:ionPickerDidUnload",
-          "method": "pickerWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionPickerWillDismiss",
-          "method": "pickerWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionPickerWillPresent",
-          "method": "pickerWillPresent",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:keyup.escape",
-          "method": "escapeKeyUp",
-          "passive": false,
-          "capture": false
-        }
-      ],
       "methods": [
         {
           "name": "create"
@@ -3832,9 +3745,14 @@
       },
       "props": [
         {
-          "name": "color",
-          "type": "String",
-          "attr": "color"
+          "name": "animated",
+          "type": "Boolean",
+          "attr": "animated"
+        },
+        {
+          "name": "backdropDismiss",
+          "type": "Boolean",
+          "attr": "backdrop-dismiss"
         },
         {
           "name": "component",
@@ -3855,18 +3773,13 @@
           "attr": "delegate"
         },
         {
-          "name": "enableBackdropDismiss",
-          "type": "Boolean",
-          "attr": "enable-backdrop-dismiss"
-        },
-        {
           "name": "enterAnimation",
           "attr": "enter-animation"
         },
         {
-          "name": "ev",
+          "name": "event",
           "type": "Any",
-          "attr": "ev"
+          "attr": "event"
         },
         {
           "name": "keyboardClose",
@@ -3883,9 +3796,9 @@
           "attr": "mode"
         },
         {
-          "name": "overlayId",
+          "name": "overlayIndex",
           "type": "Number",
-          "attr": "overlay-id"
+          "attr": "overlay-index"
         },
         {
           "name": "showBackdrop",
@@ -3896,11 +3809,6 @@
           "name": "translucent",
           "type": "Boolean",
           "attr": "translucent"
-        },
-        {
-          "name": "willAnimate",
-          "type": "Boolean",
-          "attr": "will-animate"
         }
       ],
       "listeners": [
@@ -3993,7 +3901,8 @@
           "event": "ionPopoverWillPresent",
           "method": "willPresent"
         }
-      ]
+      ],
+      "scoped": true
     },
     {
       "tag": "ion-popover-controller",
@@ -4003,32 +3912,6 @@
       "componentClass": "PopoverController",
       "componentPath": "components/popover-controller/popover-controller.js",
       "styles": {},
-      "listeners": [
-        {
-          "event": "body:ionPopoverDidUnload",
-          "method": "popoverWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionPopoverWillDismiss",
-          "method": "popoverWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionPopoverWillPresent",
-          "method": "popoverWillPresent",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:keyup.escape",
-          "method": "escapeKeyUp",
-          "passive": false,
-          "capture": false
-        }
-      ],
       "methods": [
         {
           "name": "create"
@@ -4102,7 +3985,7 @@
         },
         {
           "name": "value",
-          "type": "String",
+          "type": "Any",
           "mutable": true,
           "attr": "value"
         }
@@ -4150,21 +4033,13 @@
           "attr": "allow-empty-selection"
         },
         {
-          "name": "disabled",
-          "type": "Boolean",
-          "attr": "disabled",
-          "watch": [
-            "disabledChanged"
-          ]
-        },
-        {
           "name": "name",
           "type": "String",
           "attr": "name"
         },
         {
           "name": "value",
-          "type": "String",
+          "type": "Any",
           "mutable": true,
           "attr": "value",
           "watch": [
@@ -4203,9 +4078,7 @@
     },
     {
       "tag": "ion-range",
-      "dependencies": [
-        "ion-range-knob"
-      ],
+      "dependencies": [],
       "componentClass": "Range",
       "componentPath": "components/range/range.js",
       "styles": {
@@ -4250,12 +4123,18 @@
         {
           "name": "max",
           "type": "Number",
-          "attr": "max"
+          "attr": "max",
+          "watch": [
+            "maxChanged"
+          ]
         },
         {
           "name": "min",
           "type": "Number",
-          "attr": "min"
+          "attr": "min",
+          "watch": [
+            "minChanged"
+          ]
         },
         {
           "name": "mode",
@@ -4284,7 +4163,7 @@
         },
         {
           "name": "value",
-          "type": "Any",
+          "type": "Number",
           "mutable": true,
           "attr": "value",
           "watch": [
@@ -4341,76 +4220,6 @@
         }
       ],
       "shadow": true
-    },
-    {
-      "tag": "ion-range-knob",
-      "dependencies": [],
-      "componentClass": "RangeKnob",
-      "componentPath": "components/range-knob/range-knob.js",
-      "styles": {},
-      "props": [
-        {
-          "name": "disabled",
-          "type": "Boolean",
-          "attr": "disabled"
-        },
-        {
-          "name": "knob",
-          "type": "String",
-          "attr": "knob"
-        },
-        {
-          "name": "labelId",
-          "type": "String",
-          "attr": "label-id"
-        },
-        {
-          "name": "max",
-          "type": "Number",
-          "attr": "max"
-        },
-        {
-          "name": "min",
-          "type": "Number",
-          "attr": "min"
-        },
-        {
-          "name": "pin",
-          "type": "Boolean",
-          "attr": "pin"
-        },
-        {
-          "name": "pressed",
-          "type": "Boolean",
-          "attr": "pressed"
-        },
-        {
-          "name": "ratio",
-          "type": "Number",
-          "attr": "ratio"
-        },
-        {
-          "name": "value",
-          "type": "Number",
-          "attr": "value"
-        }
-      ],
-      "listeners": [
-        {
-          "event": "keydown",
-          "method": "handleKeyBoard",
-          "passive": false,
-          "capture": false
-        }
-      ],
-      "events": [
-        {
-          "event": "ionDecrease"
-        },
-        {
-          "event": "ionIncrease"
-        }
-      ]
     },
     {
       "tag": "ion-refresher",
@@ -4581,7 +4390,12 @@
       ],
       "states": [
         {
-          "name": "activated"
+          "name": "state"
+        }
+      ],
+      "methods": [
+        {
+          "name": "complete"
         }
       ],
       "context": [
@@ -4596,7 +4410,12 @@
       ],
       "hostElement": {
         "name": "el"
-      }
+      },
+      "events": [
+        {
+          "event": "ionItemReorder"
+        }
+      ]
     },
     {
       "tag": "ion-ripple-effect",
@@ -4610,42 +4429,6 @@
           ]
         }
       },
-      "props": [
-        {
-          "name": "parent",
-          "type": "String",
-          "attr": "parent"
-        },
-        {
-          "name": "tapClick",
-          "type": "Boolean",
-          "attr": "tap-click",
-          "watch": [
-            "tapClickChanged"
-          ]
-        }
-      ],
-      "listeners": [
-        {
-          "event": "ionActivated",
-          "method": "ionActivated",
-          "passive": false,
-          "enabled": false,
-          "capture": false
-        },
-        {
-          "event": "mousedown",
-          "method": "mouseDown",
-          "enabled": false,
-          "capture": false
-        },
-        {
-          "event": "touchstart",
-          "method": "touchStart",
-          "enabled": false,
-          "capture": false
-        }
-      ],
       "methods": [
         {
           "name": "addRipple"
@@ -4657,12 +4440,12 @@
           "id": "queue"
         },
         {
-          "name": "enableListener",
-          "id": "enableListener"
+          "name": "win",
+          "id": "window"
         },
         {
-          "name": "doc",
-          "id": "document"
+          "name": "config",
+          "id": "config"
         }
       ],
       "hostElement": {
@@ -4717,12 +4500,18 @@
         {
           "name": "from",
           "type": "String",
-          "attr": "from"
+          "attr": "from",
+          "watch": [
+            "propDidChange"
+          ]
         },
         {
           "name": "to",
           "type": "String",
-          "attr": "to"
+          "attr": "to",
+          "watch": [
+            "propDidChange"
+          ]
         }
       ],
       "events": [
@@ -4751,6 +4540,12 @@
       ],
       "listeners": [
         {
+          "event": "document:ionBackButton",
+          "method": "onBackButton",
+          "passive": false,
+          "capture": false
+        },
+        {
           "event": "window:popstate",
           "method": "onPopState",
           "passive": false,
@@ -4758,6 +4553,9 @@
         }
       ],
       "methods": [
+        {
+          "name": "goBack"
+        },
         {
           "name": "navChanged"
         },
@@ -4812,12 +4610,11 @@
         {
           "name": "animated",
           "type": "Boolean",
-          "mutable": true,
           "attr": "animated"
         },
         {
-          "name": "animationBuilder",
-          "attr": "animation-builder"
+          "name": "animation",
+          "attr": "animation"
         },
         {
           "name": "delegate",
@@ -4886,87 +4683,6 @@
           ]
         }
       },
-      "shadow": true
-    },
-    {
-      "tag": "ion-scroll",
-      "dependencies": [],
-      "componentClass": "Scroll",
-      "componentPath": "components/scroll/scroll.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/scroll/scroll.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "forceOverscroll",
-          "type": "Boolean",
-          "mutable": true,
-          "attr": "force-overscroll"
-        },
-        {
-          "name": "mode",
-          "type": "String",
-          "attr": "mode"
-        },
-        {
-          "name": "scrollEvents",
-          "type": "Boolean",
-          "attr": "scroll-events"
-        }
-      ],
-      "listeners": [
-        {
-          "event": "scroll",
-          "method": "onScroll",
-          "capture": false
-        }
-      ],
-      "methods": [
-        {
-          "name": "scrollByPoint"
-        },
-        {
-          "name": "scrollToBottom"
-        },
-        {
-          "name": "scrollToPoint"
-        },
-        {
-          "name": "scrollToTop"
-        }
-      ],
-      "context": [
-        {
-          "name": "config",
-          "id": "config"
-        },
-        {
-          "name": "queue",
-          "id": "queue"
-        },
-        {
-          "name": "win",
-          "id": "window"
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "events": [
-        {
-          "event": "ionScroll"
-        },
-        {
-          "event": "ionScrollEnd"
-        },
-        {
-          "event": "ionScrollStart"
-        }
-      ],
       "shadow": true
     },
     {
@@ -5075,9 +4791,21 @@
       "states": [
         {
           "name": "focused"
+        },
+        {
+          "name": "noAnimate"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setFocus"
         }
       ],
       "context": [
+        {
+          "name": "config",
+          "id": "config"
+        },
         {
           "name": "doc",
           "id": "document"
@@ -5167,7 +4895,7 @@
           "event": "ionChange"
         }
       ],
-      "shadow": true
+      "scoped": true
     },
     {
       "tag": "ion-segment-button",
@@ -5271,6 +4999,11 @@
           "attr": "interface-options"
         },
         {
+          "name": "mode",
+          "type": "String",
+          "attr": "mode"
+        },
+        {
           "name": "multiple",
           "type": "Boolean",
           "attr": "multiple"
@@ -5336,6 +5069,11 @@
           "capture": false
         }
       ],
+      "methods": [
+        {
+          "name": "open"
+        }
+      ],
       "connect": [
         {
           "name": "actionSheetCtrl",
@@ -5391,7 +5129,7 @@
         },
         {
           "name": "value",
-          "type": "String",
+          "type": "Any",
           "mutable": true,
           "attr": "value"
         }
@@ -5455,81 +5193,8 @@
           "passive": false,
           "capture": false
         }
-      ]
-    },
-    {
-      "tag": "ion-show-when",
-      "dependencies": [],
-      "componentClass": "ShowWhen",
-      "componentPath": "components/show-when/show-when.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/show-when/show-when.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "mediaQuery",
-          "type": "String",
-          "attr": "media-query"
-        },
-        {
-          "name": "mode",
-          "type": "String",
-          "attr": "mode"
-        },
-        {
-          "name": "or",
-          "type": "Boolean",
-          "attr": "or"
-        },
-        {
-          "name": "orientation",
-          "type": "String",
-          "attr": "orientation"
-        },
-        {
-          "name": "platform",
-          "type": "String",
-          "attr": "platform"
-        },
-        {
-          "name": "size",
-          "type": "String",
-          "attr": "size"
-        }
       ],
-      "states": [
-        {
-          "name": "passesTest"
-        }
-      ],
-      "listeners": [
-        {
-          "event": "window:resize",
-          "method": "onResize",
-          "capture": false
-        }
-      ],
-      "context": [
-        {
-          "name": "config",
-          "id": "config"
-        },
-        {
-          "name": "calculatedPlatforms",
-          "id": "platforms"
-        },
-        {
-          "name": "win",
-          "id": "window"
-        }
-      ],
-      "hostElement": {
-        "name": "element"
-      }
+      "scoped": true
     },
     {
       "tag": "ion-skeleton-text",
@@ -5568,7 +5233,12 @@
             "components/slide/slide.scss"
           ]
         }
-      }
+      },
+      "events": [
+        {
+          "event": "ionSlideChanged"
+        }
+      ]
     },
     {
       "tag": "ion-slides",
@@ -5588,15 +5258,20 @@
         }
       },
       "assetPaths": [
-        "components/slides/vendor"
+        "components/slides/swiper"
       ],
       "props": [
+        {
+          "name": "mode",
+          "type": "String",
+          "attr": "mode"
+        },
         {
           "name": "options",
           "type": "Any",
           "attr": "options",
           "watch": [
-            "updateSwiperOptions"
+            "optionsChanged"
           ]
         },
         {
@@ -5608,6 +5283,14 @@
           "name": "scrollbar",
           "type": "Boolean",
           "attr": "scrollbar"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "ionSlideChanged",
+          "method": "onSlideChanged",
+          "passive": false,
+          "capture": false
         }
       ],
       "methods": [
@@ -5706,8 +5389,7 @@
         {
           "event": "ionSlideWillChange"
         }
-      ],
-      "shadow": true
+      ]
     },
     {
       "tag": "ion-spinner",
@@ -5715,14 +5397,9 @@
       "componentClass": "Spinner",
       "componentPath": "components/spinner/spinner.js",
       "styles": {
-        "ios": {
+        "$": {
           "stylePaths": [
-            "components/spinner/spinner.ios.scss"
-          ]
-        },
-        "md": {
-          "stylePaths": [
-            "components/spinner/spinner.md.scss"
+            "components/spinner/spinner.scss"
           ]
         }
       },
@@ -5738,13 +5415,8 @@
           "attr": "duration"
         },
         {
-          "name": "mode",
-          "type": "String",
-          "attr": "mode"
-        },
-        {
           "name": "name",
-          "type": "String",
+          "type": "Any",
           "attr": "name"
         },
         {
@@ -5782,28 +5454,23 @@
         {
           "name": "disabled",
           "type": "Boolean",
-          "attr": "disabled"
+          "attr": "disabled",
+          "watch": [
+            "updateState"
+          ]
         },
         {
           "name": "when",
           "type": "Any",
           "attr": "when",
           "watch": [
-            "whenChanged"
+            "updateState"
           ]
         }
       ],
       "states": [
         {
           "name": "visible"
-        }
-      ],
-      "methods": [
-        {
-          "name": "isPane"
-        },
-        {
-          "name": "isVisible"
         }
       ],
       "context": [
@@ -5821,7 +5488,8 @@
       },
       "events": [
         {
-          "event": "ionChange"
+          "event": "ionChange",
+          "bubbles": false
         },
         {
           "event": "ionSplitPaneVisible"
@@ -5848,27 +5516,6 @@
           "attr": "active"
         },
         {
-          "name": "badge",
-          "type": "String",
-          "attr": "badge",
-          "watch": [
-            "onPropChanged"
-          ]
-        },
-        {
-          "name": "badgeColor",
-          "type": "String",
-          "attr": "badge-color",
-          "watch": [
-            "onPropChanged"
-          ]
-        },
-        {
-          "name": "btnId",
-          "type": "String",
-          "attr": "btn-id"
-        },
-        {
           "name": "component",
           "type": "String",
           "attr": "component"
@@ -5878,68 +5525,12 @@
           "attr": "delegate"
         },
         {
-          "name": "disabled",
-          "type": "Boolean",
-          "attr": "disabled",
-          "watch": [
-            "onPropChanged"
-          ]
-        },
-        {
-          "name": "href",
+          "name": "tab",
           "type": "String",
-          "attr": "href",
-          "watch": [
-            "onPropChanged"
-          ]
-        },
-        {
-          "name": "icon",
-          "type": "String",
-          "attr": "icon",
-          "watch": [
-            "onPropChanged"
-          ]
-        },
-        {
-          "name": "label",
-          "type": "String",
-          "attr": "label",
-          "watch": [
-            "onPropChanged"
-          ]
-        },
-        {
-          "name": "name",
-          "type": "String",
-          "attr": "name"
-        },
-        {
-          "name": "selected",
-          "type": "Boolean",
-          "attr": "selected",
-          "watch": [
-            "selectedChanged"
-          ]
-        },
-        {
-          "name": "show",
-          "type": "Boolean",
-          "attr": "show",
-          "watch": [
-            "onPropChanged"
-          ]
-        },
-        {
-          "name": "tabsHideOnSubPages",
-          "type": "Boolean",
-          "attr": "tabs-hide-on-sub-pages"
+          "attr": "tab"
         }
       ],
       "methods": [
-        {
-          "name": "getTabId"
-        },
         {
           "name": "setActive"
         }
@@ -5947,113 +5538,22 @@
       "hostElement": {
         "name": "el"
       },
-      "events": [
-        {
-          "event": "ionSelect"
-        },
-        {
-          "event": "ionTabMutated"
-        }
-      ],
       "shadow": true
     },
     {
-      "tag": "ion-tab-button",
-      "dependencies": [
-        "ion-badge",
-        "ion-icon",
-        "ion-ripple-effect"
-      ],
-      "componentClass": "TabButton",
-      "componentPath": "components/tab-button/tab-button.js",
+      "tag": "ion-tab-bar",
+      "dependencies": [],
+      "componentClass": "TabBar",
+      "componentPath": "components/tab-bar/tab-bar.js",
       "styles": {
         "ios": {
           "stylePaths": [
-            "components/tab-button/tab-button.ios.scss"
+            "components/tab-bar/tab-bar.ios.scss"
           ]
         },
         "md": {
           "stylePaths": [
-            "components/tab-button/tab-button.md.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "badge",
-          "type": "String",
-          "attr": "badge"
-        },
-        {
-          "name": "badgeColor",
-          "type": "String",
-          "attr": "badge-color"
-        },
-        {
-          "name": "color",
-          "type": "String",
-          "attr": "color"
-        },
-        {
-          "name": "disabled",
-          "type": "Boolean",
-          "attr": "disabled"
-        },
-        {
-          "name": "href",
-          "type": "String",
-          "attr": "href"
-        },
-        {
-          "name": "icon",
-          "type": "String",
-          "attr": "icon"
-        },
-        {
-          "name": "label",
-          "type": "String",
-          "attr": "label"
-        },
-        {
-          "name": "mode",
-          "type": "String",
-          "attr": "mode"
-        },
-        {
-          "name": "selected",
-          "type": "Boolean",
-          "attr": "selected"
-        }
-      ],
-      "states": [
-        {
-          "name": "keyFocus"
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "shadow": true
-    },
-    {
-      "tag": "ion-tabbar",
-      "dependencies": [
-        "ion-button",
-        "ion-icon",
-        "ion-scroll",
-        "ion-tab-button"
-      ],
-      "componentClass": "Tabbar",
-      "componentPath": "components/tabbar/tabbar.js",
-      "styles": {
-        "ios": {
-          "stylePaths": [
-            "components/tabbar/tabbar.ios.scss"
-          ]
-        },
-        "md": {
-          "stylePaths": [
-            "components/tabbar/tabbar.md.scss"
+            "components/tab-bar/tab-bar.md.scss"
           ]
         }
       },
@@ -6062,11 +5562,6 @@
           "name": "color",
           "type": "String",
           "attr": "color"
-        },
-        {
-          "name": "highlight",
-          "type": "Boolean",
-          "attr": "highlight"
         },
         {
           "name": "layout",
@@ -6079,25 +5574,12 @@
           "attr": "mode"
         },
         {
-          "name": "placement",
-          "type": "String",
-          "attr": "placement"
-        },
-        {
-          "name": "scrollable",
-          "type": "Boolean",
-          "attr": "scrollable"
-        },
-        {
           "name": "selectedTab",
+          "type": "String",
           "attr": "selected-tab",
           "watch": [
             "selectedTabChanged"
           ]
-        },
-        {
-          "name": "tabs",
-          "attr": "tabs"
         },
         {
           "name": "translucent",
@@ -6106,12 +5588,6 @@
         }
       ],
       "states": [
-        {
-          "name": "canScrollLeft"
-        },
-        {
-          "name": "canScrollRight"
-        },
         {
           "name": "keyboardVisible"
         }
@@ -6127,11 +5603,6 @@
           "event": "body:keyboardWillShow",
           "method": "onKeyboardWillShow",
           "passive": false,
-          "capture": false
-        },
-        {
-          "event": "window:resize",
-          "method": "onResize",
           "capture": false
         }
       ],
@@ -6150,22 +5621,27 @@
       },
       "events": [
         {
-          "event": "ionTabbarClick"
+          "event": "ionTabBarChanged"
         }
       ],
       "shadow": true
     },
     {
-      "tag": "ion-tabs",
+      "tag": "ion-tab-button",
       "dependencies": [
-        "ion-tabbar"
+        "ion-ripple-effect"
       ],
-      "componentClass": "Tabs",
-      "componentPath": "components/tabs/tabs.js",
+      "componentClass": "TabButton",
+      "componentPath": "components/tab-button/tab-button.js",
       "styles": {
-        "$": {
+        "ios": {
           "stylePaths": [
-            "components/tabs/tabs.scss"
+            "components/tab-button/tab-button.ios.scss"
+          ]
+        },
+        "md": {
+          "stylePaths": [
+            "components/tab-button/tab-button.md.scss"
           ]
         }
       },
@@ -6176,50 +5652,82 @@
           "attr": "color"
         },
         {
-          "name": "name",
+          "name": "disabled",
+          "type": "Boolean",
+          "attr": "disabled"
+        },
+        {
+          "name": "href",
           "type": "String",
-          "attr": "name"
+          "attr": "href"
         },
         {
-          "name": "scrollable",
-          "type": "Boolean",
-          "attr": "scrollable"
-        },
-        {
-          "name": "tabbarHidden",
-          "type": "Boolean",
-          "attr": "tabbar-hidden"
-        },
-        {
-          "name": "tabbarHighlight",
-          "type": "Boolean",
-          "mutable": true,
-          "attr": "tabbar-highlight"
-        },
-        {
-          "name": "tabbarLayout",
+          "name": "layout",
           "type": "String",
-          "mutable": true,
-          "attr": "tabbar-layout"
+          "attr": "layout"
         },
         {
-          "name": "tabbarPlacement",
+          "name": "mode",
           "type": "String",
-          "mutable": true,
-          "attr": "tabbar-placement"
+          "attr": "mode"
         },
         {
-          "name": "translucent",
-          "type": "Boolean",
-          "attr": "translucent"
-        },
-        {
-          "name": "useRouter",
-          "type": "Boolean",
-          "mutable": true,
-          "attr": "use-router"
+          "name": "tab",
+          "type": "String",
+          "attr": "tab"
         }
       ],
+      "states": [
+        {
+          "name": "selected"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "click",
+          "method": "onClick",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "parent:ionTabBarChanged",
+          "method": "onTabbarChanged",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "context": [
+        {
+          "name": "queue",
+          "id": "queue"
+        },
+        {
+          "name": "doc",
+          "id": "document"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ionTabButtonClick"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "ion-tabs",
+      "dependencies": [],
+      "componentClass": "Tabs",
+      "componentPath": "components/tabs/tabs.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/tabs/tabs.scss"
+          ]
+        }
+      },
       "states": [
         {
           "name": "selectedTab"
@@ -6230,14 +5738,8 @@
       ],
       "listeners": [
         {
-          "event": "ionTabbarClick",
+          "event": "ionTabButtonClick",
           "method": "onTabClicked",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "ionTabMutated",
-          "method": "onTabMutated",
           "passive": false,
           "capture": false
         }
@@ -6336,11 +5838,6 @@
           "name": "autocapitalize",
           "type": "String",
           "attr": "autocapitalize"
-        },
-        {
-          "name": "autocomplete",
-          "type": "String",
-          "attr": "autocomplete"
         },
         {
           "name": "autofocus",
@@ -6444,6 +5941,11 @@
           "name": "hasFocus"
         }
       ],
+      "methods": [
+        {
+          "name": "setFocus"
+        }
+      ],
       "hostElement": {
         "name": "el"
       },
@@ -6472,14 +5974,9 @@
       "componentClass": "Thumbnail",
       "componentPath": "components/thumbnail/thumbnail.js",
       "styles": {
-        "ios": {
+        "$": {
           "stylePaths": [
-            "components/thumbnail/thumbnail.ios.scss"
-          ]
-        },
-        "md": {
-          "stylePaths": [
-            "components/thumbnail/thumbnail.md.scss"
+            "components/thumbnail/thumbnail.scss"
           ]
         }
       },
@@ -6491,14 +5988,9 @@
       "componentClass": "ToolbarTitle",
       "componentPath": "components/title/title.js",
       "styles": {
-        "ios": {
+        "$": {
           "stylePaths": [
-            "components/title/title.ios.scss"
-          ]
-        },
-        "md": {
-          "stylePaths": [
-            "components/title/title.md.scss"
+            "components/title/title.scss"
           ]
         }
       },
@@ -6507,13 +5999,11 @@
           "name": "color",
           "type": "String",
           "attr": "color"
-        },
-        {
-          "name": "mode",
-          "type": "String",
-          "attr": "mode"
         }
       ],
+      "hostElement": {
+        "name": "el"
+      },
       "shadow": true
     },
     {
@@ -6538,9 +6028,19 @@
       },
       "props": [
         {
+          "name": "animated",
+          "type": "Boolean",
+          "attr": "animated"
+        },
+        {
           "name": "closeButtonText",
           "type": "String",
           "attr": "close-button-text"
+        },
+        {
+          "name": "color",
+          "type": "String",
+          "attr": "color"
         },
         {
           "name": "cssClass",
@@ -6571,9 +6071,14 @@
           "attr": "message"
         },
         {
-          "name": "overlayId",
+          "name": "mode",
+          "type": "String",
+          "attr": "mode"
+        },
+        {
+          "name": "overlayIndex",
           "type": "Number",
-          "attr": "overlay-id"
+          "attr": "overlay-index"
         },
         {
           "name": "position",
@@ -6589,19 +6094,6 @@
           "name": "translucent",
           "type": "Boolean",
           "attr": "translucent"
-        },
-        {
-          "name": "willAnimate",
-          "type": "Boolean",
-          "attr": "will-animate"
-        }
-      ],
-      "listeners": [
-        {
-          "event": "ionDismiss",
-          "method": "onDismiss",
-          "passive": false,
-          "capture": false
         }
       ],
       "methods": [
@@ -6656,7 +6148,8 @@
           "event": "ionToastWillPresent",
           "method": "willPresent"
         }
-      ]
+      ],
+      "shadow": true
     },
     {
       "tag": "ion-toast-controller",
@@ -6666,32 +6159,6 @@
       "componentClass": "ToastController",
       "componentPath": "components/toast-controller/toast-controller.js",
       "styles": {},
-      "listeners": [
-        {
-          "event": "body:ionToastDidUnload",
-          "method": "toastWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionToastWillDismiss",
-          "method": "toastWillDismiss",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:ionToastWillPresent",
-          "method": "toastWillPresent",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "body:keyup.escape",
-          "method": "escapeKeyUp",
-          "passive": false,
-          "capture": false
-        }
-      ],
       "methods": [
         {
           "name": "create"
@@ -6966,7 +6433,7 @@
   ],
   "compiler": {
     "name": "@stencil/core",
-    "version": "0.11.0",
+    "version": "0.15.2",
     "typescriptVersion": "2.9.2"
   },
   "bundles": [
@@ -7000,7 +6467,6 @@
         "ion-content",
         "ion-footer",
         "ion-header",
-        "ion-scroll",
         "ion-title",
         "ion-toolbar"
       ]
@@ -7064,12 +6530,6 @@
         "ion-col",
         "ion-grid",
         "ion-row"
-      ]
-    },
-    {
-      "components": [
-        "ion-hide-when",
-        "ion-show-when"
       ]
     },
     {
@@ -7154,8 +6614,7 @@
     },
     {
       "components": [
-        "ion-range",
-        "ion-range-knob"
+        "ion-range"
       ]
     },
     {
@@ -7220,8 +6679,8 @@
     {
       "components": [
         "ion-tab",
+        "ion-tab-bar",
         "ion-tab-button",
-        "ion-tabbar",
         "ion-tabs"
       ]
     },

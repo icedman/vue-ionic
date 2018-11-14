@@ -1,5 +1,3 @@
-// Media Query Functions
-// -----------------------------------------------------
 export const SIZE_TO_MEDIA = {
     'xs': '(min-width: 0px)',
     'sm': '(min-width: 576px)',
@@ -7,17 +5,10 @@ export const SIZE_TO_MEDIA = {
     'lg': '(min-width: 992px)',
     'xl': '(min-width: 1200px)',
 };
-// Check if the window matches the media query
-// at the breakpoint passed
-// e.g. isMatch('sm') => true if screen width exceeds 576px
-export function isMatch(breakpoint) {
-    if (!breakpoint) {
+export function matchBreakpoint(win, breakpoint) {
+    if (breakpoint === undefined || breakpoint === '') {
         return true;
     }
     const mediaQuery = SIZE_TO_MEDIA[breakpoint];
-    if (mediaQuery && matchMedia(mediaQuery)) {
-        const media = matchMedia(mediaQuery);
-        return media.matches;
-    }
-    return false;
+    return win.matchMedia(mediaQuery).matches;
 }

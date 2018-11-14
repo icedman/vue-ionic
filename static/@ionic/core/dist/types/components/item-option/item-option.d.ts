@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Color, Mode } from '../../interface';
-export declare class ItemOption {
+export declare class ItemOption implements ComponentInterface {
     el: HTMLElement;
     /**
      * The color to use from your application's color palette.
@@ -14,11 +15,11 @@ export declare class ItemOption {
      */
     mode: Mode;
     /**
-     * If true, the user cannot interact with the item option. Defaults to `false`.
+     * If `true`, the user cannot interact with the item option. Defaults to `false`.
      */
     disabled: boolean;
     /**
-     * If true, the option will expand to take up the available width and cover any other options. Defaults to `false`.
+     * If `true`, the option will expand to take up the available width and cover any other options. Defaults to `false`.
      */
     expandable: boolean;
     /**
@@ -28,6 +29,7 @@ export declare class ItemOption {
     href?: string;
     private clickedOptionButton;
     hostData(): {
+        'ion-activatable': boolean;
         class: {
             'item-option-expandable': boolean;
         } | {

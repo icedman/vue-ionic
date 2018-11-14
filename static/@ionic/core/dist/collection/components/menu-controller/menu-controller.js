@@ -9,145 +9,111 @@ export class MenuController {
         this.registerAnimation('push', menuPushAnimation);
         this.registerAnimation('overlay', menuOverlayAnimation);
     }
-    /**
-     * Open the menu.
-     */
-    open(menuId) {
-        const menu = this.get(menuId);
+    async open(menuId) {
+        const menu = await this.get(menuId);
         if (menu) {
             return menu.open();
         }
-        return Promise.resolve(false);
+        return false;
     }
-    /**
-     * Close the menu. If no menu is specified, then it will close any menu
-     * that is open. If a menu is specified, it will close that menu.
-     */
-    close(menuId) {
-        const menu = menuId ? this.get(menuId) : this.getOpen();
-        if (menu) {
+    async close(menuId) {
+        const menu = await (menuId !== undefined ? this.get(menuId) : this.getOpen());
+        if (menu !== undefined) {
             return menu.close();
         }
-        return Promise.resolve(false);
+        return false;
     }
-    /**
-     * Toggle the menu. If it's closed, it will open, and if opened, it
-     * will close.
-     */
-    toggle(menuId) {
-        const menu = this.get(menuId);
+    async toggle(menuId) {
+        const menu = await this.get(menuId);
         if (menu) {
             return menu.toggle();
         }
-        return Promise.resolve(false);
+        return false;
     }
-    /**
-     * Used to enable or disable a menu. For example, there could be multiple
-     * left menus, but only one of them should be able to be opened at the same
-     * time. If there are multiple menus on the same side, then enabling one menu
-     * will also automatically disable all the others that are on the same side.
-     */
-    enable(shouldEnable, menuId) {
-        const menu = this.get(menuId);
+    async enable(shouldEnable, menuId) {
+        const menu = await this.get(menuId);
         if (menu) {
             menu.disabled = !shouldEnable;
         }
         return menu;
     }
-    /**
-     * Used to enable or disable the ability to swipe open the menu.
-     */
-    swipeEnable(shouldEnable, menuId) {
-        const menu = this.get(menuId);
+    async swipeGesture(shouldEnable, menuId) {
+        const menu = await this.get(menuId);
         if (menu) {
-            menu.swipeEnabled = shouldEnable;
+            menu.swipeGesture = shouldEnable;
         }
         return menu;
     }
-    /**
-     * Returns true if the specified menu is open. If the menu is not specified, it
-     * will return true if any menu is currently open.
-     */
-    isOpen(menuId) {
-        if (menuId) {
-            const menu = this.get(menuId);
-            return (menu && menu.isOpen()) || false;
+    async isOpen(menuId) {
+        if (menuId != null) {
+            const menu = await this.get(menuId);
+            return (menu !== undefined && menu.isOpen());
         }
-        return !!this.getOpen();
+        else {
+            const menu = await this.getOpen();
+            return menu !== undefined;
+        }
     }
-    /**
-     * Returns true if the specified menu is enabled.
-     */
-    isEnabled(menuId) {
-        const menu = this.get(menuId);
+    async isEnabled(menuId) {
+        const menu = await this.get(menuId);
         if (menu) {
             return !menu.disabled;
         }
         return false;
     }
-    /**
-     * Used to get a menu instance. If a menu is not provided then it will
-     * return the first menu found. If the specified menu is `left` or `right`, then
-     * it will return the enabled menu on that side. Otherwise, it will try to find
-     * the menu using the menu's `id` property. If a menu is not found then it will
-     * return `null`.
-     */
-    get(menuId) {
-        if (false) {
+    async get(menuId) {
+        if (Build.isDev) {
             if (menuId === 'left') {
                 console.error('menu.side=left is deprecated, use "start" instead');
-                return null;
+                return undefined;
             }
             if (menuId === 'right') {
                 console.error('menu.side=right is deprecated, use "end" instead');
-                return null;
+                return undefined;
             }
         }
+        await this.waitUntilReady();
         if (menuId === 'start' || menuId === 'end') {
-            // there could be more than one menu on the same side
-            // so first try to get the enabled one
             const menuRef = this.find(m => m.side === menuId && !m.disabled);
             if (menuRef) {
                 return menuRef;
             }
-            // didn't find a menu side that is enabled
-            // so try to get the first menu side found
-            return this.find(m => m.side === menuId) || null;
+            return this.find(m => m.side === menuId);
         }
-        else if (menuId) {
-            // the menuId was not left or right
-            // so try to get the menu by its "id"
-            return this.find(m => m.menuId === menuId) || null;
+        else if (menuId != null) {
+            return this.find(m => m.menuId === menuId);
         }
-        // return the first enabled menu
         const menu = this.find(m => !m.disabled);
         if (menu) {
             return menu;
         }
-        // get the first menu in the array, if one exists
-        return this.menus.length > 0 ? this.menus[0].el : null;
+        return this.menus.length > 0 ? this.menus[0].el : undefined;
     }
-    /**
-     * Returns the instance of the menu already opened, otherwise `null`.
-     */
-    getOpen() {
-        return this.find(m => m.isOpen());
+    async getOpen() {
+        await this.waitUntilReady();
+        return this.getOpenSync();
     }
-    /**
-     * Returns an array of all menu instances.
-     */
-    getMenus() {
-        return this.menus.map(menu => menu.el);
+    async getMenus() {
+        await this.waitUntilReady();
+        return this.getMenusSync();
     }
-    /**
-     * Returns true if any menu is currently animating.
-     */
-    isAnimating() {
-        return this.menus.some(menu => menu.isAnimating);
+    async isAnimating() {
+        await this.waitUntilReady();
+        return this.isAnimatingSync();
+    }
+    registerAnimation(name, animation) {
+        this.menuAnimations.set(name, animation);
+    }
+    _getInstance() {
+        return Promise.resolve(this);
     }
     _register(menu) {
-        if (this.menus.indexOf(menu) < 0) {
-            this.menus.push(menu);
+        const menus = this.menus;
+        if (menus.indexOf(menu) < 0) {
+            if (!menu.disabled) {
+                this._setActiveMenu(menu);
+            }
+            menus.push(menu);
         }
     }
     _unregister(menu) {
@@ -157,55 +123,53 @@ export class MenuController {
         }
     }
     _setActiveMenu(menu) {
-        // if this menu should be enabled
-        // then find all the other menus on this same side
-        // and automatically disable other same side menus
         const side = menu.side;
         this.menus
             .filter(m => m.side === side && m !== menu)
-            .forEach(m => (m.disabled = true));
+            .forEach(m => m.disabled = true);
     }
-    _setOpen(menu, shouldOpen, animated) {
-        if (this.isAnimating()) {
-            return Promise.resolve(false);
+    async _setOpen(menu, shouldOpen, animated) {
+        if (this.isAnimatingSync()) {
+            return false;
         }
         if (shouldOpen) {
-            const openedMenu = this.getOpen();
+            const openedMenu = await this.getOpen();
             if (openedMenu && menu.el !== openedMenu) {
-                openedMenu.setOpen(false, false);
+                await openedMenu.setOpen(false, false);
             }
         }
         return menu._setOpen(shouldOpen, animated);
     }
-    createAnimation(type, menuCmp) {
+    _createAnimation(type, menuCmp) {
         const animationBuilder = this.menuAnimations.get(type);
         if (!animationBuilder) {
             return Promise.reject('animation not registered');
         }
         return this.animationCtrl.create(animationBuilder, null, menuCmp);
     }
-    registerAnimation(name, animation) {
-        this.menuAnimations.set(name, animation);
+    getOpenSync() {
+        return this.find(m => m._isOpen);
+    }
+    getMenusSync() {
+        return this.menus.map(menu => menu.el);
+    }
+    isAnimatingSync() {
+        return this.menus.some(menu => menu.isAnimating);
     }
     find(predicate) {
         const instance = this.menus.find(predicate);
-        if (instance) {
+        if (instance !== undefined) {
             return instance.el;
         }
-        return null;
+        return undefined;
+    }
+    waitUntilReady() {
+        return Promise.all(Array.from(this.doc.querySelectorAll('ion-menu'))
+            .map(menu => menu.componentOnReady()));
     }
     static get is() { return "ion-menu-controller"; }
     static get properties() { return {
-        "_register": {
-            "method": true
-        },
-        "_setActiveMenu": {
-            "method": true
-        },
-        "_setOpen": {
-            "method": true
-        },
-        "_unregister": {
+        "_getInstance": {
             "method": true
         },
         "animationCtrl": {
@@ -214,8 +178,8 @@ export class MenuController {
         "close": {
             "method": true
         },
-        "createAnimation": {
-            "method": true
+        "doc": {
+            "context": "document"
         },
         "enable": {
             "method": true
@@ -244,12 +208,12 @@ export class MenuController {
         "registerAnimation": {
             "method": true
         },
-        "swipeEnable": {
+        "swipeGesture": {
             "method": true
         },
         "toggle": {
             "method": true
         }
     }; }
+    static get style() { return "/**style-placeholder:ion-menu-controller:**/"; }
 }
-export { menuOverlayAnimation, menuPushAnimation, menuRevealAnimation };

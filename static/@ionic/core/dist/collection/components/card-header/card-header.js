@@ -1,9 +1,6 @@
 import { createColorClasses } from '../../utils/theme';
 export class CardHeader {
     constructor() {
-        /**
-         * If true, the card header will be translucent. Defaults to `false`.
-         */
         this.translucent = false;
     }
     hostData() {

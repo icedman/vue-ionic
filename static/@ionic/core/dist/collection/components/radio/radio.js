@@ -1,26 +1,31 @@
-import { deferEvent } from '../../utils/helpers';
 import { createColorClasses, hostContext } from '../../utils/theme';
 export class Radio {
     constructor() {
         this.inputId = `ion-rb-${radioButtonIds++}`;
         this.keyFocus = false;
-        /**
-         * The name of the control, which is submitted with the form data.
-         */
         this.name = this.inputId;
-        /*
-         * If true, the user cannot interact with the radio. Defaults to `false`.
-         */
         this.disabled = false;
-        /**
-         * If true, the radio is selected. Defaults to `false`.
-         */
         this.checked = false;
+        this.onClick = () => {
+            this.checkedChanged(true);
+        };
+        this.onChange = () => {
+            this.checked = true;
+            this.nativeInput.focus();
+        };
+        this.onKeyUp = () => {
+            this.keyFocus = true;
+        };
+        this.onFocus = () => {
+            this.ionFocus.emit();
+        };
+        this.onBlur = () => {
+            this.keyFocus = false;
+            this.ionBlur.emit();
+        };
     }
     componentWillLoad() {
-        this.ionSelect = deferEvent(this.ionSelect);
-        this.ionStyle = deferEvent(this.ionStyle);
-        if (this.value === undefined) {
+        if (this.value == null) {
             this.value = this.inputId;
         }
         this.emitStyle();
@@ -45,7 +50,6 @@ export class Radio {
     }
     checkedChanged(isChecked) {
         if (this.nativeInput.checked !== isChecked) {
-            // keep the checked value and native input `nync
             this.nativeInput.checked = isChecked;
         }
         if (isChecked) {
@@ -66,33 +70,16 @@ export class Radio {
             'interactive-disabled': this.disabled,
         });
     }
-    onClick() {
-        this.checkedChanged(true);
-    }
-    onChange() {
-        this.checked = true;
-        this.nativeInput.focus();
-    }
-    onKeyUp() {
-        this.keyFocus = true;
-    }
-    onFocus() {
-        this.ionFocus.emit();
-    }
-    onBlur() {
-        this.keyFocus = false;
-        this.ionBlur.emit();
-    }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('.item', this.el), 'interactive': true, 'radio-checked': this.checked, 'radio-disabled': this.disabled, 'radio-key': this.keyFocus })
+            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('ion-item', this.el), 'interactive': true, 'radio-checked': this.checked, 'radio-disabled': this.disabled, 'radio-key': this.keyFocus })
         };
     }
     render() {
         return [
             h("div", { class: "radio-icon" },
                 h("div", { class: "radio-inner" })),
-            h("input", { type: "radio", onClick: this.onClick.bind(this), onChange: this.onChange.bind(this), onFocus: this.onFocus.bind(this), onBlur: this.onBlur.bind(this), onKeyUp: this.onKeyUp.bind(this), id: this.inputId, name: this.name, value: this.value, disabled: this.disabled, ref: r => this.nativeInput = r })
+            h("input", { type: "radio", onClick: this.onClick, onChange: this.onChange, onFocus: this.onFocus, onBlur: this.onBlur, onKeyUp: this.onKeyUp, id: this.inputId, name: this.name, value: this.value, disabled: this.disabled, ref: r => this.nativeInput = r })
         ];
     }
     static get is() { return "ion-radio"; }
@@ -129,7 +116,7 @@ export class Radio {
             "attr": "name"
         },
         "value": {
-            "type": String,
+            "type": "Any",
             "attr": "value",
             "mutable": true
         }

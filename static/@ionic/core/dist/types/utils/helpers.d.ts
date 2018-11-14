@@ -4,8 +4,9 @@ export declare function reorderArray(array: any[], indexes: {
     from: number;
     to: number;
 }): any[];
+export declare function rIC(callback: () => void): void;
 export declare function hasShadowDom(el: HTMLElement): boolean;
-export declare function renderHiddenInput(container: HTMLElement, name: string, value: string, disabled: boolean): void;
+export declare function renderHiddenInput(container: HTMLElement, name: string, value: string | undefined | null, disabled: boolean): void;
 export declare function clamp(min: number, n: number, max: number): number;
 export declare function assert(actual: any, reason: string): void;
 export declare function now(ev: UIEvent): number;
@@ -23,4 +24,4 @@ export declare function pointerCoord(ev: any): {
 export declare function isEndSide(win: Window, side: Side): boolean;
 export declare function deferEvent(event: EventEmitter): EventEmitter;
 export declare function debounceEvent(event: EventEmitter, wait: number): EventEmitter;
-export declare function debounce(func: (...args: any[]) => void, wait?: number): (...args: any[]) => void;
+export declare function debounce(func: (...args: any[]) => void, wait?: number): (...args: any[]) => any;

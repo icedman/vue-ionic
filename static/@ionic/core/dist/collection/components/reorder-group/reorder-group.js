@@ -1,51 +1,52 @@
 import { hapticSelectionChanged, hapticSelectionEnd, hapticSelectionStart } from '../../utils/haptic';
-import { createThemedClasses } from '../../utils/theme';
 export class ReorderGroup {
     constructor() {
+        this.lastToIndex = -1;
         this.cachedHeights = [];
         this.scrollElTop = 0;
         this.scrollElBottom = 0;
         this.scrollElInitial = 0;
         this.containerTop = 0;
         this.containerBottom = 0;
-        this.activated = false;
-        /**
-         * If true, the reorder will be hidden. Defaults to `true`.
-         */
+        this.state = 0;
         this.disabled = true;
     }
     disabledChanged() {
         if (this.gesture) {
-            this.gesture.disabled = this.disabled;
+            this.gesture.setDisabled(this.disabled);
         }
+        const a = { a: 2 };
+        delete a.a;
     }
     async componentDidLoad() {
         const contentEl = this.el.closest('ion-content');
         if (contentEl) {
             await contentEl.componentOnReady();
-            this.scrollEl = contentEl.getScrollElement();
+            this.scrollEl = await contentEl.getScrollElement();
         }
-        this.gesture = (await import('../../utils/gesture/gesture')).create({
+        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
             el: this.doc.body,
             queue: this.queue,
             gestureName: 'reorder',
-            gesturePriority: 30,
-            disableScroll: true,
+            gesturePriority: 90,
             threshold: 0,
             direction: 'y',
             passive: false,
-            canStart: this.canStart.bind(this),
-            onStart: this.onDragStart.bind(this),
-            onMove: this.onDragMove.bind(this),
-            onEnd: this.onDragEnd.bind(this),
+            canStart: detail => this.canStart(detail),
+            onStart: ev => this.onStart(ev),
+            onMove: ev => this.onMove(ev),
+            onEnd: () => this.onEnd(),
         });
         this.disabledChanged();
     }
     componentDidUnload() {
-        this.onDragEnd();
+        this.onEnd();
+    }
+    complete(listOrReorder) {
+        return Promise.resolve(this.completeSync(listOrReorder));
     }
     canStart(ev) {
-        if (this.selectedItemEl) {
+        if (this.selectedItemEl || this.state !== 0) {
             return false;
         }
         const target = ev.event.target;
@@ -61,7 +62,7 @@ export class ReorderGroup {
         ev.data = item;
         return true;
     }
-    onDragStart(ev) {
+    onStart(ev) {
         ev.event.preventDefault();
         const item = this.selectedItemEl = ev.data;
         const heights = this.cachedHeights;
@@ -78,7 +79,7 @@ export class ReorderGroup {
             heights.push(sum);
             child.$ionIndex = i;
         }
-        const box = this.el.getBoundingClientRect();
+        const box = el.getBoundingClientRect();
         this.containerTop = box.top;
         this.containerBottom = box.bottom;
         if (this.scrollEl) {
@@ -94,72 +95,81 @@ export class ReorderGroup {
         }
         this.lastToIndex = indexForItem(item);
         this.selectedItemHeight = item.offsetHeight;
-        this.activated = true;
+        this.state = 1;
         item.classList.add(ITEM_REORDER_SELECTED);
         hapticSelectionStart();
     }
-    onDragMove(ev) {
+    onMove(ev) {
         const selectedItem = this.selectedItemEl;
         if (!selectedItem) {
             return;
         }
-        // Scroll if we reach the scroll margins
         const scroll = this.autoscroll(ev.currentY);
-        // // Get coordinate
         const top = this.containerTop - scroll;
         const bottom = this.containerBottom - scroll;
         const currentY = Math.max(top, Math.min(ev.currentY, bottom));
         const deltaY = scroll + currentY - ev.startY;
         const normalizedY = currentY - top;
         const toIndex = this.itemIndexForTop(normalizedY);
-        if (toIndex !== undefined && (toIndex !== this.lastToIndex)) {
+        if (toIndex !== this.lastToIndex) {
             const fromIndex = indexForItem(selectedItem);
             this.lastToIndex = toIndex;
             hapticSelectionChanged();
             this.reorderMove(fromIndex, toIndex);
         }
-        // Update selected item position
         selectedItem.style.transform = `translateY(${deltaY}px)`;
     }
-    onDragEnd() {
-        this.activated = false;
+    onEnd() {
         const selectedItem = this.selectedItemEl;
+        this.state = 2;
         if (!selectedItem) {
+            this.state = 0;
             return;
         }
-        const children = this.el.children;
         const toIndex = this.lastToIndex;
         const fromIndex = indexForItem(selectedItem);
-        const ref = (fromIndex < toIndex)
-            ? children[toIndex + 1]
-            : children[toIndex];
-        this.el.insertBefore(selectedItem, ref);
-        const len = children.length;
-        for (let i = 0; i < len; i++) {
-            children[i].style['transform'] = '';
-        }
-        const reorderInactive = () => {
-            if (this.selectedItemEl) {
-                this.selectedItemEl.style.transition = '';
-                this.selectedItemEl.classList.remove(ITEM_REORDER_SELECTED);
-                this.selectedItemEl = undefined;
-            }
-        };
         if (toIndex === fromIndex) {
             selectedItem.style.transition = 'transform 200ms ease-in-out';
-            setTimeout(reorderInactive, 200);
+            setTimeout(() => this.completeSync(), 200);
         }
         else {
-            reorderInactive();
+            this.ionItemReorder.emit({
+                from: fromIndex,
+                to: toIndex,
+                complete: this.completeSync.bind(this)
+            });
         }
         hapticSelectionEnd();
+    }
+    completeSync(listOrReorder) {
+        const selectedItemEl = this.selectedItemEl;
+        if (selectedItemEl && this.state === 2) {
+            const children = this.el.children;
+            const len = children.length;
+            const toIndex = this.lastToIndex;
+            const fromIndex = indexForItem(selectedItemEl);
+            if (listOrReorder === true) {
+                const ref = (fromIndex < toIndex)
+                    ? children[toIndex + 1]
+                    : children[toIndex];
+                this.el.insertBefore(selectedItemEl, ref);
+            }
+            if (Array.isArray(listOrReorder)) {
+                listOrReorder = reorderArray(listOrReorder, fromIndex, toIndex);
+            }
+            for (let i = 0; i < len; i++) {
+                children[i].style['transform'] = '';
+            }
+            selectedItemEl.style.transition = '';
+            selectedItemEl.classList.remove(ITEM_REORDER_SELECTED);
+            this.selectedItemEl = undefined;
+            this.state = 0;
+        }
+        return listOrReorder;
     }
     itemIndexForTop(deltaY) {
         const heights = this.cachedHeights;
         let i = 0;
-        // TODO: since heights is a sorted array of integers, we can do
-        // speed up the search using binary search. Remember that linear-search is still
-        // faster than binary-search for small arrays (<64) due CPU branch misprediction.
         for (i = 0; i < heights.length; i++) {
             if (heights[i] > deltaY) {
                 break;
@@ -167,7 +177,6 @@ export class ReorderGroup {
         }
         return i;
     }
-    /********* DOM WRITE ********* */
     reorderMove(fromIndex, toIndex) {
         const itemHeight = this.selectedItemHeight;
         const children = this.el.children;
@@ -201,13 +210,16 @@ export class ReorderGroup {
     }
     hostData() {
         return {
-            class: Object.assign({}, createThemedClasses(this.mode, 'reorder-group'), { 'reorder-enabled': !this.disabled, 'reorder-list-active': this.activated })
+            class: {
+                'reorder-enabled': !this.disabled,
+                'reorder-list-active': this.state !== 0,
+            }
         };
     }
     static get is() { return "ion-reorder-group"; }
     static get properties() { return {
-        "activated": {
-            "state": true
+        "complete": {
+            "method": true
         },
         "disabled": {
             "type": Boolean,
@@ -222,8 +234,18 @@ export class ReorderGroup {
         },
         "queue": {
             "context": "queue"
+        },
+        "state": {
+            "state": true
         }
     }; }
+    static get events() { return [{
+            "name": "ionItemReorder",
+            "method": "ionItemReorder",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }]; }
     static get style() { return "/**style-placeholder:ion-reorder-group:**/"; }
 }
 function indexForItem(element) {
@@ -240,8 +262,14 @@ function findReorderItem(node, container) {
         node = parent;
         nested++;
     }
-    return null;
+    return undefined;
 }
 const AUTO_SCROLL_MARGIN = 60;
 const SCROLL_JUMP = 10;
 const ITEM_REORDER_SELECTED = 'reorder-selected';
+function reorderArray(array, from, to) {
+    const element = array[from];
+    array.splice(from, 1);
+    array.splice(to, 0, element);
+    return array.slice();
+}

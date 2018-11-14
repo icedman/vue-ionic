@@ -1,14 +1,9 @@
 export class RouteRedirect {
     constructor() {
-        /**
-         * A redirect route, redirects "from" a URL "to" another URL. This property is that "from" URL.
-         * It needs to be an exact match of the navigated URL in order to apply.
-         *
-         * The path specified in this value is always an absolute path, even if the initial `/` slash
-         * is not specified.
-         *
-         */
         this.from = '';
+    }
+    propDidChange() {
+        this.ionRouteRedirectChanged.emit();
     }
     componentDidLoad() {
         this.ionRouteRedirectChanged.emit();
@@ -16,18 +11,17 @@ export class RouteRedirect {
     componentDidUnload() {
         this.ionRouteRedirectChanged.emit();
     }
-    componentDidUpdate() {
-        this.ionRouteRedirectChanged.emit();
-    }
     static get is() { return "ion-route-redirect"; }
     static get properties() { return {
         "from": {
             "type": String,
-            "attr": "from"
+            "attr": "from",
+            "watchCallbacks": ["propDidChange"]
         },
         "to": {
             "type": String,
-            "attr": "to"
+            "attr": "to",
+            "watchCallbacks": ["propDidChange"]
         }
     }; }
     static get events() { return [{

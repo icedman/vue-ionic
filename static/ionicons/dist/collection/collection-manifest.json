@@ -20,6 +20,7 @@
           "name": "ariaLabel",
           "type": "String",
           "mutable": true,
+          "reflectToAttr": true,
           "attr": "aria-label"
         },
         {
@@ -112,7 +113,7 @@
   "collections": [],
   "compiler": {
     "name": "@stencil/core",
-    "version": "0.10.10",
+    "version": "0.14.0-4",
     "typescriptVersion": "2.9.2"
   },
   "bundles": []

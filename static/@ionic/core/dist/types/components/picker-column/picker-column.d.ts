@@ -1,38 +1,40 @@
 import '../../stencil.core';
-import { QueueApi } from '../../stencil.core';
+import { ComponentInterface, QueueApi } from '../../stencil.core';
 import { Mode, PickerColumn } from '../../interface';
-/** @hidden */
-export declare class PickerColumnCmp {
+export declare class PickerColumnCmp implements ComponentInterface {
     mode: Mode;
     private bounceFrom;
     private lastIndex?;
-    private lastTempIndex?;
     private minY;
     private maxY;
     private optHeight;
-    private pos;
     private rotateFactor;
     private scaleFactor;
-    private startY?;
     private velocity;
     private y;
+    private optsEl?;
     private gesture?;
+    private rafId;
+    private tmrId;
+    private noAnimate;
     el: HTMLElement;
     queue: QueueApi;
+    /** @internal */
     col: PickerColumn;
     componentWillLoad(): void;
     componentDidLoad(): Promise<void>;
-    private optClick;
+    componentDidUnload(): void;
     private setSelected;
     private update;
     private decelerate;
-    private canStart;
-    private onDragStart;
-    private onDragMove;
-    private onDragEnd;
+    private indexForY;
+    private onStart;
+    private onMove;
+    private onEnd;
     private refresh;
     hostData(): {
         class: {
+            'picker-col': boolean;
             'picker-opts-left': boolean;
             'picker-opts-right': boolean;
         };
@@ -40,9 +42,5 @@ export declare class PickerColumnCmp {
             'max-width': string | undefined;
         };
     };
-    render(): JSX.Element[];
+    render(): (JSX.Element | undefined)[];
 }
-export declare const PICKER_OPT_SELECTED = "picker-opt-selected";
-export declare const DECELERATION_FRICTION = 0.97;
-export declare const FRAME_MS: number;
-export declare const MAX_PICKER_SPEED = 60;

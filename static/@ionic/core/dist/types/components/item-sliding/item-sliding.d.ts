@@ -1,7 +1,14 @@
-import { EventEmitter, QueueApi } from '../../stencil.core';
-export declare class ItemSliding {
+import { ComponentInterface, EventEmitter, QueueApi } from '../../stencil.core';
+declare const enum SlidingState {
+    Disabled = 2,
+    Enabled = 4,
+    End = 8,
+    Start = 16,
+    SwipeEnd = 32,
+    SwipeStart = 64
+}
+export declare class ItemSliding implements ComponentInterface {
     private item;
-    private list;
     private openAmount;
     private initialOpenAmount;
     private optsWidthRightSide;
@@ -13,8 +20,13 @@ export declare class ItemSliding {
     private optsDirty;
     private gesture?;
     el: HTMLIonItemSlidingElement;
-    private state;
+    state: SlidingState;
     queue: QueueApi;
+    /**
+     * If `true`, the user cannot interact with the sliding-item. Defaults to `false`.
+     */
+    disabled: boolean;
+    disabledChanged(): void;
     /**
      * Emitted when the sliding position changes.
      */
@@ -24,7 +36,7 @@ export declare class ItemSliding {
     /**
      * Get the amount the item is open in pixels.
      */
-    getOpenAmount(): number;
+    getOpenAmount(): Promise<number>;
     /**
      * Get the ratio of the open amount of the item compared to the width of the options.
      * If the number returned is positive, then the options on the right side are open.
@@ -32,25 +44,25 @@ export declare class ItemSliding {
      * If the absolute value of the number is greater than 1, the item is open more than
      * the width of the options.
      */
-    getSlidingRatio(): number;
+    getSlidingRatio(): Promise<number>;
     /**
      * Close the sliding item. Items can also be closed from the [List](../../list/List).
      */
-    close(): void;
+    close(): Promise<void>;
     /**
      * Close all of the sliding items in the list. Items can also be closed from the [List](../../list/List).
      */
-    closeOpened(): boolean;
+    closeOpened(): Promise<boolean>;
     private updateOptions;
     private canStart;
-    private onDragStart;
-    private onDragMove;
-    private onDragEnd;
+    private onStart;
+    private onMove;
+    private onEnd;
     private calculateOptsWidth;
     private setOpenAmount;
+    private getSlidingRatioSync;
     hostData(): {
         class: {
-            'item-sliding': boolean;
             'item-sliding-active-slide': boolean;
             'item-sliding-active-options-end': boolean;
             'item-sliding-active-options-start': boolean;
@@ -59,5 +71,4 @@ export declare class ItemSliding {
         };
     };
 }
-/** @hidden */
-export declare function swipeShouldReset(isResetDirection: boolean, isMovingFast: boolean, isOnResetZone: boolean): boolean;
+export {};

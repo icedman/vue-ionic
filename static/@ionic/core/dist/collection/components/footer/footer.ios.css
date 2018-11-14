@@ -5,10 +5,8 @@ ion-footer {
   width: 100%;
   z-index: 10; }
 
-@supports (padding-top: env(safe-area-inset-top)) {
-  ion-footer ion-toolbar:last-child {
-    /* stylelint-disable-next-line property-blacklist */
-    padding-bottom: env(safe-area-inset-bottom); } }
+ion-footer ion-toolbar:last-child {
+  padding-bottom: var(--ion-safe-area-bottom, 0); }
 
 .footer-ios ion-toolbar:first-child {
   --border-width: 0.55px 0 0; }

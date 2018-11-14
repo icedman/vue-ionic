@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Color, Config, Mode } from '../../interface';
-export declare class Toolbar {
+export declare class Toolbar implements ComponentInterface {
     config: Config;
     /**
      * The color to use from your application's color palette.
@@ -14,7 +15,7 @@ export declare class Toolbar {
      */
     mode: Mode;
     hostData(): {
-        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap | null;
+        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap | undefined;
     };
     render(): JSX.Element[];
 }

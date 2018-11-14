@@ -1,225 +1,179 @@
-import { PanRecognizer } from './recognizers';
-import { gestureController } from './gesture-controller';
-import { PointerEvents } from './pointer-events';
-export function create(config) {
-    return new Gesture(config);
-}
-export class Gesture {
-    constructor(config) {
-        this.positions = [];
-        this.hasCapturedPan = false;
-        this.hasStartedPan = false;
-        this.hasFiredStart = true;
-        this.isMoveQueued = false;
-        const finalConfig = Object.assign({ disableScroll: false, direction: 'x', gesturePriority: 0, passive: true, maxAngle: 40, threshold: 10 }, config);
-        this.canStart = finalConfig.canStart;
-        this.onWillStart = finalConfig.onWillStart;
-        this.onStart = finalConfig.onStart;
-        this.onEnd = finalConfig.onEnd;
-        this.onMove = finalConfig.onMove;
-        this.threshold = finalConfig.threshold;
-        this.queue = finalConfig.queue;
-        this.detail = {
-            type: 'pan',
-            startX: 0,
-            startY: 0,
-            startTimeStamp: 0,
-            currentX: 0,
-            currentY: 0,
-            velocityX: 0,
-            velocityY: 0,
-            deltaX: 0,
-            deltaY: 0,
-            timeStamp: 0,
-            event: undefined,
-            data: undefined
-        };
-        this.pointerEvents = new PointerEvents(finalConfig.el, this.pointerDown.bind(this), this.pointerMove.bind(this), this.pointerUp.bind(this), {
-            capture: false,
-        });
-        this.pan = new PanRecognizer(finalConfig.direction, finalConfig.threshold, finalConfig.maxAngle);
-        this.gesture = gestureController.createGesture({
-            name: config.gestureName,
-            priority: config.gesturePriority,
-            disableScroll: config.disableScroll
-        });
-    }
-    set disabled(disabled) {
-        this.pointerEvents.disabled = disabled;
-    }
-    destroy() {
-        this.gesture.destroy();
-        this.pointerEvents.destroy();
-    }
-    pointerDown(ev) {
+import { GESTURE_CONTROLLER } from './gesture-controller';
+import { createPointerEvents } from './pointer-events';
+import { createPanRecognizer } from './recognizers';
+export function createGesture(config) {
+    const finalConfig = Object.assign({ disableScroll: false, direction: 'x', gesturePriority: 0, passive: true, maxAngle: 40, threshold: 10 }, config);
+    const canStart = finalConfig.canStart;
+    const onWillStart = finalConfig.onWillStart;
+    const onStart = finalConfig.onStart;
+    const onEnd = finalConfig.onEnd;
+    const notCaptured = finalConfig.notCaptured;
+    const onMove = finalConfig.onMove;
+    const threshold = finalConfig.threshold;
+    const queue = finalConfig.queue;
+    const detail = {
+        type: 'pan',
+        startX: 0,
+        startY: 0,
+        startTimeStamp: 0,
+        currentX: 0,
+        currentY: 0,
+        velocityX: 0,
+        velocityY: 0,
+        deltaX: 0,
+        deltaY: 0,
+        timeStamp: 0,
+        event: undefined,
+        data: undefined
+    };
+    const pointerEvents = createPointerEvents(finalConfig.el, pointerDown, pointerMove, pointerUp, {
+        capture: false,
+    });
+    const pan = createPanRecognizer(finalConfig.direction, finalConfig.threshold, finalConfig.maxAngle);
+    const gesture = GESTURE_CONTROLLER.createGesture({
+        name: config.gestureName,
+        priority: config.gesturePriority,
+        disableScroll: config.disableScroll
+    });
+    let hasCapturedPan = false;
+    let hasStartedPan = false;
+    let hasFiredStart = true;
+    let isMoveQueued = false;
+    function pointerDown(ev) {
         const timeStamp = now(ev);
-        if (this.hasStartedPan || !this.hasFiredStart) {
+        if (hasStartedPan || !hasFiredStart) {
             return false;
         }
-        const detail = this.detail;
         updateDetail(ev, detail);
         detail.startX = detail.currentX;
         detail.startY = detail.currentY;
         detail.startTimeStamp = detail.timeStamp = timeStamp;
         detail.velocityX = detail.velocityY = detail.deltaX = detail.deltaY = 0;
         detail.event = ev;
-        this.positions.length = 0;
-        // Check if gesture can start
-        if (this.canStart && this.canStart(detail) === false) {
+        if (canStart && canStart(detail) === false) {
             return false;
         }
-        // Release fallback
-        this.gesture.release();
-        // Start gesture
-        if (!this.gesture.start()) {
+        gesture.release();
+        if (!gesture.start()) {
             return false;
         }
-        this.positions.push(detail.currentX, detail.currentY, timeStamp);
-        this.hasStartedPan = true;
-        if (this.threshold === 0) {
-            return this.tryToCapturePan();
+        hasStartedPan = true;
+        if (threshold === 0) {
+            return tryToCapturePan();
         }
-        this.pan.start(detail.startX, detail.startY);
+        pan.start(detail.startX, detail.startY);
         return true;
     }
-    pointerMove(ev) {
-        // fast path, if gesture is currently captured
-        // do minimun job to get user-land even dispatched
-        if (this.hasCapturedPan) {
-            if (!this.isMoveQueued && this.hasFiredStart) {
-                this.isMoveQueued = true;
-                this.calcGestureData(ev);
-                this.queue.write(this.fireOnMove.bind(this));
+    function pointerMove(ev) {
+        if (hasCapturedPan) {
+            if (!isMoveQueued && hasFiredStart) {
+                isMoveQueued = true;
+                calcGestureData(detail, ev);
+                queue.write(fireOnMove);
             }
             return;
         }
-        // gesture is currently being detected
-        const detail = this.detail;
-        this.calcGestureData(ev);
-        if (this.pan.detect(detail.currentX, detail.currentY)) {
-            if (this.pan.isGesture()) {
-                if (!this.tryToCapturePan()) {
-                    this.abortGesture();
-                }
+        calcGestureData(detail, ev);
+        if (pan.detect(detail.currentX, detail.currentY)) {
+            if (!pan.isGesture() || !tryToCapturePan()) {
+                abortGesture();
             }
         }
     }
-    fireOnMove() {
-        // Since fireOnMove is called inside a RAF, onEnd() might be called,
-        // we must double check hasCapturedPan
-        if (!this.hasCapturedPan) {
+    function fireOnMove() {
+        if (!hasCapturedPan) {
             return;
         }
-        const detail = this.detail;
-        this.isMoveQueued = false;
-        if (this.onMove) {
-            this.onMove(detail);
+        isMoveQueued = false;
+        if (onMove) {
+            onMove(detail);
         }
     }
-    calcGestureData(ev) {
-        const detail = this.detail;
-        updateDetail(ev, detail);
-        const currentX = detail.currentX;
-        const currentY = detail.currentY;
-        const timestamp = detail.timeStamp = now(ev);
-        detail.deltaX = currentX - detail.startX;
-        detail.deltaY = currentY - detail.startY;
-        detail.event = ev;
-        const timeRange = timestamp - 100;
-        const positions = this.positions;
-        let startPos = positions.length - 1;
-        // move pointer to position measured 100ms ago
-        while (startPos > 0 && positions[startPos] > timeRange) {
-            startPos -= 3;
-        }
-        if (startPos > 1) {
-            // compute relative movement between these two points
-            const frequency = 1 / (positions[startPos] - timestamp);
-            const movedY = positions[startPos - 1] - currentY;
-            const movedX = positions[startPos - 2] - currentX;
-            // based on XXms compute the movement to apply for each render step
-            // velocity = space/time = s*(1/t) = s*frequency
-            detail.velocityX = movedX * frequency;
-            detail.velocityY = movedY * frequency;
-        }
-        else {
-            detail.velocityX = 0;
-            detail.velocityY = 0;
-        }
-        positions.push(currentX, currentY, timestamp);
-    }
-    tryToCapturePan() {
-        if (this.gesture && !this.gesture.capture()) {
+    function tryToCapturePan() {
+        if (gesture && !gesture.capture()) {
             return false;
         }
-        this.hasCapturedPan = true;
-        this.hasFiredStart = false;
-        // reset start position since the real user-land event starts here
-        // If the pan detector threshold is big, not reseting the start position
-        // will cause a jump in the animation equal to the detector threshold.
-        // the array of positions used to calculate the gesture velocity does not
-        // need to be cleaned, more points in the positions array always results in a
-        // more acurate value of the velocity.
-        const detail = this.detail;
+        hasCapturedPan = true;
+        hasFiredStart = false;
         detail.startX = detail.currentX;
         detail.startY = detail.currentY;
         detail.startTimeStamp = detail.timeStamp;
-        if (this.onWillStart) {
-            this.onWillStart(this.detail).then(this.fireOnStart.bind(this));
+        if (onWillStart) {
+            onWillStart(detail).then(fireOnStart);
         }
         else {
-            this.fireOnStart();
+            fireOnStart();
         }
         return true;
     }
-    fireOnStart() {
-        if (this.onStart) {
-            this.onStart(this.detail);
+    function fireOnStart() {
+        if (onStart) {
+            onStart(detail);
         }
-        this.hasFiredStart = true;
+        hasFiredStart = true;
     }
-    abortGesture() {
-        this.reset();
-        this.pointerEvents.stop();
-        if (this.notCaptured) {
-            this.notCaptured(this.detail);
-        }
-    }
-    reset() {
-        this.hasCapturedPan = false;
-        this.hasStartedPan = false;
-        this.isMoveQueued = false;
-        this.hasFiredStart = true;
-        if (this.gesture) {
-            this.gesture.release();
+    function abortGesture() {
+        reset();
+        pointerEvents.stop();
+        if (notCaptured) {
+            notCaptured(detail);
         }
     }
-    // END *************************
-    pointerUp(ev) {
-        const hasCaptured = this.hasCapturedPan;
-        const hasFiredStart = this.hasFiredStart;
-        this.reset();
-        if (!hasFiredStart) {
+    function reset() {
+        hasCapturedPan = false;
+        hasStartedPan = false;
+        isMoveQueued = false;
+        hasFiredStart = true;
+        gesture.release();
+    }
+    function pointerUp(ev) {
+        const tmpHasCaptured = hasCapturedPan;
+        const tmpHasFiredStart = hasFiredStart;
+        reset();
+        if (!tmpHasFiredStart) {
             return;
         }
-        this.calcGestureData(ev);
-        const detail = this.detail;
-        // Try to capture press
-        if (hasCaptured) {
-            if (this.onEnd) {
-                this.onEnd(detail);
+        calcGestureData(detail, ev);
+        if (tmpHasCaptured) {
+            if (onEnd) {
+                onEnd(detail);
             }
             return;
         }
-        // Not captured any event
-        if (this.notCaptured) {
-            this.notCaptured(detail);
+        if (notCaptured) {
+            notCaptured(detail);
         }
     }
+    return {
+        setDisabled(disabled) {
+            pointerEvents.setDisabled(disabled);
+        },
+        destroy() {
+            gesture.destroy();
+            pointerEvents.destroy();
+        }
+    };
+}
+function calcGestureData(detail, ev) {
+    const prevX = detail.currentX;
+    const prevY = detail.currentY;
+    const prevT = detail.timeStamp;
+    updateDetail(ev, detail);
+    const currentX = detail.currentX;
+    const currentY = detail.currentY;
+    const timestamp = detail.timeStamp = now(ev);
+    const timeDelta = timestamp - prevT;
+    if (timeDelta > 0 && timeDelta < 100) {
+        const velocityX = (currentX - prevX) / timeDelta;
+        const velocityY = (currentY - prevY) / timeDelta;
+        detail.velocityX = velocityX * 0.7 + detail.velocityX * 0.3;
+        detail.velocityY = velocityY * 0.7 + detail.velocityY * 0.3;
+    }
+    detail.deltaX = currentX - detail.startX;
+    detail.deltaY = currentY - detail.startY;
+    detail.event = ev;
 }
 function updateDetail(ev, detail) {
-    // get X coordinates for either a mouse click
-    // or a touch depending on the given event
     let x = 0;
     let y = 0;
     if (ev) {

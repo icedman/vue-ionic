@@ -1,20 +1,21 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { ActionSheetButton, Animation, AnimationBuilder, Color, Config, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
-export declare class ActionSheet implements OverlayInterface {
-    mode: Mode;
-    color?: Color;
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { ActionSheetButton, Animation, AnimationBuilder, Config, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
+export declare class ActionSheet implements ComponentInterface, OverlayInterface {
     presented: boolean;
     animation?: Animation;
     el: HTMLElement;
     animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
+    /** @internal */
+    overlayIndex: number;
     /**
-     * Unique ID to be used with the overlay. Internal only
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
      */
-    overlayId: number;
+    mode: Mode;
     /**
-     * If the actionSheet should close the keyboard
+     * If `true`, the keyboard will be automatically dismissed when the overlay is presented.
      */
     keyboardClose: boolean;
     /**
@@ -28,16 +29,16 @@ export declare class ActionSheet implements OverlayInterface {
     /**
      * An array of buttons for the action sheet.
      */
-    buttons: ActionSheetButton[];
+    buttons: (ActionSheetButton | string)[];
     /**
      * Additional classes to apply for custom CSS. If multiple classes are
      * provided they should be separated by spaces.
      */
     cssClass?: string | string[];
     /**
-     * If true, the action sheet will be dismissed when the backdrop is clicked. Defaults to `true`.
+     * If `true`, the action sheet will be dismissed when the backdrop is clicked. Defaults to `true`.
      */
-    enableBackdropDismiss: boolean;
+    backdropDismiss: boolean;
     /**
      * Title for the action sheet.
      */
@@ -47,13 +48,13 @@ export declare class ActionSheet implements OverlayInterface {
      */
     subHeader?: string;
     /**
-     * If true, the action sheet will be translucent. Defaults to `false`.
+     * If `true`, the action sheet will be translucent. Defaults to `false`.
      */
     translucent: boolean;
     /**
-     * If true, the action sheet will animate. Defaults to `true`.
+     * If `true`, the action sheet will animate. Defaults to `true`.
      */
-    willAnimate: boolean;
+    animated: boolean;
     /**
      * Emitted after the alert has loaded.
      */
@@ -89,28 +90,24 @@ export declare class ActionSheet implements OverlayInterface {
     /**
      * Dismiss the action sheet overlay after it has been presented.
      */
-    dismiss(data?: any, role?: string): Promise<void>;
+    dismiss(data?: any, role?: string): Promise<boolean>;
     /**
-     * Returns a promise that resolves when the action-sheet did dismiss. It also accepts a callback
-     * that is called in the same circustances.
+     * Returns a promise that resolves when the action-sheet did dismiss.
+     */
+    onDidDismiss(): Promise<OverlayEventDetail>;
+    /**
+     * Returns a promise that resolves when the action-sheet will dismiss.
      *
      */
-    onDidDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
-    /**
-     * Returns a promise that resolves when the action-sheet will dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
-     */
-    onWillDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onWillDismiss(): Promise<OverlayEventDetail>;
     private buttonClick;
     private callButtonHandler;
+    private getButtons;
     hostData(): {
         style: {
             zIndex: number;
         };
         class: {
-            'action-sheet-translucent': boolean;
-        } | {
             'action-sheet-translucent': boolean;
         };
     };

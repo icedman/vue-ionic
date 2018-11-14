@@ -1,19 +1,15 @@
-import { QueueApi } from '../../stencil.core';
-import { Config, Mode } from '../../interface';
-export declare class App {
-    private isDevice;
-    mode: Mode;
+import { ComponentInterface, QueueApi } from '../../stencil.core';
+import { Config } from '../../interface';
+export declare class App implements ComponentInterface {
     el: HTMLElement;
     win: Window;
     config: Config;
     queue: QueueApi;
-    componentWillLoad(): void;
     componentDidLoad(): void;
     hostData(): {
         class: {
-            'is-device': boolean;
-            'is-hydrid': boolean;
-            'statusbar-padding': any;
+            'ion-page': boolean;
+            'force-statusbar-padding': boolean;
         };
     };
 }

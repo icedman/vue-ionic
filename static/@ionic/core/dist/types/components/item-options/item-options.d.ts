@@ -1,6 +1,6 @@
-import { EventEmitter } from '../../stencil.core';
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
 import { Side } from '../../interface';
-export declare class ItemOptions {
+export declare class ItemOptions implements ComponentInterface {
     el: HTMLElement;
     win: Window;
     /**
@@ -11,9 +11,8 @@ export declare class ItemOptions {
     /**
      * Emitted when the item has been fully swiped.
      */
-    ionSwipe: EventEmitter<void>;
-    isEndSide(): boolean;
-    width(): number;
+    ionSwipe: EventEmitter<any>;
+    /** @internal */
     fireSwipeEvent(): void;
     hostData(): {
         class: {

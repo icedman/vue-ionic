@@ -7,7 +7,9 @@ ion-picker {
   position: absolute;
   width: 100%;
   height: 100%;
+  font-family: var(--ion-font-family, inherit);
   contain: strict;
+  user-select: none;
   z-index: 1000; }
 
 .picker-toolbar {
@@ -31,11 +33,10 @@ ion-picker {
   z-index: 10; }
 
 .picker-columns {
-  margin-bottom: constant(safe-area-inset-bottom);
-  margin-bottom: env(safe-area-inset-bottom);
   display: flex;
   position: relative;
   justify-content: center;
+  margin-bottom: var(--ion-safe-area-bottom, 0);
   contain: strict;
   overflow: hidden; }
 
@@ -109,12 +110,9 @@ ion-picker {
 .picker-button:focus {
   outline: none; }
 
-.picker-md {
-  font-family: var(--ion-font-family, inherit); }
-
 .picker-md .picker-wrapper {
   height: 260px;
-  border-top: 0.55px solid rgba(var(--ion-item-border-color-rgb, 0, 0, 0), 0.13);
+  border-top: 0.55px solid var(--ion-item-border-color, var(--ion-border-color, rgba(0, 0, 0, 0.13)));
   background: var(--ion-background-color, #fff); }
 
 .picker-md .picker-toolbar {
@@ -148,7 +146,7 @@ ion-picker {
 .picker-md .picker-opts {
   top: 77px;
   transform-style: preserve-3d;
-  color: var(--ion-item-text-color, var(--ion-text-color, #000));
+  color: var(--ion-item-color, var(--ion-text-color, #000));
   font-size: 22px;
   line-height: 42px;
   pointer-events: none; }
@@ -159,7 +157,7 @@ ion-picker {
   height: 43px;
   transition-timing-function: ease-out;
   background: transparent;
-  color: var(--ion-item-text-color, var(--ion-text-color, #000));
+  color: var(--ion-item-color, var(--ion-text-color, #000));
   font-size: 22px;
   line-height: 42px;
   backface-visibility: hidden;
@@ -177,7 +175,7 @@ ion-picker {
   position: absolute;
   width: 100%;
   height: 81px;
-  border-bottom: 1px solid rgba(var(--ion-item-border-color-rgb, 0, 0, 0), 0.13);
+  border-bottom: 1px solid var(--ion-item-border-color, var(--ion-border-color, rgba(0, 0, 0, 0.13)));
   background: linear-gradient(to bottom, var(--ion-background-color, #fff) 20%, rgba(var(--ion-background-color-rgb, 255, 255, 255), 0.8) 100%);
   z-index: 10; }
 
@@ -188,6 +186,6 @@ ion-picker {
   position: absolute;
   width: 100%;
   height: 119px;
-  border-top: 1px solid rgba(var(--ion-item-border-color-rgb, 0, 0, 0), 0.13);
+  border-top: 1px solid var(--ion-item-border-color, var(--ion-border-color, rgba(0, 0, 0, 0.13)));
   background: linear-gradient(to top, var(--ion-background-color, #fff) 30%, rgba(var(--ion-background-color-rgb, 255, 255, 255), 0.8) 100%);
   z-index: 11; }

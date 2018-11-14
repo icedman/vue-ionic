@@ -1,17 +1,11 @@
 export class SelectOption {
     constructor() {
         this.inputId = `ion-selopt-${selectOptionIds++}`;
-        /**
-         * If true, the user cannot interact with the select option. Defaults to `false`.
-         */
         this.disabled = false;
-        /**
-         * If true, the element is selected.
-         */
         this.selected = false;
     }
     componentWillLoad() {
-        if (this.value === undefined) {
+        if (this.value == null) {
             this.value = this.el.textContent || '';
         }
     }
@@ -41,7 +35,7 @@ export class SelectOption {
             "attr": "selected"
         },
         "value": {
-            "type": String,
+            "type": "Any",
             "attr": "value",
             "mutable": true
         }

@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Color, Mode } from '../../interface';
-export declare class ChipButton {
+export declare class ChipButton implements ComponentInterface {
     el: HTMLElement;
     /**
      * The color to use from your application's color palette.
@@ -14,13 +15,14 @@ export declare class ChipButton {
      */
     mode: Mode;
     /**
-     * If true, the user cannot interact with the chip button. Defaults to `false`.
+     * If `true`, the user cannot interact with the chip button. Defaults to `false`.
      */
     disabled: boolean;
     /**
-     * Set to `"clear"` for a transparent button style.
+     * Set to `"clear"` for a transparent button or to `"solid"` for a filled background.
+     * Defaults to `"clear"`.
      */
-    fill: string;
+    fill: 'clear' | 'solid';
     /**
      * Contains a URL or a URL fragment that the hyperlink points to.
      * If this property is set, an anchor tag will be rendered.

@@ -11,13 +11,12 @@
   opacity: .01;
   touch-action: none;
   z-index: 2; }
-  :host.backdrop-hide {
-    background: transparent; }
-  :host.backdrop-no-tappable {
-    cursor: auto; }
 
-body.backdrop-no-scroll {
-  overflow: hidden; }
+:host(.backdrop-hide) {
+  background: transparent; }
+
+:host(.backdrop-no-tappable) {
+  cursor: auto; }
 
 :host {
   background-color: var(--ion-backdrop-color, #000); }

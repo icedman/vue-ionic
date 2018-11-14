@@ -1,11 +1,5 @@
 export class Route {
     constructor() {
-        /**
-         * Relative path that needs to match in order for this route to apply.
-         *
-         * Accepts paths similar to expressjs so that you can define parameters
-         * in the url /foo/:bar where bar would be available in incoming props.
-         */
         this.url = '';
     }
     onUpdate(newValue) {

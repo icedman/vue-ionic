@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Color, Mode } from '../../interface';
-export declare class ItemDivider {
+export declare class ItemDivider implements ComponentInterface {
     el: HTMLElement;
     /**
      * The color to use from your application's color palette.
@@ -15,7 +16,11 @@ export declare class ItemDivider {
     mode: Mode;
     componentDidLoad(): void;
     hostData(): {
-        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap | null;
+        class: {
+            'item': boolean;
+        } | {
+            'item': boolean;
+        };
     };
     render(): JSX.Element[];
 }

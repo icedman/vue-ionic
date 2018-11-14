@@ -1,5 +1,5 @@
 import { hapticSelection } from '../../utils/haptic';
-import { deferEvent, renderHiddenInput } from '../../utils/helpers';
+import { renderHiddenInput } from '../../utils/helpers';
 import { createColorClasses, hostContext } from '../../utils/theme';
 export class Toggle {
     constructor() {
@@ -7,22 +7,23 @@ export class Toggle {
         this.pivotX = 0;
         this.activated = false;
         this.keyFocus = false;
-        /**
-         * The name of the control, which is submitted with the form data.
-         */
         this.name = this.inputId;
-        /**
-         * If true, the toggle is selected. Defaults to `false`.
-         */
         this.checked = false;
-        /*
-         * If true, the user cannot interact with the toggle. Default false.
-         */
         this.disabled = false;
-        /**
-         * the value of the toggle.
-         */
         this.value = 'on';
+        this.onChange = () => {
+            this.checked = !this.checked;
+        };
+        this.onKeyUp = () => {
+            this.keyFocus = true;
+        };
+        this.onFocus = () => {
+            this.ionFocus.emit();
+        };
+        this.onBlur = () => {
+            this.keyFocus = false;
+            this.ionBlur.emit();
+        };
     }
     checkedChanged(isChecked) {
         this.ionChange.emit({
@@ -31,15 +32,13 @@ export class Toggle {
         });
     }
     disabledChanged() {
-        this.ionStyle.emit({
-            'interactive-disabled': this.disabled,
-        });
+        this.emitStyle();
         if (this.gesture) {
-            this.gesture.disabled = this.disabled;
+            this.gesture.setDisabled(this.disabled);
         }
     }
     componentWillLoad() {
-        this.ionStyle = deferEvent(this.ionStyle);
+        this.emitStyle();
     }
     async componentDidLoad() {
         const parentItem = this.nativeInput.closest('ion-item');
@@ -50,26 +49,30 @@ export class Toggle {
                 this.nativeInput.setAttribute('aria-labelledby', itemLabel.id);
             }
         }
-        this.gesture = (await import('../../utils/gesture/gesture')).create({
+        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
             el: this.el,
             queue: this.queue,
             gestureName: 'toggle',
-            gesturePriority: 30,
+            gesturePriority: 100,
             threshold: 0,
-            onStart: this.onDragStart.bind(this),
-            onMove: this.onDragMove.bind(this),
-            onEnd: this.onDragEnd.bind(this),
+            onStart: ev => this.onStart(ev),
+            onMove: ev => this.onMove(ev),
+            onEnd: ev => this.onEnd(ev),
         });
         this.disabledChanged();
     }
-    onDragStart(detail) {
+    emitStyle() {
+        this.ionStyle.emit({
+            'interactive-disabled': this.disabled,
+        });
+    }
+    onStart(detail) {
         this.pivotX = detail.currentX;
         this.activated = true;
-        // touch-action does not work in iOS
         detail.event.preventDefault();
         return true;
     }
-    onDragMove(detail) {
+    onMove(detail) {
         const currentX = detail.currentX;
         if (shouldToggle(this.checked, currentX - this.pivotX, -15)) {
             this.checked = !this.checked;
@@ -77,7 +80,7 @@ export class Toggle {
             hapticSelection();
         }
     }
-    onDragEnd(detail) {
+    onEnd(detail) {
         const delta = detail.currentX - this.pivotX;
         if (shouldToggle(this.checked, delta, 4)) {
             this.checked = !this.checked;
@@ -86,30 +89,21 @@ export class Toggle {
         this.activated = false;
         this.nativeInput.focus();
     }
-    onChange() {
-        this.checked = !this.checked;
-    }
-    onKeyUp() {
-        this.keyFocus = true;
-    }
-    onFocus() {
-        this.ionFocus.emit();
-    }
-    onBlur() {
-        this.keyFocus = false;
-        this.ionBlur.emit();
+    getValue() {
+        return this.value || '';
     }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('.item', this.el), 'toggle-activated': this.activated, 'toggle-checked': this.checked, 'toggle-disabled': this.disabled, 'toggle-key': this.keyFocus, 'interactive': true })
+            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('ion-item', this.el), 'toggle-activated': this.activated, 'toggle-checked': this.checked, 'toggle-disabled': this.disabled, 'toggle-key': this.keyFocus, 'interactive': true })
         };
     }
     render() {
-        renderHiddenInput(this.el, this.name, this.value, this.disabled);
+        const value = this.getValue();
+        renderHiddenInput(this.el, this.name, (this.checked ? value : ''), this.disabled);
         return [
             h("div", { class: "toggle-icon" },
                 h("div", { class: "toggle-inner" })),
-            h("input", { type: "checkbox", onChange: this.onChange.bind(this), onFocus: this.onFocus.bind(this), onBlur: this.onBlur.bind(this), onKeyUp: this.onKeyUp.bind(this), checked: this.checked, id: this.inputId, name: this.name, value: this.value, disabled: this.disabled, ref: r => this.nativeInput = r }),
+            h("input", { type: "checkbox", onChange: this.onChange, onFocus: this.onFocus, onBlur: this.onBlur, onKeyUp: this.onKeyUp, checked: this.checked, id: this.inputId, name: this.name, value: value, disabled: this.disabled, ref: r => this.nativeInput = r }),
             h("slot", null)
         ];
     }

@@ -1,21 +1,17 @@
-import { ModalOptions } from '../../interface';
-import { OverlayController } from '../../utils/overlays';
-export declare class ModalController implements OverlayController {
-    private modals;
+import { ComponentInterface } from '../../stencil.core';
+import { ComponentRef, ModalOptions, OverlayController } from '../../interface';
+export declare class ModalController implements ComponentInterface, OverlayController {
     doc: Document;
-    protected modalWillPresent(ev: any): void;
-    protected modalWillDismiss(ev: any): void;
-    protected escapeKeyUp(): void;
     /**
      * Create a modal overlay with modal options.
      */
-    create(opts?: ModalOptions): Promise<HTMLIonModalElement>;
+    create<T extends ComponentRef>(opts: ModalOptions<T>): Promise<HTMLIonModalElement>;
     /**
      * Dismiss the open modal overlay.
      */
-    dismiss(data?: any, role?: string, modalId?: number): Promise<void>;
+    dismiss(data?: any, role?: string, id?: string): Promise<boolean>;
     /**
      * Get the most recently opened modal overlay.
      */
-    getTop(): HTMLIonModalElement;
+    getTop(): Promise<HTMLIonModalElement | undefined>;
 }

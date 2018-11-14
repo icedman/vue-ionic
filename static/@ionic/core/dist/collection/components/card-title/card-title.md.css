@@ -1,14 +1,18 @@
 :host {
+  /**
+   * @prop --color: Color of the card title
+   */
   display: block;
-  position: relative; }
+  position: relative;
+  color: var(--color); }
 
 :host(.ion-color) {
-  /* stylelint-disable-next-line declaration-no-important */
-  color: var(--ion-color-base) !important; }
+  color: var(--ion-color-base); }
 
 :host {
+  --color: var(--ion-text-color-step-150, #262626);
   margin: 0;
   padding: 0;
-  color: var(--ion-text-color-step-150, #262626);
-  font-size: 24px;
+  font-size: 20px;
+  font-weight: 500;
   line-height: 1.2; }

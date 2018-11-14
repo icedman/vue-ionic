@@ -5,17 +5,14 @@
 // --------------------------------------------------
 
 :host {
-  --ion-color-base: #{$toolbar-ios-background-color};
-  --ion-color-contrast: #{$toolbar-ios-text-color};
+  --background: #{$toolbar-ios-background};
+  --color: #{$toolbar-ios-color};
   --border-color: #{$toolbar-ios-border-color};
-  --translucent-filter: #{$toolbar-ios-translucent-filter};
-  --padding-top: #{$toolbar-ios-padding};
-  --padding-bottom: #{$toolbar-ios-padding};
-  --padding-start: #{$toolbar-ios-padding};
-  --padding-end: #{$toolbar-ios-padding};
-  --min-height: #{$toolbar-ios-height};
-
-  font-family: $toolbar-ios-font-family;
+  --padding-top: 4px;
+  --padding-bottom: 4px;
+  --padding-start: 4px;
+  --padding-end: 4px;
+  --min-height: 44px;
 }
 
 // iOS Toolbar Content

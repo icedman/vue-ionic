@@ -1,7 +1,13 @@
-:host {
+:host-context(.item) {
+  /**
+   * @prop --color: Color of the label
+   */
+  --color: initial;
   margin: 0;
   display: block;
   flex: 1;
+  color: var(--color);
+  font-family: var(--ion-font-family, inherit);
   font-size: inherit;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -41,9 +47,11 @@
 :host-context(.item-has-value).label-floating {
   transform: translate3d(0,  0,  0) scale(0.8); }
 
-:host {
-  margin: 10px 8px 10px 0;
-  font-family: var(--ion-font-family, inherit); }
+:host(.label-no-animate.label-floating) {
+  transition: none; }
+
+:host-context(.item) {
+  margin: 10px 8px 10px 0; }
 
 :host([text-wrap]) {
   font-size: 14px;
@@ -51,7 +59,7 @@
 
 :host(.label-stacked) {
   margin-bottom: 4px;
-  font-size: 12px; }
+  font-size: 13.6px; }
 
 :host(.label-floating) {
   margin-bottom: 0;

@@ -1,4 +1,7 @@
 .split-pane {
+  /**
+   * @prop --border: Border between panes
+   */
   left: 0;
   right: 0;
   top: 0;
@@ -24,30 +27,28 @@
 .split-pane-visible > .split-pane-side:not(ion-menu),
 .split-pane-visible > ion-menu.split-pane-side.menu-enabled {
   display: flex;
-  flex-shrink: 0;
-  order: -1; }
+  flex-shrink: 0; }
 
 .split-pane-side:not(ion-menu) {
   display: none; }
 
-.split-pane-visible > .split-pane-side[side=start] {
+.split-pane-visible > .split-pane-side {
   order: -1; }
 
 .split-pane-visible > .split-pane-side[side=end] {
   order: 1; }
 
-.split-pane-visible > .split-pane-side[side=left] {
-  order: -1; }
-
-.split-pane-visible > .split-pane-side[side=right] {
-  order: 1; }
+.split-pane-ios {
+  --border: 0.55px solid var(--ion-item-border-color, var(--ion-border-color, #c8c7cc)); }
 
 .split-pane-ios.split-pane-visible > .split-pane-side {
   min-width: 270px;
   max-width: 28%;
-  border-right: 0.55px solid var(--ion-item-border-color, #c8c7cc);
+  border-right: var(--border);
   border-left: 0; }
 
-.split-pane-ios.split-pane-visible > .split-pane-side[side=right] {
+.split-pane-ios.split-pane-visible > .split-pane-side[side=end] {
+  min-width: 270px;
+  max-width: 28%;
   border-right: 0;
-  border-left: 0.55px solid var(--ion-item-border-color, #c8c7cc); }
+  border-left: var(--border); }

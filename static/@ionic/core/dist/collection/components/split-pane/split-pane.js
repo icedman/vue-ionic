@@ -12,25 +12,17 @@ const QUERY = {
 export class SplitPane {
     constructor() {
         this.visible = false;
-        /**
-         * If true, the split pane will be hidden. Defaults to `false`.
-         */
         this.disabled = false;
-        /**
-         * When the split-pane should be shown.
-         * Can be a CSS media query expression, or a shortcut expression.
-         * Can also be a boolean expression.
-         */
-        this.when = QUERY['md'];
+        this.when = QUERY['lg'];
     }
     visibleChanged(visible) {
-        const detail = { visible };
+        const detail = { visible, isPane: this.isPane.bind(this) };
         this.ionChange.emit(detail);
         this.ionSplitPaneVisible.emit(detail);
     }
     componentDidLoad() {
-        this._styleChildren();
-        this.whenChanged();
+        this.styleChildren();
+        this.updateState();
     }
     componentDidUnload() {
         if (this.rmL) {
@@ -38,7 +30,7 @@ export class SplitPane {
             this.rmL = undefined;
         }
     }
-    whenChanged() {
+    updateState() {
         if (this.isServer) {
             return;
         }
@@ -46,39 +38,26 @@ export class SplitPane {
             this.rmL();
             this.rmL = undefined;
         }
-        // Check if the split-pane is disabled
         if (this.disabled) {
             this.visible = false;
             return;
         }
-        // When query is a boolean
         const query = this.when;
         if (typeof query === 'boolean') {
             this.visible = query;
             return;
         }
-        // When query is a string, let's find first if it is a shortcut
-        const defaultQuery = QUERY[query];
-        const mediaQuery = (defaultQuery)
-            ? defaultQuery
-            : query;
-        // Media query is empty or null, we hide it
-        if (!mediaQuery || mediaQuery.length === 0) {
+        const mediaQuery = QUERY[query] || query;
+        if (mediaQuery.length === 0) {
             this.visible = false;
             return;
         }
-        // Listen on media query
         const callback = (q) => this.visible = q.matches;
         const mediaList = this.win.matchMedia(mediaQuery);
         mediaList.addListener(callback);
         this.rmL = () => mediaList.removeListener(callback);
         this.visible = mediaList.matches;
     }
-    /** Returns if the split pane is toggled or not */
-    isVisible() {
-        return this.visible;
-    }
-    /** @hidden */
     isPane(element) {
         if (!this.visible) {
             return false;
@@ -86,7 +65,7 @@ export class SplitPane {
         return element.parentElement === this.el
             && element.classList.contains(SPLIT_PANE_SIDE);
     }
-    _styleChildren() {
+    styleChildren() {
         if (this.isServer) {
             return;
         }
@@ -118,19 +97,14 @@ export class SplitPane {
     static get properties() { return {
         "disabled": {
             "type": Boolean,
-            "attr": "disabled"
+            "attr": "disabled",
+            "watchCallbacks": ["updateState"]
         },
         "el": {
             "elementRef": true
         },
-        "isPane": {
-            "method": true
-        },
         "isServer": {
             "context": "isServer"
-        },
-        "isVisible": {
-            "method": true
         },
         "visible": {
             "state": true,
@@ -139,7 +113,7 @@ export class SplitPane {
         "when": {
             "type": "Any",
             "attr": "when",
-            "watchCallbacks": ["whenChanged"]
+            "watchCallbacks": ["updateState"]
         },
         "win": {
             "context": "window"
@@ -148,7 +122,7 @@ export class SplitPane {
     static get events() { return [{
             "name": "ionChange",
             "method": "ionChange",
-            "bubbles": true,
+            "bubbles": false,
             "cancelable": true,
             "composed": true
         }, {

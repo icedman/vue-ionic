@@ -1,29 +1,25 @@
 export class MenuToggle {
     constructor() {
         this.visible = false;
-        /**
-         * Automatically hides the content when the corresponding menu is not active
-         */
         this.autoHide = true;
     }
     componentDidLoad() {
-        this.updateVisibility();
+        return this.updateVisibility();
     }
     async onClick() {
         const menuCtrl = await getMenuController(this.doc);
         if (menuCtrl) {
-            const menu = menuCtrl.get(this.menu);
-            if (menu && menu.isActive()) {
-                return menuCtrl.toggle(this.menu);
+            const menu = await menuCtrl.get(this.menu);
+            if (menu) {
+                menuCtrl.toggle(this.menu);
             }
         }
-        return false;
     }
     async updateVisibility() {
         const menuCtrl = await getMenuController(this.doc);
         if (menuCtrl) {
-            const menu = menuCtrl.get(this.menu);
-            if (menu && menu.isActive()) {
+            const menu = await menuCtrl.get(this.menu);
+            if (menu && await menu.isActive()) {
                 this.visible = true;
                 return;
             }

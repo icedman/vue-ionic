@@ -1,5 +1,6 @@
+import { ComponentInterface } from '../../stencil.core';
 import { ComponentProps, NavComponent } from '../../interface';
-export declare class NavSetRoot {
+export declare class NavSetRoot implements ComponentInterface {
     el: HTMLElement;
     /**
      * Component you want to make root for the navigation stack
@@ -10,5 +11,5 @@ export declare class NavSetRoot {
      * Data you want to pass to the component as props
      */
     componentProps?: ComponentProps;
-    push(): Promise<any>;
+    push(): void;
 }

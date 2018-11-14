@@ -1,6 +1,6 @@
-import { clamp, deferEvent } from '../../utils/helpers';
-import { createThemedClasses } from '../../utils/theme';
-import { convertFormatToKey, convertToArrayOfNumbers, convertToArrayOfStrings, dateDataSortValue, dateSortValue, dateValueRange, daysInMonth, getValueFromFormat, parseDate, parseTemplate, renderDatetime, renderTextFormat, updateDate } from './datetime-util';
+import { clamp, renderHiddenInput } from '../../utils/helpers';
+import { hostContext } from '../../utils/theme';
+import { convertDataToISO, convertFormatToKey, convertToArrayOfNumbers, convertToArrayOfStrings, dateDataSortValue, dateSortValue, dateValueRange, daysInMonth, getValueFromFormat, parseDate, parseTemplate, renderDatetime, renderTextFormat, updateDate } from './datetime-util';
 export class Datetime {
     constructor() {
         this.inputId = `ion-dt-${datetimeIds++}`;
@@ -9,61 +9,40 @@ export class Datetime {
         this.datetimeMin = {};
         this.datetimeMax = {};
         this.datetimeValue = {};
-        /**
-         * If true, the user cannot interact with the datetime. Defaults to `false`.
-         */
+        this.name = this.inputId;
         this.disabled = false;
-        /**
-         * The display format of the date and time as text that shows
-         * within the item. When the `pickerFormat` input is not used, then the
-         * `displayFormat` is used for both display the formatted text, and determining
-         * the datetime picker's columns. See the `pickerFormat` input description for
-         * more info. Defaults to `MMM D, YYYY`.
-         */
         this.displayFormat = 'MMM D, YYYY';
-        /**
-         * The text to display on the picker's cancel button. Default: `Cancel`.
-         */
         this.cancelText = 'Cancel';
-        /**
-         * The text to display on the picker's "Done" button. Default: `Done`.
-         */
         this.doneText = 'Done';
-        /**
-         * Any additional options that the picker interface can accept.
-         * See the [Picker API docs](../../picker/Picker) for the picker options.
-         */
-        this.pickerOptions = {
-            buttons: [],
-            columns: []
-        };
     }
     disabledChanged() {
         this.emitStyle();
     }
-    /**
-     * Update the datetime value when the value changes
-     */
     valueChanged() {
-        this.updateValue();
+        this.updateDatetimeValue(this.value);
         this.emitStyle();
+        this.ionChange.emit({
+            value: this.value
+        });
     }
     componentWillLoad() {
-        // first see if locale names were provided in the inputs
-        // then check to see if they're in the config
-        // if neither were provided then it will use default English names
-        this.ionStyle = deferEvent(this.ionStyle);
         this.locale = {
-            // this.locale[type] = convertToArrayOfStrings((this[type] ? this[type] : this.config.get(type), type);
             monthNames: convertToArrayOfStrings(this.monthNames, 'monthNames'),
             monthShortNames: convertToArrayOfStrings(this.monthShortNames, 'monthShortNames'),
             dayNames: convertToArrayOfStrings(this.dayNames, 'dayNames'),
             dayShortNames: convertToArrayOfStrings(this.dayShortNames, 'dayShortNames')
         };
-        this.updateValue();
-    }
-    componentDidLoad() {
+        this.updateDatetimeValue(this.value);
         this.emitStyle();
+    }
+    async open() {
+        if (this.disabled) {
+            return;
+        }
+        const pickerOptions = this.generatePickerOptions();
+        const picker = this.picker = await this.pickerCtrl.create(pickerOptions);
+        await this.validate();
+        await picker.present();
     }
     emitStyle() {
         this.ionStyle.emit({
@@ -73,146 +52,115 @@ export class Datetime {
             'interactive-disabled': this.disabled,
         });
     }
-    updateValue() {
-        updateDate(this.datetimeValue, this.value);
+    updateDatetimeValue(value) {
+        updateDate(this.datetimeValue, value);
         this.updateText();
     }
-    buildPicker(pickerOptions) {
-        // If the user has not passed in picker buttons,
-        // add a cancel and ok button to the picker
+    generatePickerOptions() {
+        const pickerOptions = Object.assign({}, this.pickerOptions, { columns: this.generateColumns() });
         const buttons = pickerOptions.buttons;
         if (!buttons || buttons.length === 0) {
             pickerOptions.buttons = [
                 {
                     text: this.cancelText,
                     role: 'cancel',
-                    handler: () => this.ionCancel.emit()
+                    handler: () => {
+                        this.ionCancel.emit();
+                    }
                 },
                 {
                     text: this.doneText,
-                    handler: (data) => this.value = data,
+                    handler: (data) => {
+                        this.updateDatetimeValue(data);
+                        this.value = convertDataToISO(this.datetimeValue);
+                    }
                 }
             ];
         }
-        pickerOptions.columns = this.generateColumns();
-        const picker = this.pickerCtrl.create(pickerOptions);
-        return picker;
-    }
-    async open() {
-        // TODO check this.isFocus() || this.disabled
-        if (this.disabled) {
-            return;
-        }
-        const pickerOptions = Object.assign({}, this.pickerOptions);
-        this.picker = await this.buildPicker(pickerOptions);
-        this.validate();
-        await this.picker.present();
+        return pickerOptions;
     }
     generateColumns() {
-        let columns = [];
-        // if a picker format wasn't provided, then fallback
-        // to use the display format
         let template = this.pickerFormat || this.displayFormat || DEFAULT_FORMAT;
-        if (template) {
-            // make sure we've got up to date sizing information
-            this.calcMinMax();
-            // does not support selecting by day name
-            // automaticallly remove any day name formats
-            template = template.replace('DDDD', '{~}').replace('DDD', '{~}');
-            if (template.indexOf('D') === -1) {
-                // there is not a day in the template
-                // replace the day name with a numeric one if it exists
-                template = template.replace('{~}', 'D');
-            }
-            // make sure no day name replacer is left in the string
-            template = template.replace(/{~}/g, '');
-            // parse apart the given template into an array of "formats"
-            parseTemplate(template).forEach((format) => {
-                // loop through each format in the template
-                // create a new picker column to build up with data
-                const key = convertFormatToKey(format);
-                let values;
-                // check if they have exact values to use for this date part
-                // otherwise use the default date part values
-                values = this[key + 'Values']
-                    ? convertToArrayOfNumbers(this[key + 'Values'], key)
-                    : dateValueRange(format, this.datetimeMin, this.datetimeMax);
-                const column = {
-                    name: key,
-                    selectedIndex: 0,
-                    options: values.map(val => {
-                        return {
-                            value: val,
-                            text: renderTextFormat(format, val, null, this.locale),
-                        };
-                    })
-                };
-                // cool, we've loaded up the columns with options
-                // preselect the option for this column
-                const optValue = getValueFromFormat(this.datetimeValue, format);
-                const selectedIndex = column.options.findIndex(opt => opt.value === optValue);
-                if (selectedIndex >= 0) {
-                    // set the select index for this column's options
-                    column.selectedIndex = selectedIndex;
-                }
-                // add our newly created column to the picker
-                columns.push(column);
-            });
-            // Normalize min/max
-            const min = this.datetimeMin;
-            const max = this.datetimeMax;
-            ['month', 'day', 'hour', 'minute']
-                .filter(name => !columns.find(column => column.name === name))
-                .forEach(name => {
-                min[name] = 0;
-                max[name] = 0;
-            });
-            columns = this.divyColumns(columns);
+        if (template.length === 0) {
+            return [];
         }
-        return columns;
+        this.calcMinMax();
+        template = template.replace('DDDD', '{~}').replace('DDD', '{~}');
+        if (template.indexOf('D') === -1) {
+            template = template.replace('{~}', 'D');
+        }
+        template = template.replace(/{~}/g, '');
+        const columns = parseTemplate(template).map((format) => {
+            const key = convertFormatToKey(format);
+            let values;
+            const self = this;
+            values = self[key + 'Values']
+                ? convertToArrayOfNumbers(self[key + 'Values'], key)
+                : dateValueRange(format, this.datetimeMin, this.datetimeMax);
+            const colOptions = values.map(val => {
+                return {
+                    value: val,
+                    text: renderTextFormat(format, val, undefined, this.locale),
+                };
+            });
+            const optValue = getValueFromFormat(this.datetimeValue, format);
+            const selectedIndex = colOptions.findIndex(opt => opt.value === optValue);
+            return {
+                name: key,
+                selectedIndex: selectedIndex >= 0 ? selectedIndex : 0,
+                options: colOptions
+            };
+        });
+        const min = this.datetimeMin;
+        const max = this.datetimeMax;
+        ['month', 'day', 'hour', 'minute']
+            .filter(name => !columns.find(column => column.name === name))
+            .forEach(name => {
+            min[name] = 0;
+            max[name] = 0;
+        });
+        return divyColumns(columns);
     }
-    validate() {
+    async validate() {
         const today = new Date();
         const minCompareVal = dateDataSortValue(this.datetimeMin);
         const maxCompareVal = dateDataSortValue(this.datetimeMax);
-        const yearCol = this.picker.getColumn('year');
+        const yearCol = await this.picker.getColumn('year');
         let selectedYear = today.getFullYear();
         if (yearCol) {
-            // default to the first value if the current year doesn't exist in the options
             if (!yearCol.options.find(col => col.value === today.getFullYear())) {
                 selectedYear = yearCol.options[0].value;
             }
             const selectedIndex = yearCol.selectedIndex;
-            if (selectedIndex != null) {
+            if (selectedIndex !== undefined) {
                 const yearOpt = yearCol.options[selectedIndex];
                 if (yearOpt) {
-                    // they have a selected year value
                     selectedYear = yearOpt.value;
                 }
             }
         }
-        const selectedMonth = this.validateColumn('month', 1, minCompareVal, maxCompareVal, [selectedYear, 0, 0, 0, 0], [selectedYear, 12, 31, 23, 59]);
+        const selectedMonth = await this.validateColumn('month', 1, minCompareVal, maxCompareVal, [selectedYear, 0, 0, 0, 0], [selectedYear, 12, 31, 23, 59]);
         const numDaysInMonth = daysInMonth(selectedMonth, selectedYear);
-        const selectedDay = this.validateColumn('day', 2, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, 0, 0, 0], [selectedYear, selectedMonth, numDaysInMonth, 23, 59]);
-        const selectedHour = this.validateColumn('hour', 3, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, selectedDay, 0, 0], [selectedYear, selectedMonth, selectedDay, 23, 59]);
-        this.validateColumn('minute', 4, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, selectedDay, selectedHour, 0], [selectedYear, selectedMonth, selectedDay, selectedHour, 59]);
+        const selectedDay = await this.validateColumn('day', 2, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, 0, 0, 0], [selectedYear, selectedMonth, numDaysInMonth, 23, 59]);
+        const selectedHour = await this.validateColumn('hour', 3, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, selectedDay, 0, 0], [selectedYear, selectedMonth, selectedDay, 23, 59]);
+        await this.validateColumn('minute', 4, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, selectedDay, selectedHour, 0], [selectedYear, selectedMonth, selectedDay, selectedHour, 59]);
     }
     calcMinMax(now) {
         const todaysYear = (now || new Date()).getFullYear();
-        if (this.yearValues) {
+        if (this.yearValues !== undefined) {
             const years = convertToArrayOfNumbers(this.yearValues, 'year');
-            if (this.min == null) {
+            if (this.min === undefined) {
                 this.min = Math.min.apply(Math, years);
             }
-            if (this.max == null) {
+            if (this.max === undefined) {
                 this.max = Math.max.apply(Math, years);
             }
         }
         else {
-            if (this.min == null) {
+            if (this.min === undefined) {
                 this.min = (todaysYear - 100).toString();
             }
-            if (this.max == null) {
+            if (this.max === undefined) {
                 this.max = todaysYear.toString();
             }
         }
@@ -230,7 +178,6 @@ export class Datetime {
         max.minute = max.minute || 59;
         min.second = min.second || 0;
         max.second = max.second || 59;
-        // Ensure min/max constraits
         if (min.year > max.year) {
             console.error('min.year > max.year');
             min.year = max.year - 100;
@@ -246,8 +193,8 @@ export class Datetime {
             }
         }
     }
-    validateColumn(name, index, min, max, lowerBounds, upperBounds) {
-        const column = this.picker.getColumn(name);
+    async validateColumn(name, index, min, max, lowerBounds, upperBounds) {
+        const column = await this.picker.getColumn(name);
         if (!column) {
             return 0;
         }
@@ -277,80 +224,38 @@ export class Datetime {
         }
         return 0;
     }
-    divyColumns(columns) {
-        const pickerColumns = columns;
-        const columnsWidth = [];
-        let col;
-        let width;
-        for (let i = 0; i < pickerColumns.length; i++) {
-            col = pickerColumns[i];
-            columnsWidth.push(0);
-            for (const option of col.options) {
-                width = option.text.length;
-                if (width > columnsWidth[i]) {
-                    columnsWidth[i] = width;
-                }
-            }
-        }
-        if (columnsWidth.length === 2) {
-            width = Math.max(columnsWidth[0], columnsWidth[1]);
-            pickerColumns[0].align = 'right';
-            pickerColumns[1].align = 'left';
-            pickerColumns[0].optionsWidth = pickerColumns[1].optionsWidth = `${width * 17}px`;
-        }
-        else if (columnsWidth.length === 3) {
-            width = Math.max(columnsWidth[0], columnsWidth[2]);
-            pickerColumns[0].align = 'right';
-            pickerColumns[1].columnWidth = `${columnsWidth[1] * 17}px`;
-            pickerColumns[0].optionsWidth = pickerColumns[2].optionsWidth = `${width * 17}px`;
-            pickerColumns[2].align = 'left';
-        }
-        return columns;
-    }
-    /**
-     */
     updateText() {
-        // create the text of the formatted data
         const template = this.displayFormat || this.pickerFormat || DEFAULT_FORMAT;
-        // debugger;
         this.text = renderDatetime(template, this.datetimeValue, this.locale);
     }
-    /**
-     */
     hasValue() {
         const val = this.datetimeValue;
-        return val
-            && typeof val === 'object'
-            && Object.keys(val).length > 0;
+        return Object.keys(val).length > 0;
     }
     hostData() {
+        const addPlaceholderClass = (this.text == null && this.placeholder != null) ? true : false;
         return {
-            class: Object.assign({}, createThemedClasses(this.mode, 'datetime'), { 'datetime-disabled': this.disabled })
+            class: {
+                'datetime-disabled': this.disabled,
+                'datetime-placeholder': addPlaceholderClass,
+                'in-item': hostContext('ion-item', this.el)
+            }
         };
     }
     render() {
-        let addPlaceholderClass = false;
-        // If selected text has been passed in, use that first
         let datetimeText = this.text;
         if (datetimeText == null) {
-            if (this.placeholder) {
-                datetimeText = this.placeholder;
-                addPlaceholderClass = true;
-            }
-            else {
-                datetimeText = '';
-            }
+            datetimeText = this.placeholder != null ? this.placeholder : '';
         }
-        const datetimeTextClasses = {
-            'datetime-text': true,
-            'datetime-placeholder': addPlaceholderClass
-        };
+        renderHiddenInput(this.el, this.name, this.value, this.disabled);
         return [
-            h("div", { class: datetimeTextClasses }, datetimeText),
-            h("button", { type: "button", "aria-haspopup": "true", id: this.datetimeId, "aria-labelledby": this.labelId, "aria-disabled": this.disabled ? 'true' : null, onClick: this.open.bind(this), class: "datetime-cover" }, this.mode === 'md' && h("ion-ripple-effect", { tapClick: true }))
+            h("div", { class: "datetime-text" }, datetimeText),
+            h("button", { type: "button", "aria-haspopup": "true", "aria-labelledby": this.labelId, "aria-disabled": this.disabled ? 'true' : null, onClick: this.open.bind(this), class: "datetime-cover" }),
+            h("slot", null)
         ];
     }
     static get is() { return "ion-datetime"; }
+    static get encapsulation() { return "shadow"; }
     static get properties() { return {
         "cancelText": {
             "type": String,
@@ -381,6 +286,9 @@ export class Datetime {
             "type": String,
             "attr": "done-text"
         },
+        "el": {
+            "elementRef": true
+        },
         "hourValues": {
             "type": "Any",
             "attr": "hour-values"
@@ -399,6 +307,10 @@ export class Datetime {
             "type": "Any",
             "attr": "minute-values"
         },
+        "mode": {
+            "type": String,
+            "attr": "mode"
+        },
         "monthNames": {
             "type": String,
             "attr": "month-names"
@@ -410,6 +322,13 @@ export class Datetime {
         "monthValues": {
             "type": "Any",
             "attr": "month-values"
+        },
+        "name": {
+            "type": String,
+            "attr": "name"
+        },
+        "open": {
+            "method": true
         },
         "pickerCtrl": {
             "connect": "ion-picker-controller"
@@ -447,6 +366,12 @@ export class Datetime {
             "cancelable": true,
             "composed": true
         }, {
+            "name": "ionChange",
+            "method": "ionChange",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
             "name": "ionStyle",
             "method": "ionStyle",
             "bubbles": true,
@@ -455,6 +380,35 @@ export class Datetime {
         }]; }
     static get style() { return "/**style-placeholder:ion-datetime:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-datetime:**/"; }
+}
+function divyColumns(columns) {
+    const columnsWidth = [];
+    let col;
+    let width;
+    for (let i = 0; i < columns.length; i++) {
+        col = columns[i];
+        columnsWidth.push(0);
+        for (const option of col.options) {
+            width = option.text.length;
+            if (width > columnsWidth[i]) {
+                columnsWidth[i] = width;
+            }
+        }
+    }
+    if (columnsWidth.length === 2) {
+        width = Math.max(columnsWidth[0], columnsWidth[1]);
+        columns[0].align = 'right';
+        columns[1].align = 'left';
+        columns[0].optionsWidth = columns[1].optionsWidth = `${width * 17}px`;
+    }
+    else if (columnsWidth.length === 3) {
+        width = Math.max(columnsWidth[0], columnsWidth[2]);
+        columns[0].align = 'right';
+        columns[1].columnWidth = `${columnsWidth[1] * 17}px`;
+        columns[0].optionsWidth = columns[2].optionsWidth = `${width * 17}px`;
+        columns[2].align = 'left';
+    }
+    return columns;
 }
 let datetimeIds = 0;
 const DEFAULT_FORMAT = 'MMM D, YYYY';

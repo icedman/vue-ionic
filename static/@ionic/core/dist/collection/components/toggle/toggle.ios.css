@@ -1,18 +1,27 @@
 :host {
-  --ion-color-base: var(--ion-color-primary, #3880ff);
-  --ion-color-base-rgb: var(--ion-color-primary-rgb, 56, 128, 255);
+  /**
+   * @prop --background: Background of the toggle
+   * @prop --background-checked: Background of the toggle when checked
+   * @prop --handle-background: Background of the toggle handle
+   * @prop --handle-background-checked: Background of the toggle handle when checked
+   */
   /* stylelint-disable-next-line declaration-no-important */
   box-sizing: content-box !important;
   display: inline-block;
   contain: content;
+  cursor: pointer;
   touch-action: none;
-  user-select: none; }
+  user-select: none;
+  z-index: 2; }
 
 :host(.toggle-key) input {
   border: 2px solid #5e9ed6; }
 
 :host(:focus) {
   outline: none; }
+
+:host(.toggle-disabled) {
+  pointer-events: none; }
 
 input {
   left: 0;
@@ -29,13 +38,21 @@ input {
   pointer-events: none; }
 
 :host {
-  --checked-background: var(--ion-color-base);
-  --checked-knob: var(--ion-color-base);
+  --background: var(--ion-item-background, var(--ion-background-color, #fff));
+  --background-checked: var(--ion-color-primary, #3880ff);
+  --handle-background: var(--ion-item-background, var(--ion-background-color, #fff));
+  --handle-background-checked: var(--ion-item-background, var(--ion-background-color, #fff));
   box-sizing: content-box;
   position: relative;
   width: 51px;
   height: 32px;
   contain: strict; }
+
+:host(.ion-color.toggle-checked) .toggle-icon {
+  background: var(--ion-color-base); }
+
+:host(.ion-color.toggle-checked) .toggle-inner {
+  background: var(--ion-color-contrast); }
 
 .toggle-icon {
   border-radius: 16px;
@@ -43,6 +60,7 @@ input {
   position: relative;
   width: 100%;
   height: 100%;
+  transform: translate3d(0, 0, 0);
   transition: background-color 300ms;
   background-color: var(--ion-background-color-step-50, #f2f2f2);
   overflow: hidden;
@@ -57,7 +75,7 @@ input {
   position: absolute;
   transform: scale3d(1, 1, 1);
   transition: transform 300ms;
-  background-color: var(--ion-item-background-color, var(--ion-background-color, #fff));
+  background: var(--background);
   content: ""; }
 
 .toggle-inner {
@@ -68,20 +86,21 @@ input {
   width: 28px;
   height: 28px;
   transition: transform 300ms, width 120ms ease-in-out 80ms, left 110ms ease-in-out 80ms, right 110ms ease-in-out 80ms;
-  background-color: var(--ion-item-background-color, var(--ion-background-color, #fff));
+  background: var(--handle-background);
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16), 0 3px 1px rgba(0, 0, 0, 0.1);
   will-change: transform;
   contain: strict; }
 
 :host(.toggle-checked) .toggle-icon {
-  background-color: var(--checked-knob); }
+  background: var(--background-checked); }
 
 :host(.toggle-activated) .toggle-icon::before,
 :host(.toggle-checked) .toggle-icon::before {
   transform: scale3d(0, 0, 0); }
 
 :host(.toggle-checked) .toggle-inner {
-  transform: translate3d(19px,  0,  0); }
+  transform: translate3d(19px,  0,  0);
+  background: var(--handle-background-checked); }
 
 :host(.toggle-activated.toggle-checked) .toggle-inner::before {
   transform: scale3d(0, 0, 0); }
@@ -93,8 +112,7 @@ input {
   left: -4px; }
 
 :host(.toggle-disabled) {
-  opacity: 0.3;
-  pointer-events: none; }
+  opacity: 0.3; }
 
 :host(.in-item[slot]) {
   margin: 0;

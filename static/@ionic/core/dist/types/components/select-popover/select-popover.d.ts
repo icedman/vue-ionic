@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Mode, SelectPopoverOption } from '../../interface';
-export declare class SelectPopover {
+export declare class SelectPopover implements ComponentInterface {
     mode: Mode;
     /** Header text for the popover */
     header?: string;
@@ -11,8 +12,5 @@ export declare class SelectPopover {
     /** Array of options for the popover */
     options: SelectPopoverOption[];
     onSelect(ev: any): void;
-    hostData(): {
-        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap;
-    };
     render(): JSX.Element;
 }

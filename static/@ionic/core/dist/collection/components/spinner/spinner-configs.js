@@ -1,4 +1,4 @@
-export const SPINNERS = {
+const spinners = {
     'lines': {
         dur: 1000,
         lines: 12,
@@ -89,3 +89,4 @@ export const SPINNERS = {
         }
     }
 };
+export const SPINNERS = spinners;

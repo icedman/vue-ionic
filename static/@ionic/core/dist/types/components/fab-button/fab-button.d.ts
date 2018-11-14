@@ -1,8 +1,15 @@
 import '../../stencil.core';
-import { Color, Mode } from '../../interface';
-export declare class FabButton {
-    private inList;
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { Color, Mode, RouterDirection } from '../../interface';
+export declare class FabButton implements ComponentInterface {
     el: HTMLElement;
+    keyFocus: boolean;
+    win: Window;
+    /**
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
+     */
+    mode: Mode;
     /**
      * The color to use from your application's color palette.
      * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
@@ -10,16 +17,11 @@ export declare class FabButton {
      */
     color?: Color;
     /**
-     * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
-     */
-    mode: Mode;
-    /**
-     * If true, the fab button will be show a close icon. Defaults to `false`.
+     * If `true`, the fab button will be show a close icon. Defaults to `false`.
      */
     activated: boolean;
     /**
-     * If true, the user cannot interact with the fab button. Defaults to `false`.
+     * If `true`, the user cannot interact with the fab button. Defaults to `false`.
      */
     disabled: boolean;
     /**
@@ -28,24 +30,53 @@ export declare class FabButton {
      */
     href?: string;
     /**
-     * If true, the fab button will be translucent. Defaults to `false`.
+     * When using a router, it specifies the transition direction when navigating to
+     * another page using `href`.
+     */
+    routerDirection?: RouterDirection;
+    /**
+     * If `true`, the fab button will show when in a fab-list.
+     */
+    show: boolean;
+    /**
+     * If `true`, the fab button will be translucent. Defaults to `false`.
      */
     translucent: boolean;
     /**
-     * If true, the fab button will show when in a fab-list.
+     * The type of the button.
+     * Possible values are: `"submit"`, `"reset"` and `"button"`.
+     * Default value is: `"button"`
      */
-    show: boolean;
-    componentWillLoad(): void;
+    type: 'submit' | 'reset' | 'button';
     /**
-     * Get the classes for fab buttons in lists
+     * Emitted when the button has focus.
      */
-    private getFabClassMap;
+    ionFocus: EventEmitter<void>;
+    /**
+     * Emitted when the button loses focus.
+     */
+    ionBlur: EventEmitter<void>;
+    private onFocus;
+    private onKeyUp;
+    private onBlur;
     hostData(): {
-        'tappable': boolean;
+        'ion-activatable': boolean;
         class: {
+            'fab-button-in-list': boolean;
+            'fab-button-translucent-in-list': boolean;
+            'fab-button-close-active': boolean;
+            'fab-button-show': boolean;
+            'fab-button-disabled': boolean;
             'fab-button-translucent': boolean;
+            'focused': boolean;
         } | {
+            'fab-button-in-list': boolean;
+            'fab-button-translucent-in-list': boolean;
+            'fab-button-close-active': boolean;
+            'fab-button-show': boolean;
+            'fab-button-disabled': boolean;
             'fab-button-translucent': boolean;
+            'focused': boolean;
         };
     };
     render(): JSX.Element;

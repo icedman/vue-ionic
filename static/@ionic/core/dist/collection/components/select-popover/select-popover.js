@@ -1,7 +1,5 @@
-import { createThemedClasses } from '../../utils/theme';
 export class SelectPopover {
     constructor() {
-        /** Array of options for the popover */
         this.options = [];
     }
     onSelect(ev) {
@@ -10,25 +8,20 @@ export class SelectPopover {
             option.handler();
         }
     }
-    hostData() {
-        return {
-            class: createThemedClasses(this.mode, 'select-popover')
-        };
-    }
     render() {
         return (h("ion-list", null,
-            this.header ? h("ion-list-header", null, this.header) : null,
-            this.subHeader || this.message
-                ? h("ion-item", null,
+            this.header !== undefined && h("ion-list-header", null, this.header),
+            (this.subHeader !== undefined || this.message !== undefined) &&
+                h("ion-item", null,
                     h("ion-label", { "text-wrap": true },
-                        this.subHeader ? h("h3", null, this.subHeader) : null,
-                        this.message ? h("p", null, this.message) : null))
-                : null,
+                        this.subHeader !== undefined && h("h3", null, this.subHeader),
+                        this.message !== undefined && h("p", null, this.message))),
             h("ion-radio-group", null, this.options.map(option => h("ion-item", null,
                 h("ion-label", null, option.text),
                 h("ion-radio", { checked: option.checked, value: option.value, disabled: option.disabled }))))));
     }
     static get is() { return "ion-select-popover"; }
+    static get encapsulation() { return "scoped"; }
     static get properties() { return {
         "header": {
             "type": String,

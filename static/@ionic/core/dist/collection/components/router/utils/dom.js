@@ -1,24 +1,17 @@
 export async function writeNavState(root, chain, intent, index, changed = false) {
     try {
-        // find next navigation outlet in the DOM
         const outlet = searchNavNode(root);
-        // make sure we can continue interating the DOM, otherwise abort
         if (index >= chain.length || !outlet) {
             return changed;
         }
         await outlet.componentOnReady();
         const route = chain[index];
         const result = await outlet.setRouteId(route.id, route.params, intent);
-        // if the outlet changed the page, reset navigation to neutral (no direction)
-        // this means nested outlets will not animate
         if (result.changed) {
-            intent = 0 /* None */;
+            intent = 0;
             changed = true;
         }
-        // recursivelly set nested outlets
         changed = await writeNavState(result.element, chain, intent, index + 1, changed);
-        // once all nested outlets are visible let's make the parent visible too,
-        // using markVisible prevents flickering
         if (result.markVisible) {
             await result.markVisible();
         }
@@ -29,15 +22,14 @@ export async function writeNavState(root, chain, intent, index, changed = false)
         return false;
     }
 }
-export function readNavState(root) {
+export async function readNavState(root) {
     const ids = [];
     let outlet;
     let node = root;
-    // tslint:disable-next-line:no-constant-condition
     while (true) {
         outlet = searchNavNode(node);
         if (outlet) {
-            const id = outlet.getRouteId();
+            const id = await outlet.getRouteId();
             if (id) {
                 node = id.element;
                 id.element = undefined;

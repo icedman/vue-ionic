@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Color, Config, Mode } from '../../interface';
-export declare class MenuButton {
+export declare class MenuButton implements ComponentInterface {
     config: Config;
     /**
      * The color to use from your application's color palette.
@@ -14,7 +15,7 @@ export declare class MenuButton {
      */
     mode: Mode;
     /**
-     * Optional property that maps to a Menu's `menuId` prop. Can also be `left` or `right` for the menu side. This is used to find the correct menu to toggle
+     * Optional property that maps to a Menu's `menuId` prop. Can also be `start` or `end` for the menu side. This is used to find the correct menu to toggle
      */
     menu?: string;
     /**
@@ -22,6 +23,7 @@ export declare class MenuButton {
      */
     autoHide: boolean;
     hostData(): {
+        'ion-activatable': boolean;
         class: {
             'button': boolean;
         };

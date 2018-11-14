@@ -6,6 +6,7 @@ export declare const TRANSFORM_PROPS: {
     [key: string]: number;
 };
 export declare class Animator {
+    static animated: boolean;
     private _afterAddClasses?;
     private _afterRemoveClasses?;
     private _afterStyles?;
@@ -33,7 +34,7 @@ export declare class Animator {
     hasChildren: boolean;
     isPlaying: boolean;
     hasCompleted: boolean;
-    addElement(el: Node | Node[] | NodeList): Animator;
+    addElement(el: Node | Node[] | NodeList | undefined | null): Animator;
     /**
      * NO DOM
      */
@@ -95,10 +96,6 @@ export declare class Animator {
      * before the animation begins.
      */
     beforeRemoveClass(className: string): Animator;
-    /**
-     * Sets a CSS class during the duration of the animation.
-     */
-    duringAddClass(className: string): Animator;
     /**
      * Set CSS inline styles to this animation's elements
      * before the animation begins.
@@ -268,7 +265,7 @@ export declare class Animator {
      */
     onFinish(callback: (animation?: any) => void, opts?: {
         oneTimeCallback?: boolean;
-        clearExistingCallacks?: boolean;
+        clearExistingCallbacks?: boolean;
     }): Animator;
     /**
      * NO DOM

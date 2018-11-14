@@ -30,7 +30,7 @@ export function writePath(history, root, useHash, path, intent, state) {
     if (useHash) {
         url = '#' + url;
     }
-    if (intent === 1 /* Forward */) {
+    if (intent === 1) {
         history.pushState(state, '', url);
     }
     else {

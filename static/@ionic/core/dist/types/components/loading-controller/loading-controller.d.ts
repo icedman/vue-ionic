@@ -1,11 +1,7 @@
-import { LoadingOptions } from '../../interface';
-import { OverlayController } from '../../utils/overlays';
-export declare class LoadingController implements OverlayController {
-    private loadings;
+import { ComponentInterface } from '../../stencil.core';
+import { LoadingOptions, OverlayController } from '../../interface';
+export declare class LoadingController implements ComponentInterface, OverlayController {
     doc: Document;
-    protected loadingWillPresent(ev: any): void;
-    protected loadingWillDismiss(ev: any): void;
-    protected escapeKeyUp(): void;
     /**
      * Create a loading overlay with loading options.
      */
@@ -13,9 +9,9 @@ export declare class LoadingController implements OverlayController {
     /**
      * Dismiss the open loading overlay.
      */
-    dismiss(data?: any, role?: string, loadingId?: number): Promise<void>;
+    dismiss(data?: any, role?: string, id?: string): Promise<boolean>;
     /**
      * Get the most recently opened loading overlay.
      */
-    getTop(): HTMLIonLoadingElement;
+    getTop(): Promise<HTMLIonLoadingElement | undefined>;
 }

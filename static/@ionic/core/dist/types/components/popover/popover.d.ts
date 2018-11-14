@@ -1,22 +1,17 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { Animation, AnimationBuilder, Color, ComponentProps, ComponentRef, Config, FrameworkDelegate, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
-export declare class Popover implements OverlayInterface {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { Animation, AnimationBuilder, ComponentProps, ComponentRef, Config, FrameworkDelegate, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
+export declare class Popover implements ComponentInterface, OverlayInterface {
     private usersElement?;
     presented: boolean;
     animation?: Animation;
     el: HTMLElement;
     animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
+    /** @internal */
     delegate?: FrameworkDelegate;
-    overlayId: number;
-    keyboardClose: boolean;
-    /**
-     * The color to use from your application's color palette.
-     * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
-     * For more information on colors, see [theming](/docs/theming/basics).
-     */
-    color?: Color;
+    /** @internal */
+    overlayIndex: number;
     /**
      * The mode determines which platform styles to use.
      * Possible values are: `"ios"` or `"md"`.
@@ -39,30 +34,34 @@ export declare class Popover implements OverlayInterface {
      */
     componentProps?: ComponentProps;
     /**
+     * If `true`, the keyboard will be automatically dismissed when the overlay is presented.
+     */
+    keyboardClose: boolean;
+    /**
      * Additional classes to apply for custom CSS. If multiple classes are
      * provided they should be separated by spaces.
      */
     cssClass?: string | string[];
     /**
-     * If true, the popover will be dismissed when the backdrop is clicked. Defaults to `true`.
+     * If `true`, the popover will be dismissed when the backdrop is clicked. Defaults to `true`.
      */
-    enableBackdropDismiss: boolean;
+    backdropDismiss: boolean;
     /**
      * The event to pass to the popover animation.
      */
-    ev: any;
+    event: any;
     /**
-     * If true, a backdrop will be displayed behind the popover. Defaults to `true`.
+     * If `true`, a backdrop will be displayed behind the popover. Defaults to `true`.
      */
     showBackdrop: boolean;
     /**
-     * If true, the popover will be translucent. Defaults to `false`.
+     * If `true`, the popover will be translucent. Defaults to `false`.
      */
     translucent: boolean;
     /**
-     * If true, the popover will animate. Defaults to `true`.
+     * If `true`, the popover will animate. Defaults to `true`.
      */
-    willAnimate: boolean;
+    animated: boolean;
     /**
      * Emitted after the popover has loaded.
      */
@@ -99,28 +98,23 @@ export declare class Popover implements OverlayInterface {
     /**
      * Dismiss the popover overlay after it has been presented.
      */
-    dismiss(data?: any, role?: string): Promise<void>;
+    dismiss(data?: any, role?: string): Promise<boolean>;
     /**
-     * Returns a promise that resolves when the popover did dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
+     * Returns a promise that resolves when the popover did dismiss.
      */
-    onDidDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onDidDismiss(): Promise<OverlayEventDetail>;
     /**
-     * Returns a promise that resolves when the popover will dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
+     * Returns a promise that resolves when the popover will dismiss.
      */
-    onWillDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onWillDismiss(): Promise<OverlayEventDetail>;
     hostData(): {
         style: {
             zIndex: number;
         };
         'no-router': boolean;
         class: {
-            [x: string]: boolean;
+            'popover-translucent': boolean;
         };
     };
     render(): JSX.Element[];
 }
-export declare const POPOVER_POSITION_PROPERTIES: any;

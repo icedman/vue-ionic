@@ -1,12 +1,10 @@
 export class MenuButton {
     constructor() {
-        /**
-         * Automatically hides the menu button when the corresponding menu is not active
-         */
         this.autoHide = true;
     }
     hostData() {
         return {
+            'ion-activatable': true,
             class: {
                 'button': true
             }
@@ -15,9 +13,10 @@ export class MenuButton {
     render() {
         const menuIcon = this.config.get('menuIcon', 'menu');
         return (h("ion-menu-toggle", { menu: this.menu, autoHide: this.autoHide },
-            h("button", null,
+            h("button", { type: "button" },
                 h("slot", null,
-                    h("ion-icon", { icon: menuIcon, mode: this.mode, color: this.color, lazy: false })))));
+                    h("ion-icon", { icon: menuIcon, mode: this.mode, color: this.color, lazy: false })),
+                this.mode === 'md' && h("ion-ripple-effect", null))));
     }
     static get is() { return "ion-menu-button"; }
     static get encapsulation() { return "shadow"; }

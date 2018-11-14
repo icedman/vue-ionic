@@ -1,32 +1,30 @@
-import { deferEvent, renderHiddenInput } from '../../utils/helpers';
+import { renderHiddenInput } from '../../utils/helpers';
 import { createColorClasses, hostContext } from '../../utils/theme';
 export class Checkbox {
     constructor() {
         this.inputId = `ion-cb-${checkboxIds++}`;
         this.labelId = `${this.inputId}-lbl`;
         this.keyFocus = false;
-        /**
-         * The name of the control, which is submitted with the form data.
-         */
         this.name = this.inputId;
-        /**
-         * If true, the checkbox is selected. Defaults to `false`.
-         */
         this.checked = false;
-        /**
-         * If true, the user cannot interact with the checkbox. Defaults to `false`.
-         */
         this.disabled = false;
-        /**
-         * The value of the checkbox.
-         */
         this.value = 'on';
+        this.onChange = () => {
+            this.checked = !this.checked;
+        };
+        this.onKeyUp = () => {
+            this.keyFocus = true;
+        };
+        this.onFocus = () => {
+            this.ionFocus.emit();
+        };
+        this.onBlur = () => {
+            this.keyFocus = false;
+            this.ionBlur.emit();
+        };
     }
     componentWillLoad() {
         this.emitStyle();
-    }
-    componentDidLoad() {
-        this.ionStyle = deferEvent(this.ionStyle);
     }
     checkedChanged(isChecked) {
         this.ionChange.emit({
@@ -41,22 +39,9 @@ export class Checkbox {
             'interactive-disabled': this.disabled,
         });
     }
-    onChange() {
-        this.checked = !this.checked;
-    }
-    onKeyUp() {
-        this.keyFocus = true;
-    }
-    onFocus() {
-        this.ionFocus.emit();
-    }
-    onBlur() {
-        this.keyFocus = false;
-        this.ionBlur.emit();
-    }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('.item', this.el), 'checkbox-checked': this.checked, 'checkbox-disabled': this.disabled, 'checkbox-key': this.keyFocus, 'interactive': true })
+            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('ion-item', this.el), 'checkbox-checked': this.checked, 'checkbox-disabled': this.disabled, 'checkbox-key': this.keyFocus, 'interactive': true })
         };
     }
     render() {
@@ -64,7 +49,7 @@ export class Checkbox {
         return [
             h("div", { class: "checkbox-icon" },
                 h("div", { class: "checkbox-inner" })),
-            h("input", { type: "checkbox", id: this.inputId, "aria-labelledby": this.labelId, onChange: this.onChange.bind(this), onFocus: this.onFocus.bind(this), onBlur: this.onBlur.bind(this), onKeyUp: this.onKeyUp.bind(this), checked: this.checked, name: this.name, value: this.value, disabled: this.disabled })
+            h("input", { type: "checkbox", id: this.inputId, "aria-labelledby": this.labelId, onChange: this.onChange, onFocus: this.onFocus, onBlur: this.onBlur, onKeyUp: this.onKeyUp, checked: this.checked, name: this.name, value: this.value, disabled: this.disabled })
         ];
     }
     static get is() { return "ion-checkbox"; }

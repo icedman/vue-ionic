@@ -23,6 +23,12 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
 })
 
+Vue.prototype.$ionic = {
+  alert: document.querySelector('ion-alert-controller'),
+  actionSheet: document.querySelector('ion-action-sheet-controller'),
+  toast: document.querySelector('ion-toast-controller')
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

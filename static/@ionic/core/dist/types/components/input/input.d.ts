@@ -1,41 +1,12 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { Color, InputChangeEvent, Mode, StyleEvent, TextFieldTypes } from '../../interface';
-import { InputComponent } from './input-base';
-export declare class Input implements InputComponent {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { Color, Mode, StyleEvent, TextFieldTypes, TextInputChangeEvent } from '../../interface';
+export declare class Input implements ComponentInterface {
     private nativeInput?;
     private inputId;
-    didBlurAfterEdit: boolean;
+    private didBlurAfterEdit;
     hasFocus: boolean;
     el: HTMLElement;
-    /**
-     * Emitted when a keyboard input ocurred.
-     */
-    ionInput: EventEmitter<KeyboardEvent>;
-    /**
-     * Emitted when the value has changed.
-     */
-    ionChange: EventEmitter<InputChangeEvent>;
-    /**
-     * Emitted when the styles change.
-     */
-    ionStyle: EventEmitter<StyleEvent>;
-    /**
-     * Emitted when the input loses focus.
-     */
-    ionBlur: EventEmitter<void>;
-    /**
-     * Emitted when the input has focus.
-     */
-    ionFocus: EventEmitter<void>;
-    /**
-     * Emitted when the input has been created.
-     */
-    ionInputDidLoad: EventEmitter<void>;
-    /**
-     * Emitted when the input has been removed.
-     */
-    ionInputDidUnload: EventEmitter<void>;
     /**
      * The color to use from your application's color palette.
      * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
@@ -68,20 +39,20 @@ export declare class Input implements InputComponent {
      */
     autofocus: boolean;
     /**
-     * If true, a clear icon will appear in the input when there is a value. Clicking it clears the input. Defaults to `false`.
+     * If `true`, a clear icon will appear in the input when there is a value. Clicking it clears the input. Defaults to `false`.
      */
     clearInput: boolean;
     /**
-     * If true, the value will be cleared after focus upon edit. Defaults to `true` when `type` is `"password"`, `false` for all other types.
+     * If `true`, the value will be cleared after focus upon edit. Defaults to `true` when `type` is `"password"`, `false` for all other types.
      */
-    clearOnEdit: boolean;
+    clearOnEdit?: boolean;
     /**
      * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `0`.
      */
     debounce: number;
     protected debounceChanged(): void;
     /**
-     * If true, the user cannot interact with the input. Defaults to `false`.
+     * If `true`, the user cannot interact with the input. Defaults to `false`.
      */
     disabled: boolean;
     protected disabledChanged(): void;
@@ -106,7 +77,7 @@ export declare class Input implements InputComponent {
      */
     minlength?: number;
     /**
-     * If true, the user can enter more than one value. This attribute applies when the type attribute is set to `"email"` or `"file"`, otherwise it is ignored.
+     * If `true`, the user can enter more than one value. This attribute applies when the type attribute is set to `"email"` or `"file"`, otherwise it is ignored.
      */
     multiple?: boolean;
     /**
@@ -122,11 +93,11 @@ export declare class Input implements InputComponent {
      */
     placeholder?: string;
     /**
-     * If true, the user cannot modify the value. Defaults to `false`.
+     * If `true`, the user cannot modify the value. Defaults to `false`.
      */
     readonly: boolean;
     /**
-     * If true, the user must fill in a value before submitting a form.
+     * If `true`, the user must fill in a value before submitting a form.
      */
     required: boolean;
     /**
@@ -134,7 +105,7 @@ export declare class Input implements InputComponent {
      */
     results?: number;
     /**
-     * If true, the element will have its spelling and grammar checked. Defaults to `false`.
+     * If `true`, the element will have its spelling and grammar checked. Defaults to `false`.
      */
     spellcheck: boolean;
     /**
@@ -152,24 +123,55 @@ export declare class Input implements InputComponent {
     /**
      * The value of the input.
      */
-    value: string;
+    value?: string | null;
     /**
      * Update the native input element when the value changes
      */
     protected valueChanged(): void;
+    /**
+     * Emitted when a keyboard input ocurred.
+     */
+    ionInput: EventEmitter<KeyboardEvent>;
+    /**
+     * Emitted when the value has changed.
+     */
+    ionChange: EventEmitter<TextInputChangeEvent>;
+    /**
+     * Emitted when the styles change.
+     */
+    ionStyle: EventEmitter<StyleEvent>;
+    /**
+     * Emitted when the input loses focus.
+     */
+    ionBlur: EventEmitter<void>;
+    /**
+     * Emitted when the input has focus.
+     */
+    ionFocus: EventEmitter<void>;
+    /**
+     * Emitted when the input has been created.
+     */
+    ionInputDidLoad: EventEmitter<void>;
+    /**
+     * Emitted when the input has been removed.
+     */
+    ionInputDidUnload: EventEmitter<void>;
     componentWillLoad(): void;
     componentDidLoad(): void;
     componentDidUnload(): void;
+    /**
+     * Sets focus on the specified `ion-input`. Use this method instead of the global
+     * `input.focus()`.
+     */
+    setFocus(): void;
+    private getValue;
     private emitStyle;
     private onInput;
     private onBlur;
     private onFocus;
-    private focusChanged;
-    /**
-     * Check if we need to clear the text input if clearOnEdit is enabled
-     */
     private onKeydown;
     private clearTextInput;
+    private focusChanged;
     private hasValue;
     hostData(): {
         class: {

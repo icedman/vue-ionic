@@ -42,7 +42,6 @@ export function matchesPath(inputPath, chain) {
         else {
             for (const segment of path) {
                 const data = segments.next();
-                // data param
                 if (segment[0] === ':') {
                     if (data === '') {
                         return null;

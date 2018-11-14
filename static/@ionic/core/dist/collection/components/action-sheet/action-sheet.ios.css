@@ -9,7 +9,9 @@
   bottom: 0;
   display: block;
   position: fixed;
+  font-family: var(--ion-font-family, inherit);
   touch-action: none;
+  user-select: none;
   z-index: 1000; }
 
 .action-sheet-wrapper {
@@ -63,12 +65,10 @@
   overflow: hidden; }
 
 :host {
-  font-family: var(--ion-font-family, inherit);
   text-align: center; }
 
 .action-sheet-wrapper {
-  margin: constant(safe-area-inset-top) auto constant(safe-area-inset-bottom);
-  margin: env(safe-area-inset-top) auto env(safe-area-inset-bottom); }
+  margin: var(--ion-safe-area-top, 0) auto var(--ion-safe-area-bottom, 0); }
 
 .action-sheet-container {
   padding: 0 10px; }

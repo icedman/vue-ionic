@@ -1,12 +1,6 @@
 import { createThemedClasses } from '../../utils/theme';
 export class Footer {
     constructor() {
-        /**
-         * If true, the footer will be translucent.
-         * Note: In order to scroll content behind the footer, the `fullscreen`
-         * attribute needs to be set on the content.
-         * Defaults to `false`.
-         */
         this.translucent = false;
     }
     hostData() {

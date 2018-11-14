@@ -3,16 +3,16 @@ export function startTapClick(doc) {
     let lastTouch = -MOUSE_WAIT * 10;
     let lastActivated = 0;
     let cancelled = false;
+    let scrolling = false;
     let activatableEle;
     let activeDefer;
     const clearDefers = new WeakMap();
     function onBodyClick(ev) {
-        if (cancelled) {
+        if (cancelled || scrolling) {
             ev.preventDefault();
             ev.stopPropagation();
         }
     }
-    // Touch Events
     function onTouchStart(ev) {
         lastTouch = now(ev);
         pointerDown(ev);
@@ -35,6 +35,7 @@ export function startTapClick(doc) {
     }
     function cancelActive() {
         clearTimeout(activeDefer);
+        activeDefer = undefined;
         if (activatableEle) {
             removeActivated(false);
             activatableEle = undefined;
@@ -42,27 +43,28 @@ export function startTapClick(doc) {
         cancelled = true;
     }
     function pointerDown(ev) {
-        if (activatableEle) {
+        if (activatableEle || scrolling) {
             return;
         }
         cancelled = false;
-        setActivatedElement(getActivatableTarget(ev.target), ev);
+        setActivatedElement(getActivatableTarget(ev), ev);
     }
     function pointerUp(ev) {
+        if (scrolling) {
+            return;
+        }
         setActivatedElement(undefined, ev);
         if (cancelled && ev.cancelable) {
             ev.preventDefault();
         }
     }
     function setActivatedElement(el, ev) {
-        // do nothing
         if (el && el === activatableEle) {
             return;
         }
         clearTimeout(activeDefer);
         activeDefer = undefined;
         const { x, y } = pointerCoord(ev);
-        // unactivate selected
         if (activatableEle) {
             if (clearDefers.has(activatableEle)) {
                 throw new Error('internal error');
@@ -72,7 +74,6 @@ export function startTapClick(doc) {
             }
             removeActivated(true);
         }
-        // activate
         if (el) {
             const deferId = clearDefers.get(el);
             if (deferId) {
@@ -90,11 +91,10 @@ export function startTapClick(doc) {
     function addActivated(el, x, y) {
         lastActivated = Date.now();
         el.classList.add(ACTIVATED);
-        const event = new CustomEvent('ionActivated', {
-            bubbles: false,
-            detail: { x, y }
-        });
-        el.dispatchEvent(event);
+        const rippleEffect = getRippleEffect(el);
+        if (rippleEffect && rippleEffect.addRipple) {
+            rippleEffect.addRipple(x, y);
+        }
     }
     function removeActivated(smooth) {
         const active = activatableEle;
@@ -114,7 +114,13 @@ export function startTapClick(doc) {
         }
     }
     doc.body.addEventListener('click', onBodyClick, true);
-    doc.body.addEventListener('ionScrollStart', cancelActive);
+    doc.body.addEventListener('ionScrollStart', () => {
+        scrolling = true;
+        cancelActive();
+    });
+    doc.body.addEventListener('ionScrollEnd', () => {
+        scrolling = false;
+    });
     doc.body.addEventListener('ionGestureCaptured', cancelActive);
     doc.addEventListener('touchstart', onTouchStart, true);
     doc.addEventListener('touchcancel', onTouchEnd, true);
@@ -122,8 +128,28 @@ export function startTapClick(doc) {
     doc.addEventListener('mousedown', onMouseDown, true);
     doc.addEventListener('mouseup', onMouseUp, true);
 }
-function getActivatableTarget(el) {
-    return el.closest(':not([tappable]) > a, :not([tappable]) > button, [tappable]');
+function getActivatableTarget(ev) {
+    if (ev.composedPath) {
+        const path = ev.composedPath();
+        for (let i = 0; i < path.length - 2; i++) {
+            const el = path[i];
+            if (el.hasAttribute && el.hasAttribute('ion-activatable')) {
+                return el;
+            }
+        }
+    }
+    else {
+        return ev.target.closest('[ion-activatable]');
+    }
+}
+function getRippleEffect(el) {
+    if (el.shadowRoot) {
+        const ripple = el.shadowRoot.querySelector('ion-ripple-effect');
+        if (ripple) {
+            return ripple;
+        }
+    }
+    return el.querySelector('ion-ripple-effect');
 }
 const ACTIVATED = 'activated';
 const ADD_ACTIVATED_DEFERS = 200;

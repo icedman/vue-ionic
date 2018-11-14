@@ -1,14 +1,11 @@
 export function hostContext(selector, el) {
-    return !!el.closest(selector);
+    return el.closest(selector) !== null;
 }
-/**
- * Create the mode and color classes for the component based on the classes passed in
- */
 export function createColorClasses(color) {
-    return (color) ? {
+    return (typeof color === 'string' && color.length > 0) ? {
         'ion-color': true,
         [`ion-color-${color}`]: true
-    } : null;
+    } : undefined;
 }
 export function createThemedClasses(mode, name) {
     return {
@@ -17,7 +14,7 @@ export function createThemedClasses(mode, name) {
     };
 }
 export function getClassList(classes) {
-    if (classes) {
+    if (classes !== undefined) {
         const array = Array.isArray(classes) ? classes : classes.split(' ');
         return array
             .filter(c => c != null)
@@ -32,15 +29,15 @@ export function getClassMap(classes) {
     return map;
 }
 export async function openURL(win, url, ev, direction) {
-    if (url && url[0] !== '#' && url.indexOf('://') === -1) {
+    if (url != null && url[0] !== '#' && url.indexOf('://') === -1) {
         const router = win.document.querySelector('ion-router');
         if (router) {
-            if (ev) {
+            if (ev != null) {
                 ev.preventDefault();
             }
             await router.componentOnReady();
             return router.push(url, direction);
         }
     }
-    return Promise.resolve();
+    return false;
 }

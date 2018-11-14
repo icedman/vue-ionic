@@ -1,52 +1,54 @@
 import { createColorClasses } from '../../utils/theme';
 export class TabButton {
     constructor() {
-        this.keyFocus = false;
-        /**
-         * If true, the tab button will be selected. Defaults to `false`.
-         */
         this.selected = false;
+        this.layout = 'icon-top';
+        this.disabled = false;
     }
-    onKeyUp() {
-        this.keyFocus = true;
+    onTabbarChanged(ev) {
+        this.selected = this.tab === ev.detail.tab;
     }
-    onBlur() {
-        this.keyFocus = false;
+    onClick(ev) {
+        if (!this.disabled) {
+            this.ionTabButtonClick.emit({
+                tab: this.tab,
+                href: this.href
+            });
+        }
+        ev.preventDefault();
+    }
+    componentWillLoad() {
+        if (this.tab === undefined) {
+            console.warn(`ion-tab-button needs a tab name, so it can be selected.
+  <ion-tab-button tab="TAB_NAME">`);
+        }
+    }
+    get hasLabel() {
+        return !!this.el.querySelector('ion-label');
+    }
+    get hasIcon() {
+        return !!this.el.querySelector('ion-icon');
     }
     hostData() {
-        const selected = this.selected;
-        const hasLabel = !!this.label;
-        const hasIcon = !!this.icon;
-        const hasLabelOnly = (hasLabel && !hasIcon);
-        const hasIconOnly = (hasIcon && !hasLabel);
-        const hasBadge = !!this.badge;
+        const { color, tab, selected, layout, disabled, hasLabel, hasIcon } = this;
         return {
             'role': 'tab',
+            'ion-activatable': true,
             'aria-selected': selected ? 'true' : null,
-            class: Object.assign({}, createColorClasses(this.color), { 'tab-selected': selected, 'has-label': hasLabel, 'has-icon': hasIcon, 'has-label-only': hasLabelOnly, 'has-icon-only': hasIconOnly, 'has-badge': hasBadge, 'tab-button-disabled': this.disabled, 'focused': this.keyFocus })
+            'id': `tab-button-${tab}`,
+            'aria-controls': `tab-view-${tab}`,
+            class: Object.assign({}, createColorClasses(color), { 'tab-selected': selected, 'tab-disabled': disabled, 'tab-has-label': hasLabel, 'tab-has-icon': hasIcon, 'tab-has-label-only': hasLabel && !hasIcon, 'tab-has-icon-only': hasIcon && !hasLabel, [`tab-layout-${layout}`]: true })
         };
     }
     render() {
-        const { icon, label, href, badge, badgeColor, mode } = this;
-        return [
-            h("a", { href: href || '#', class: "tab-button-native", onKeyUp: this.onKeyUp.bind(this), onBlur: this.onBlur.bind(this) },
-                icon && h("ion-icon", { class: "tab-button-icon", icon: icon, lazy: false }),
-                label && h("span", { class: "tab-button-text" }, label),
-                badge && h("ion-badge", { class: "tab-badge", color: badgeColor }, badge),
-                mode === 'md' && h("ion-ripple-effect", { tapClick: true }))
-        ];
+        const { mode, href } = this;
+        return (h("a", { href: href || '#' },
+            h("slot", null),
+            mode === 'md' && h("ion-ripple-effect", null)));
     }
     static get is() { return "ion-tab-button"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
-        "badge": {
-            "type": String,
-            "attr": "badge"
-        },
-        "badgeColor": {
-            "type": String,
-            "attr": "badge-color"
-        },
         "color": {
             "type": String,
             "attr": "color"
@@ -55,6 +57,9 @@ export class TabButton {
             "type": Boolean,
             "attr": "disabled"
         },
+        "doc": {
+            "context": "document"
+        },
         "el": {
             "elementRef": true
         },
@@ -62,26 +67,39 @@ export class TabButton {
             "type": String,
             "attr": "href"
         },
-        "icon": {
+        "layout": {
             "type": String,
-            "attr": "icon"
-        },
-        "keyFocus": {
-            "state": true
-        },
-        "label": {
-            "type": String,
-            "attr": "label"
+            "attr": "layout"
         },
         "mode": {
             "type": String,
             "attr": "mode"
         },
+        "queue": {
+            "context": "queue"
+        },
         "selected": {
-            "type": Boolean,
-            "attr": "selected"
+            "state": true
+        },
+        "tab": {
+            "type": String,
+            "attr": "tab"
         }
     }; }
+    static get events() { return [{
+            "name": "ionTabButtonClick",
+            "method": "ionTabButtonClick",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }]; }
+    static get listeners() { return [{
+            "name": "parent:ionTabBarChanged",
+            "method": "onTabbarChanged"
+        }, {
+            "name": "click",
+            "method": "onClick"
+        }]; }
     static get style() { return "/**style-placeholder:ion-tab-button:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-tab-button:**/"; }
 }

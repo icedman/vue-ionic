@@ -1,20 +1,22 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
 import { Animation, AnimationBuilder, Config, Mode, OverlayEventDetail, OverlayInterface, PickerButton, PickerColumn } from '../../interface';
-export declare class Picker implements OverlayInterface {
+export declare class Picker implements ComponentInterface, OverlayInterface {
     private durationTimeout;
-    mode: Mode;
     presented: boolean;
     animation?: Animation;
     el: HTMLElement;
-    private showSpinner;
-    private spinner;
     animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
-    /** @hidden */
-    overlayId: number;
+    /** @internal */
+    overlayIndex: number;
     /**
-     * If the keyboard should be able to close the picker. Defaults to true.
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
+     */
+    mode: Mode;
+    /**
+     * If `true`, the keyboard will be automatically dismissed when the overlay is presented.
      */
     keyboardClose: boolean;
     /**
@@ -41,19 +43,19 @@ export declare class Picker implements OverlayInterface {
     /**
      * Number of milliseconds to wait before dismissing the picker.
      */
-    duration?: number;
+    duration: number;
     /**
-     * If true, a backdrop will be displayed behind the picker. Defaults to `true`.
+     * If `true`, a backdrop will be displayed behind the picker. Defaults to `true`.
      */
     showBackdrop: boolean;
     /**
-     * If true, the picker will be dismissed when the backdrop is clicked. Defaults to `true`.
+     * If `true`, the picker will be dismissed when the backdrop is clicked. Defaults to `true`.
      */
-    enableBackdropDismiss: boolean;
+    backdropDismiss: boolean;
     /**
-     * If true, the picker will animate. Defaults to `true`.
+     * If `true`, the picker will animate. Defaults to `true`.
      */
-    willAnimate: boolean;
+    animated: boolean;
     /**
      * Emitted after the picker has loaded.
      */
@@ -78,7 +80,6 @@ export declare class Picker implements OverlayInterface {
      * Emitted after the picker has unloaded.
      */
     ionPickerDidUnload: EventEmitter<void>;
-    componentWillLoad(): void;
     componentDidLoad(): void;
     componentDidUnload(): void;
     protected onBackdropTap(): void;
@@ -89,35 +90,19 @@ export declare class Picker implements OverlayInterface {
     /**
      * Dismiss the picker overlay after it has been presented.
      */
-    dismiss(data?: any, role?: string): Promise<void>;
+    dismiss(data?: any, role?: string): Promise<boolean>;
     /**
-     * Returns a promise that resolves when the picker did dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
+     * Returns a promise that resolves when the picker did dismiss.
      */
-    onDidDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onDidDismiss(): Promise<OverlayEventDetail>;
     /**
-     * Returns a promise that resolves when the picker will dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
+     * Returns a promise that resolves when the picker will dismiss.
      */
-    onWillDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
-    /**
-     * Add a new PickerButton to the picker
-     */
-    addButton(button: PickerButton): void;
-    /**
-     * Add a new PickerColumn to the picker
-     */
-    addColumn(column: PickerColumn): void;
+    onWillDismiss(): Promise<OverlayEventDetail>;
     /**
      * Returns the column the matches the specified name
      */
-    getColumn(name: string): PickerColumn | undefined;
-    /**
-     * Returns all the PickerColumns
-     */
-    getColumns(): PickerColumn[];
+    getColumn(name: string): Promise<PickerColumn | undefined>;
     private buttonClick;
     private getSelected;
     hostData(): {

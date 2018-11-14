@@ -1,6 +1,7 @@
 import '../../stencil.core';
+import { ComponentInterface } from '../../stencil.core';
 import { Color, Mode } from '../../interface';
-export declare class CardHeader {
+export declare class CardHeader implements ComponentInterface {
     /**
      * The color to use from your application's color palette.
      * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
@@ -13,7 +14,7 @@ export declare class CardHeader {
      */
     mode: Mode;
     /**
-     * If true, the card header will be translucent. Defaults to `false`.
+     * If `true`, the card header will be translucent. Defaults to `false`.
      */
     translucent: boolean;
     hostData(): {

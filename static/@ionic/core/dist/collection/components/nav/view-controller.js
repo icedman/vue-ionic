@@ -4,24 +4,17 @@ export class ViewController {
     constructor(component, params) {
         this.component = component;
         this.params = params;
-        this.state = 1 /* New */;
+        this.state = 1;
     }
-    /**
-     * @hidden
-     */
     async init(container) {
-        this.state = 2 /* Attached */;
+        this.state = 2;
         if (!this.element) {
             const component = this.component;
             this.element = await attachComponent(this.delegate, container, component, ['ion-page', 'ion-page-invisible'], this.params);
         }
     }
-    /**
-     * @hidden
-     * DOM WRITE
-     */
     _destroy() {
-        assert(this.state !== 3 /* Destroyed */, 'view state must be ATTACHED');
+        assert(this.state !== 3, 'view state must be ATTACHED');
         const element = this.element;
         if (element) {
             if (this.delegate) {
@@ -32,7 +25,7 @@ export class ViewController {
             }
         }
         this.nav = undefined;
-        this.state = 3 /* Destroyed */;
+        this.state = 3;
     }
 }
 export function matches(view, id, params) {
@@ -43,20 +36,20 @@ export function matches(view, id, params) {
         return false;
     }
     const currentParams = view.params;
-    const null1 = (currentParams == null);
-    const null2 = (params == null);
-    if (null1 !== null2) {
-        return false;
-    }
-    if (null1 && null2) {
+    if (currentParams === params) {
         return true;
+    }
+    if (!currentParams && !params) {
+        return true;
+    }
+    if (!currentParams || !params) {
+        return false;
     }
     const keysA = Object.keys(currentParams);
     const keysB = Object.keys(params);
     if (keysA.length !== keysB.length) {
         return false;
     }
-    // Test for A's keys different from B.
     for (const key of keysA) {
         if (currentParams[key] !== params[key]) {
             return false;

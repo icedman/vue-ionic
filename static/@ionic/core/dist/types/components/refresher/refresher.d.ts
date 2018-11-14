@@ -1,12 +1,13 @@
-import { EventEmitter, QueueApi } from '../../stencil.core';
-import { Mode } from '../../interface';
-export declare class Refresher {
+import { ComponentInterface, EventEmitter, QueueApi } from '../../stencil.core';
+import { Mode, RefresherEventDetail } from '../../interface';
+export declare class Refresher implements ComponentInterface {
     private appliedStyles;
     private didStart;
     private progress;
     private scrollEl?;
     private gesture?;
     mode: Mode;
+    el: HTMLElement;
     queue: QueueApi;
     /**
      * The current state which the refresher is in. The refresher's states include:
@@ -19,7 +20,6 @@ export declare class Refresher {
      * - `completing` - The `refreshing` state has finished and the refresher is in the way of closing itself. Once closed, the refresher will go back to the `inactive` state.
      */
     private state;
-    el: HTMLElement;
     /**
      * The minimum distance the user must pull down until the
      * refresher will go into the `refreshing` state. Defaults to `60`.
@@ -40,7 +40,7 @@ export declare class Refresher {
      */
     snapbackDuration: string;
     /**
-     * If true, the refresher will be hidden. Defaults to `false`.
+     * If `true`, the refresher will be hidden. Defaults to `false`.
      */
     disabled: boolean;
     disabledChanged(): void;
@@ -50,7 +50,7 @@ export declare class Refresher {
      * Updates the refresher state to `refreshing`. The `complete()` method should be
      * called when the async operation has completed.
      */
-    ionRefresh: EventEmitter<void>;
+    ionRefresh: EventEmitter<RefresherEventDetail>;
     /**
      * Emitted while the user is pulling down the content and exposing the refresher.
      */
@@ -84,7 +84,7 @@ export declare class Refresher {
      * refresh will not happen, and the content will return to it's original
      * position.
      */
-    getProgress(): number;
+    getProgress(): Promise<number>;
     private canStart;
     private onStart;
     private onMove;
@@ -93,6 +93,7 @@ export declare class Refresher {
     private close;
     private setCss;
     hostData(): {
+        slot: string;
         class: {
             'refresher-active': boolean;
             'refresher-pulling': boolean;

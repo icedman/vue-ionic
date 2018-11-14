@@ -8,9 +8,8 @@ ion-item-options {
   position: absolute;
   height: 100%;
   font-size: 14px;
+  user-select: none;
   z-index: 1; }
-  ion-item-options.hydrated {
-    visibility: hidden; }
 
 .item-options-start {
   /* stylelint-disable property-blacklist */
@@ -18,6 +17,12 @@ ion-item-options {
   left: 0;
   /* stylelint-enable property-blacklist */
   justify-content: flex-start; }
+
+.item-options-start ion-item-option:first-child {
+  padding-right: var(--ion-safe-area-left); }
+
+.item-options-end ion-item-option:last-child {
+  padding-right: var(--ion-safe-area-right); }
 
 .item-sliding-active-slide ion-item-options {
   display: flex; }
@@ -30,7 +35,7 @@ ion-item-options {
 .item-options-md {
   border-bottom-width: 0;
   border-bottom-style: solid;
-  border-bottom-color: rgba(var(--ion-item-border-color-rgb, 0, 0, 0), 0.13); }
+  border-bottom-color: var(--ion-item-border-color, var(--ion-border-color, rgba(0, 0, 0, 0.13))); }
 
 .list-md-lines-none .item-options-md {
   border-bottom-width: 0; }

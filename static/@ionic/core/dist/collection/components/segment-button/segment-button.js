@@ -2,17 +2,8 @@ import { createColorClasses } from '../../utils/theme';
 let ids = 0;
 export class SegmentButton {
     constructor() {
-        /**
-         * If true, the segment button is selected. Defaults to `false`.
-         */
         this.checked = false;
-        /*
-         * If true, the user cannot interact with the segment button. Default false.
-         */
         this.disabled = false;
-        /**
-         * The value of the segment button.
-         */
         this.value = 'ion-sb-' + (ids++);
     }
     checkedChanged(checked, prev) {
@@ -23,15 +14,15 @@ export class SegmentButton {
     hostData() {
         const { disabled, checked, color } = this;
         return {
-            class: Object.assign({}, createColorClasses(color), { 'segment-button-disabled': disabled, 'segment-checked': checked }),
-            'tappable': true,
+            'ion-activatable': true,
+            class: Object.assign({}, createColorClasses(color), { 'segment-button-disabled': disabled, 'segment-button-checked': checked })
         };
     }
     render() {
         return [
-            h("button", { "aria-pressed": this.checked ? 'true' : null, class: "segment-button-native", disabled: this.disabled, onClick: () => this.checked = true },
+            h("button", { type: "button", "aria-pressed": this.checked ? 'true' : null, class: "button-native", disabled: this.disabled, onClick: () => this.checked = true },
                 h("slot", null),
-                this.mode === 'md' && h("ion-ripple-effect", { tapClick: true, parent: this.el }))
+                this.mode === 'md' && h("ion-ripple-effect", null))
         ];
     }
     static get is() { return "ion-segment-button"; }

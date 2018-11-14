@@ -1,25 +1,22 @@
+import { GESTURE_CONTROLLER } from '../../utils/gesture/gesture-controller';
 import { now } from '../../utils/helpers';
 export class Backdrop {
     constructor() {
         this.lastClick = -10000;
-        /**
-         * If true, the backdrop will be visible. Defaults to `true`.
-         */
+        this.blocker = GESTURE_CONTROLLER.createBlocker({
+            disableScroll: true
+        });
         this.visible = true;
-        /**
-         * If true, the backdrop will can be clicked and will emit the `ionBackdropTap` event. Defaults to `true`.
-         */
         this.tappable = true;
-        /**
-         * If true, the backdrop will stop propagation on tap. Defaults to `true`.
-         */
         this.stopPropagation = true;
     }
     componentDidLoad() {
-        registerBackdrop(this.doc, this);
+        if (this.stopPropagation) {
+            this.blocker.block();
+        }
     }
     componentDidUnload() {
-        unregisterBackdrop(this.doc, this);
+        this.blocker.destroy();
     }
     onTouchStart(ev) {
         this.lastClick = now(ev);
@@ -79,22 +76,14 @@ export class Backdrop {
             "method": "onTouchStart",
             "capture": true
         }, {
+            "name": "click",
+            "method": "onMouseDown",
+            "capture": true
+        }, {
             "name": "mousedown",
             "method": "onMouseDown",
             "capture": true
         }]; }
     static get style() { return "/**style-placeholder:ion-backdrop:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-backdrop:**/"; }
-}
-const BACKDROP_NO_SCROLL = 'backdrop-no-scroll';
-const activeBackdrops = new Set();
-function registerBackdrop(doc, backdrop) {
-    activeBackdrops.add(backdrop);
-    doc.body.classList.add(BACKDROP_NO_SCROLL);
-}
-function unregisterBackdrop(doc, backdrop) {
-    activeBackdrops.delete(backdrop);
-    if (activeBackdrops.size === 0) {
-        doc.body.classList.remove(BACKDROP_NO_SCROLL);
-    }
 }

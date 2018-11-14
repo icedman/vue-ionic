@@ -2,7 +2,7 @@ import { createColorClasses } from '../../utils/theme';
 export class Note {
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color))
+            class: createColorClasses(this.color)
         };
     }
     render() {

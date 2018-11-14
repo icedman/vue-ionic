@@ -1,13 +1,7 @@
 import { createColorClasses } from '../../utils/theme';
 export class ItemOption {
     constructor() {
-        /**
-         * If true, the user cannot interact with the item option. Defaults to `false`.
-         */
         this.disabled = false;
-        /**
-         * If true, the option will expand to take up the available width and cover any other options. Defaults to `false`.
-         */
         this.expandable = false;
     }
     clickedOptionButton(ev) {
@@ -16,19 +10,21 @@ export class ItemOption {
     }
     hostData() {
         return {
+            'ion-activatable': true,
             class: Object.assign({}, createColorClasses(this.color), { 'item-option-expandable': this.expandable })
         };
     }
     render() {
-        const TagType = this.href ? 'a' : 'button';
-        return (h(TagType, { type: "button", class: "item-option-native", disabled: this.disabled, href: this.href, onClick: this.clickedOptionButton.bind(this) },
-            h("span", { class: "item-option-button-inner" },
+        const TagType = this.href === undefined ? 'button' : 'a';
+        return (h(TagType, { type: "button", class: "button-native", disabled: this.disabled, href: this.href, onClick: this.clickedOptionButton.bind(this) },
+            h("span", { class: "button-inner" },
                 h("slot", { name: "start" }),
                 h("slot", { name: "top" }),
                 h("slot", { name: "icon-only" }),
                 h("slot", null),
                 h("slot", { name: "bottom" }),
-                h("slot", { name: "end" }))));
+                h("slot", { name: "end" })),
+            this.mode === 'md' && h("ion-ripple-effect", null)));
     }
     static get is() { return "ion-item-option"; }
     static get encapsulation() { return "shadow"; }

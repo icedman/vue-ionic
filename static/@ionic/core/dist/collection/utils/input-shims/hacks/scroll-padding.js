@@ -22,7 +22,7 @@ function setScrollPadding(input, keyboardHeight) {
         return;
     }
     const el = input.closest('ion-content');
-    if (!el) {
+    if (el === null) {
         return;
     }
     const timer = el[PADDING_TIMER_KEY];

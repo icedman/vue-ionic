@@ -2,7 +2,6 @@ ion-list {
   margin: 0;
   padding: 0;
   display: block;
-  background: var(--ion-item-background-color, var(--ion-background-color, #fff));
   contain: content;
   list-style-type: none; }
 
@@ -11,7 +10,8 @@ ion-list.list-inset {
   overflow: hidden; }
 
 .list-ios {
-  margin: -1px 0 32px; }
+  margin: -1px 0 32px;
+  background: var(--ion-item-background, var(--ion-background-color, #fff)); }
 
 .list-ios:not(.list-inset):not(.list-ios-lines-none) .item:last-child {
   --inner-border-width: 0;

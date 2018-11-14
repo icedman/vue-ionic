@@ -1,5 +1,5 @@
 import { dismiss, eventMethod, present } from '../../utils/overlays';
-import { createThemedClasses, getClassMap } from '../../utils/theme';
+import { createColorClasses, getClassMap } from '../../utils/theme';
 import { iosEnterAnimation } from './animations/ios.enter';
 import { iosLeaveAnimation } from './animations/ios.leave';
 import { mdEnterAnimation } from './animations/md.enter';
@@ -7,20 +7,12 @@ import { mdLeaveAnimation } from './animations/md.leave';
 export class Toast {
     constructor() {
         this.presented = false;
-        /** @hidden */
+        this.duration = 0;
         this.keyboardClose = false;
-        /**
-         * If true, the close button will be displayed. Defaults to `false`.
-         */
+        this.position = 'bottom';
         this.showCloseButton = false;
-        /**
-         * If true, the toast will be translucent. Defaults to `false`.
-         */
         this.translucent = false;
-        /**
-         * If true, the toast will animate. Defaults to `true`.
-         */
-        this.willAnimate = true;
+        this.animated = true;
     }
     componentDidLoad() {
         this.ionToastDidLoad.emit();
@@ -28,74 +20,61 @@ export class Toast {
     componentDidUnload() {
         this.ionToastDidUnload.emit();
     }
-    onDismiss(ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        this.dismiss();
-    }
-    /**
-     * Present the toast overlay after it has been created.
-     */
     async present() {
         await present(this, 'toastEnter', iosEnterAnimation, mdEnterAnimation, this.position);
-        if (this.duration) {
-            this.durationTimeout = setTimeout(() => this.dismiss(), this.duration);
+        if (this.duration > 0) {
+            this.durationTimeout = setTimeout(() => this.dismiss(undefined, 'timeout'), this.duration);
         }
     }
-    /**
-     * Dismiss the toast overlay after it has been presented.
-     */
     dismiss(data, role) {
         if (this.durationTimeout) {
             clearTimeout(this.durationTimeout);
         }
         return dismiss(this, data, role, 'toastLeave', iosLeaveAnimation, mdLeaveAnimation, this.position);
     }
-    /**
-     * Returns a promise that resolves when the toast did dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
-     */
-    onDidDismiss(callback) {
-        return eventMethod(this.el, 'ionToastDidDismiss', callback);
+    onDidDismiss() {
+        return eventMethod(this.el, 'ionToastDidDismiss');
     }
-    /**
-     * Returns a promise that resolves when the toast will dismiss. It also accepts a callback
-     * that is called in the same circustances.
-     *
-     */
-    onWillDismiss(callback) {
-        return eventMethod(this.el, 'ionToastWillDismiss', callback);
+    onWillDismiss() {
+        return eventMethod(this.el, 'ionToastWillDismiss');
     }
     hostData() {
-        const themedClasses = this.translucent ? createThemedClasses(this.mode, 'toast-translucent') : {};
         return {
-            class: Object.assign({}, themedClasses, createThemedClasses(this.mode, 'toast'), getClassMap(this.cssClass))
+            style: {
+                zIndex: 60000 + this.overlayIndex,
+            },
+            class: Object.assign({}, createColorClasses(this.color), getClassMap(this.cssClass), { 'toast-translucent': this.translucent })
         };
     }
     render() {
-        const position = this.position ? this.position : 'bottom';
         const wrapperClass = {
             'toast-wrapper': true,
-            [`toast-${position}`]: true
+            [`toast-${this.position}`]: true
         };
         return (h("div", { class: wrapperClass },
             h("div", { class: "toast-container" },
-                this.message
-                    ? h("div", { class: "toast-message" }, this.message)
-                    : null,
-                this.showCloseButton
-                    ? h("ion-button", { fill: "clear", color: "light", class: "toast-button", onClick: () => this.dismiss() }, this.closeButtonText || 'Close')
-                    : null)));
+                this.message !== undefined &&
+                    h("div", { class: "toast-message" }, this.message),
+                this.showCloseButton &&
+                    h("ion-button", { fill: "clear", "ion-activatable": true, class: "toast-button", onClick: () => this.dismiss(undefined, 'cancel') }, this.closeButtonText || 'Close'))));
     }
     static get is() { return "ion-toast"; }
+    static get encapsulation() { return "shadow"; }
     static get properties() { return {
+        "animated": {
+            "type": Boolean,
+            "attr": "animated"
+        },
         "animationCtrl": {
             "connect": "ion-animation-controller"
         },
         "closeButtonText": {
             "type": String,
             "attr": "close-button-text"
+        },
+        "color": {
+            "type": String,
+            "attr": "color"
         },
         "config": {
             "context": "config"
@@ -130,15 +109,19 @@ export class Toast {
             "type": String,
             "attr": "message"
         },
+        "mode": {
+            "type": String,
+            "attr": "mode"
+        },
         "onDidDismiss": {
             "method": true
         },
         "onWillDismiss": {
             "method": true
         },
-        "overlayId": {
+        "overlayIndex": {
             "type": Number,
-            "attr": "overlay-id"
+            "attr": "overlay-index"
         },
         "position": {
             "type": String,
@@ -154,10 +137,6 @@ export class Toast {
         "translucent": {
             "type": Boolean,
             "attr": "translucent"
-        },
-        "willAnimate": {
-            "type": Boolean,
-            "attr": "will-animate"
         }
     }; }
     static get events() { return [{
@@ -196,10 +175,6 @@ export class Toast {
             "bubbles": true,
             "cancelable": true,
             "composed": true
-        }]; }
-    static get listeners() { return [{
-            "name": "ionDismiss",
-            "method": "onDismiss"
         }]; }
     static get style() { return "/**style-placeholder:ion-toast:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-toast:**/"; }

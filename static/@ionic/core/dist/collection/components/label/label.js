@@ -1,12 +1,23 @@
 import { createColorClasses } from '../../utils/theme';
 export class Label {
-    getText() {
-        return this.el.textContent || '';
+    constructor() {
+        this.noAnimate = false;
+    }
+    componentWillLoad() {
+        this.noAnimate = (this.position === 'floating');
+        this.emitStyle();
     }
     componentDidLoad() {
-        this.positionChanged();
+        if (this.noAnimate) {
+            setTimeout(() => {
+                this.noAnimate = false;
+            }, 1000);
+        }
     }
     positionChanged() {
+        this.emitStyle();
+    }
+    emitStyle() {
         const position = this.position;
         this.ionStyle.emit({
             'label': true,
@@ -16,7 +27,7 @@ export class Label {
     hostData() {
         const position = this.position;
         return {
-            class: Object.assign({}, createColorClasses(this.color), { [`label-${position}`]: !!position })
+            class: Object.assign({}, createColorClasses(this.color), { [`label-${position}`]: !!position, [`label-no-animate`]: (this.noAnimate) })
         };
     }
     static get is() { return "ion-label"; }
@@ -29,12 +40,12 @@ export class Label {
         "el": {
             "elementRef": true
         },
-        "getText": {
-            "method": true
-        },
         "mode": {
             "type": String,
             "attr": "mode"
+        },
+        "noAnimate": {
+            "state": true
         },
         "position": {
             "type": String,

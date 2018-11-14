@@ -1,8 +1,25 @@
 :host {
+  color: var(--color);
   pointer-events: all;
-  color: var(--ion-color-base); }
+  text-align: center;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+  font-kerning: none; }
 
 button {
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-decoration: inherit;
+  text-overflow: inherit;
+  text-transform: inherit;
+  text-align: inherit;
+  white-space: inherit;
+  color: inherit;
   margin: 0;
   padding: 0;
   -moz-osx-font-smoothing: grayscale;
@@ -17,17 +34,10 @@ button {
   border: 0;
   outline: none;
   background: transparent;
-  color: inherit;
   line-height: 1;
-  text-align: center;
-  text-decoration: none;
-  text-overflow: ellipsis;
-  text-transform: none;
-  white-space: nowrap;
   cursor: pointer;
   user-select: none;
   z-index: 0;
-  font-kerning: none;
   appearance: none; }
 
 ion-icon {
@@ -35,8 +45,11 @@ ion-icon {
   padding: 0;
   pointer-events: none; }
 
+:host(.ion-color) .button-native {
+  color: var(--ion-color-base); }
+
 :host {
-  --ion-color-base: currentColor; }
+  --color: initial; }
 
 button {
   padding: 0 8px; }

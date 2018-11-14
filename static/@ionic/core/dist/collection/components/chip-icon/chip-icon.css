@@ -1,14 +1,30 @@
 :host {
-  --ion-color-base: var(--ion-color-primary, #3880ff);
-  --ion-color-contrast: var(--ion-color-primary-contrast, #fff);
+  /**
+   * @prop --background: Background of the Chip Icon
+   * @prop --color: Color of the Chip Icon
+   */
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--size, 32px);
-  height: var(--size, 32px);
-  background-color: var(--ion-color-base); }
+  width: var(--width, 32px);
+  height: var(--height, 32px);
+  background: var(--background);
+  color: var(--color);
+  font-size: 18px; }
 
-ion-icon {
-  color: var(--ion-color-contrast);
-  font-size: var(--icon-size, 18px); }
+:host(.chip-icon-clear) {
+  --background: transparent;
+  --color: var(--ion-text-color-step-400, #666666); }
+
+:host(.chip-icon-solid) {
+  --background: var(--ion-color-primary, #3880ff);
+  --color: var(--ion-color-primary-contrast, #fff); }
+
+:host(.chip-icon-solid.ion-color) {
+  background: var(--ion-color-base);
+  color: var(--ion-color-contrast); }
+
+:host(.chip-icon-clear.ion-color) {
+  background: transparent;
+  color: var(--ion-color-base); }

@@ -1,28 +1,21 @@
 const iosTransitionAnimation = () => import('./animations/ios.transition');
 const mdTransitionAnimation = () => import('./animations/md.transition');
 export function transition(opts) {
-    return new Promise(resolve => {
-        opts.queue.write(async () => {
+    return new Promise((resolve, reject) => {
+        opts.queue.write(() => {
             beforeTransition(opts);
-            const animationBuilder = await getAnimationBuilder(opts);
-            const ani = (animationBuilder)
-                ? animation(animationBuilder, opts)
-                : noAnimation(opts); // fast path for no animation
-            resolve(ani);
+            runTransition(opts).then(result => {
+                if (result.animation) {
+                    result.animation.destroy();
+                }
+                afterTransition(opts);
+                resolve(result);
+            }, error => {
+                afterTransition(opts);
+                reject(error);
+            });
         });
     });
-}
-async function getAnimationBuilder(opts) {
-    if (!opts.leavingEl || opts.animated === false || opts.duration === 0) {
-        return undefined;
-    }
-    if (opts.animationBuilder) {
-        return opts.animationBuilder;
-    }
-    const builder = (opts.mode === 'ios')
-        ? (await iosTransitionAnimation()).iosTransitionAnimation
-        : (await mdTransitionAnimation()).mdTransitionAnimation;
-    return builder;
 }
 function beforeTransition(opts) {
     const enteringEl = opts.enteringEl;
@@ -39,16 +32,32 @@ function beforeTransition(opts) {
         setPageHidden(leavingEl, false);
     }
 }
-export function setPageHidden(el, hidden) {
-    if (hidden) {
-        el.setAttribute('aria-hidden', 'true');
-        el.classList.add('ion-page-hidden');
+async function runTransition(opts) {
+    const animationBuilder = await getAnimationBuilder(opts);
+    const ani = (animationBuilder)
+        ? animation(animationBuilder, opts)
+        : noAnimation(opts);
+    return ani;
+}
+function afterTransition(opts) {
+    const enteringEl = opts.enteringEl;
+    const leavingEl = opts.leavingEl;
+    enteringEl.classList.remove('ion-page-invisible');
+    if (leavingEl !== undefined) {
+        leavingEl.classList.remove('ion-page-invisible');
     }
-    else {
-        el.hidden = false;
-        el.removeAttribute('aria-hidden');
-        el.classList.remove('ion-page-hidden');
+}
+async function getAnimationBuilder(opts) {
+    if (!opts.leavingEl || !opts.animated || opts.duration === 0) {
+        return undefined;
     }
+    if (opts.animationBuilder) {
+        return opts.animationBuilder;
+    }
+    const builder = (opts.mode === 'ios')
+        ? (await iosTransitionAnimation()).iosTransitionAnimation
+        : (await mdTransitionAnimation()).mdTransitionAnimation;
+    return builder;
 }
 async function animation(animationBuilder, opts) {
     await waitForReady(opts, true);
@@ -58,24 +67,23 @@ async function animation(animationBuilder, opts) {
     if (trns.hasCompleted) {
         fireDidEvents(opts.window, opts.enteringEl, opts.leavingEl);
     }
-    return trns;
+    return {
+        hasCompleted: trns.hasCompleted,
+        animation: trns
+    };
 }
 async function noAnimation(opts) {
     const enteringEl = opts.enteringEl;
     const leavingEl = opts.leavingEl;
-    if (enteringEl) {
-        enteringEl.classList.remove('ion-page-invisible');
-    }
-    if (leavingEl) {
-        leavingEl.classList.remove('ion-page-invisible');
-    }
     await waitForReady(opts, false);
     fireWillEvents(opts.window, enteringEl, leavingEl);
     fireDidEvents(opts.window, enteringEl, leavingEl);
-    return null;
+    return {
+        hasCompleted: true
+    };
 }
 async function waitForReady(opts, defaultDeep) {
-    const deep = opts.deepWait != null ? opts.deepWait : defaultDeep;
+    const deep = opts.deepWait !== undefined ? opts.deepWait : defaultDeep;
     const promises = deep ? [
         deepReady(opts.enteringEl),
         deepReady(opts.leavingEl),
@@ -94,29 +102,22 @@ async function notifyViewReady(viewIsReady, enteringEl) {
 function playTransition(trans, opts) {
     const progressCallback = opts.progressCallback;
     const promise = new Promise(resolve => trans.onFinish(resolve));
-    // cool, let's do this, start the transition
     if (progressCallback) {
-        // this is a swipe to go back, just get the transition progress ready
-        // kick off the swipe animation start
         trans.progressStart();
         progressCallback(trans);
     }
     else {
-        // only the top level transition should actually start "play"
-        // kick it off and let it play through
-        // ******** DOM WRITE ****************
         trans.play();
     }
-    // create a callback for when the animation is done
     return promise;
 }
 function fireWillEvents(win, enteringEl, leavingEl) {
-    lifecycle(win, leavingEl, "ionViewWillLeave" /* WillLeave */);
-    lifecycle(win, enteringEl, "ionViewWillEnter" /* WillEnter */);
+    lifecycle(win, leavingEl, "ionViewWillLeave");
+    lifecycle(win, enteringEl, "ionViewWillEnter");
 }
 function fireDidEvents(win, enteringEl, leavingEl) {
-    lifecycle(win, enteringEl, "ionViewDidEnter" /* DidEnter */);
-    lifecycle(win, leavingEl, "ionViewDidLeave" /* DidLeave */);
+    lifecycle(win, enteringEl, "ionViewDidEnter");
+    lifecycle(win, leavingEl, "ionViewDidLeave");
 }
 export function lifecycle(win, el, eventName) {
     if (el) {
@@ -134,25 +135,36 @@ function shallowReady(el) {
     }
     return Promise.resolve();
 }
-async function deepReady(el) {
+export async function deepReady(el) {
     const element = el;
     if (element) {
-        if (element.componentOnReady) {
+        if (element.componentOnReady != null) {
             const stencilEl = await element.componentOnReady();
-            if (stencilEl) {
+            if (stencilEl != null) {
                 return;
             }
         }
         await Promise.all(Array.from(element.children).map(deepReady));
     }
 }
+export function setPageHidden(el, hidden) {
+    if (hidden) {
+        el.setAttribute('aria-hidden', 'true');
+        el.classList.add('ion-page-hidden');
+    }
+    else {
+        el.hidden = false;
+        el.removeAttribute('aria-hidden');
+        el.classList.remove('ion-page-hidden');
+    }
+}
 function setZIndex(enteringEl, leavingEl, direction) {
-    if (enteringEl) {
+    if (enteringEl !== undefined) {
         enteringEl.style.zIndex = (direction === 'back')
             ? '99'
             : '101';
     }
-    if (leavingEl) {
+    if (leavingEl !== undefined) {
         leavingEl.style.zIndex = '100';
     }
 }

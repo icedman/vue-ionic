@@ -1,7 +1,13 @@
-:host {
+:host-context(.item) {
+  /**
+   * @prop --color: Color of the label
+   */
+  --color: initial;
   margin: 0;
   display: block;
   flex: 1;
+  color: var(--color);
+  font-family: var(--ion-font-family, inherit);
   font-size: inherit;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -41,19 +47,18 @@
 :host-context(.item-has-value).label-floating {
   transform: translate3d(0,  0,  0) scale(0.8); }
 
-:host {
-  margin: 11px 8px 11px 0;
-  font-family: var(--ion-font-family, inherit); }
+:host(.label-no-animate.label-floating) {
+  transition: none; }
+
+:host-context(.item) {
+  margin: 11px 8px 11px 0; }
 
 :host([text-wrap]) {
   font-size: 14px;
   line-height: 1.5; }
 
-:host-context(.item-interactive) {
-  --ion-color-base: var(--ion-text-color-step-600, #999999); }
-
 :host(.label-stacked) {
-  font-size: 12px; }
+  font-size: 12.8px; }
 
 :host(.label-floating) {
   transform: translate3d(0,  27px,  0);
@@ -64,10 +69,6 @@
 :host(.label-floating) {
   margin-left: 0;
   margin-bottom: 0; }
-
-:host-context(.item-has-focus).label-stacked,
-:host-context(.item-has-focus).label-floating {
-  color: var(--ion-color-primary, #3880ff); }
 
 ::slotted(*) h1 {
   margin: 0 0 2px;

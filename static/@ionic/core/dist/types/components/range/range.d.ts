@@ -1,8 +1,8 @@
 import '../../stencil.core';
-import { EventEmitter, QueueApi } from '../../stencil.core';
-import { BaseInput, Color, Mode, RangeInputChangeEvent, StyleEvent } from '../../interface';
-import { RangeEventDetail, RangeValue } from './range-interface';
-export declare class Range implements BaseInput {
+import { ComponentInterface, EventEmitter, QueueApi } from '../../stencil.core';
+import { Color, InputChangeEvent, Mode, RangeValue, StyleEvent } from '../../interface';
+import { RangeEventDetail } from './range-interface';
+export declare class Range implements ComponentInterface {
     private noUpdate;
     private rect;
     private hasFocus;
@@ -42,17 +42,19 @@ export declare class Range implements BaseInput {
      * Minimum integer value of the range. Defaults to `0`.
      */
     min: number;
+    protected minChanged(): void;
     /**
      * Maximum integer value of the range. Defaults to `100`.
      */
     max: number;
+    protected maxChanged(): void;
     /**
-     * If true, a pin with integer value is shown when the knob
+     * If `true`, a pin with integer value is shown when the knob
      * is pressed. Defaults to `false`.
      */
     pin: boolean;
     /**
-     * If true, the knob snaps to tick marks evenly spaced based
+     * If `true`, the knob snaps to tick marks evenly spaced based
      * on the step property value. Defaults to `false`.
      */
     snaps: boolean;
@@ -60,17 +62,20 @@ export declare class Range implements BaseInput {
      * Specifies the value granularity. Defaults to `1`.
      */
     step: number;
+    /**
+     * If `true`, the user cannot interact with the range. Defaults to `false`.
+     */
     disabled: boolean;
     protected disabledChanged(): void;
     /**
      * the value of the range.
      */
-    value: any;
+    value: RangeValue;
     protected valueChanged(value: RangeValue): void;
     /**
      * Emitted when the value property has changed.
      */
-    ionChange: EventEmitter<RangeInputChangeEvent>;
+    ionChange: EventEmitter<InputChangeEvent>;
     /**
      * Emitted when the styles change.
      */
@@ -86,13 +91,14 @@ export declare class Range implements BaseInput {
     componentWillLoad(): void;
     componentDidLoad(): Promise<void>;
     keyChng(ev: CustomEvent<RangeEventDetail>): void;
+    private handleKeyboard;
     private getValue;
     private emitStyle;
     private fireBlur;
     private fireFocus;
-    private onDragStart;
-    private onDragMove;
-    private onDragEnd;
+    private onStart;
+    private onMove;
+    private onEnd;
     private update;
     private readonly valA;
     private readonly valB;
@@ -115,5 +121,3 @@ export declare class Range implements BaseInput {
     };
     render(): JSX.Element[];
 }
-export declare function ratioToValue(ratio: number, min: number, max: number, step: number): number;
-export declare function valueToRatio(value: number, min: number, max: number): number;

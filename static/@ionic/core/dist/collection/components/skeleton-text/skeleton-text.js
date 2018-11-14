@@ -1,6 +1,5 @@
 export class SkeletonText {
     constructor() {
-        /** Width for the element to render at. Default is 100% */
         this.width = '100%';
     }
     render() {

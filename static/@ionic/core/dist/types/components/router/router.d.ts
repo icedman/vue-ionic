@@ -1,10 +1,11 @@
-import { EventEmitter, QueueApi } from '../../stencil.core';
-import { Config, RouterDirection, RouterEventDetail } from '../../interface';
-export declare class Router {
+import { ComponentInterface, EventEmitter, QueueApi } from '../../stencil.core';
+import { BackButtonEvent, Config, RouterDirection, RouterEventDetail } from '../../interface';
+export declare class Router implements ComponentInterface {
     private previousPath;
     private busy;
     private state;
     private lastState;
+    private waitPromise?;
     el: HTMLElement;
     config: Config;
     queue: QueueApi;
@@ -23,7 +24,7 @@ export declare class Router {
      * Using one or another might depend in the requirements of your app and/or where it's deployed.
      *
      * Usually "hash-less" navigation works better for SEO and it's more user friendly too, but it might
-     * requires aditional server-side configuration in order to properly work.
+     * requires additional server-side configuration in order to properly work.
      *
      * On the otherside hash-navigation is much easier to deploy, it even works over the file protocol.
      *
@@ -39,17 +40,27 @@ export declare class Router {
      */
     ionRouteDidChange: EventEmitter<RouterEventDetail>;
     componentWillLoad(): Promise<void>;
+    componentDidLoad(): void;
     protected onPopState(): Promise<boolean>;
-    /** Navigate to the specified URL */
+    protected onBackButton(ev: BackButtonEvent): void;
+    /**
+     * Navigate to the specified URL.
+     */
     push(url: string, direction?: RouterDirection): Promise<boolean>;
-    /** @hidden */
+    /**
+     * Go back to previous page in the window.history.
+     */
+    goBack(): Promise<void>;
+    /** @internal */
     printDebug(): void;
-    /** @hidden */
+    /** @internal */
     navChanged(intent: number): Promise<boolean>;
     private onRedirectChanged;
     private onRoutesChanged;
     private historyDirection;
     private writeNavStateRoot;
+    private safeWriteNavState;
+    private lock;
     private writeNavState;
     private setPath;
     private getPath;

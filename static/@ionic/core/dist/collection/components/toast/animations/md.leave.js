@@ -1,6 +1,3 @@
-/**
- * md Toast Leave Animation
- */
 export function mdLeaveAnimation(AnimationC, baseEl, position) {
     const baseAnimation = new AnimationC();
     const wrapperAnimation = new AnimationC();

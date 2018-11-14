@@ -11,8 +11,10 @@
   position: fixed;
   align-items: center;
   justify-content: center;
+  font-family: var(--ion-font-family, inherit);
   contain: strict;
   touch-action: none;
+  user-select: none;
   z-index: 1000; }
 
 :host(.alert-top) {
@@ -110,7 +112,6 @@
 :host {
   --background: var(--ion-overlay-background-color, #f9f9f9);
   --max-width: 270px;
-  font-family: var(--ion-font-family, inherit);
   font-size: 14px; }
 
 .alert-wrapper {
@@ -157,7 +158,7 @@
   background-color: var(--ion-background-color, #fff);
   appearance: none; }
   .alert-input::placeholder {
-    color: var(--ion-placeholder-text-color, #999);
+    color: var(--ion-placeholder-color, var(--ion-text-color-step-600, #999999));
     font-family: inherit;
     font-weight: inherit; }
 
@@ -220,8 +221,8 @@
   height: 24px;
   border-width: 1px;
   border-style: solid;
-  border-color: var(--ion-item-border-color, #c8c7cc);
-  background-color: var(--ion-item-background-color, var(--ion-background-color, #fff));
+  border-color: var(--ion-item-border-color, var(--ion-border-color, #c8c7cc));
+  background-color: var(--ion-item-background, var(--ion-background-color, #fff));
   contain: strict; }
 
 [aria-checked=true] .alert-checkbox-icon {

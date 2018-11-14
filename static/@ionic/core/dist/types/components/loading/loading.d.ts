@@ -1,17 +1,23 @@
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
-import { Animation, AnimationBuilder, Color, Config, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
-export declare class Loading implements OverlayInterface {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { Animation, AnimationBuilder, Config, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
+export declare class Loading implements ComponentInterface, OverlayInterface {
     private durationTimeout;
     presented: boolean;
     animation?: Animation;
-    color?: Color;
-    mode: Mode;
     el: HTMLElement;
     animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
-    overlayId: number;
-    /** If true, the loading will blur any inputs and hide the keyboard */
+    /** @internal */
+    overlayIndex: number;
+    /**
+     * The mode determines which platform styles to use.
+     * Possible values are: `"ios"` or `"md"`.
+     */
+    mode: Mode;
+    /**
+     * If `true`, the keyboard will be automatically dismissed when the overlay is presented.
+     */
     keyboardClose: boolean;
     /**
      * Animation to use when the loading indicator is presented.
@@ -24,26 +30,22 @@ export declare class Loading implements OverlayInterface {
     /**
      * Optional text content to display in the loading indicator.
      */
-    content?: string;
+    message?: string;
     /**
      * Additional classes to apply for custom CSS. If multiple classes are
      * provided they should be separated by spaces.
      */
     cssClass?: string | string[];
     /**
-     * If true, the loading indicator will dismiss when the page changes. Defaults to `false`.
-     */
-    dismissOnPageChange: boolean;
-    /**
      * Number of milliseconds to wait before dismissing the loading indicator.
      */
-    duration?: number;
+    duration: number;
     /**
-     * If true, the loading indicator will be dismissed when the backdrop is clicked. Defaults to `false`.
+     * If `true`, the loading indicator will be dismissed when the backdrop is clicked. Defaults to `false`.
      */
-    enableBackdropDismiss: boolean;
+    backdropDismiss: boolean;
     /**
-     * If true, a backdrop will be displayed behind the loading indicator. Defaults to `true`.
+     * If `true`, a backdrop will be displayed behind the loading indicator. Defaults to `true`.
      */
     showBackdrop: boolean;
     /**
@@ -52,13 +54,13 @@ export declare class Loading implements OverlayInterface {
      */
     spinner?: string;
     /**
-     * If true, the loading indicator will be translucent. Defaults to `false`.
+     * If `true`, the loading indicator will be translucent. Defaults to `false`.
      */
     translucent: boolean;
     /**
-     * If true, the loading indicator will animate. Defaults to `true`.
+     * If `true`, the loading indicator will animate. Defaults to `true`.
      */
-    willAnimate: boolean;
+    animated: boolean;
     /**
      * Emitted after the loading has unloaded.
      */
@@ -94,17 +96,15 @@ export declare class Loading implements OverlayInterface {
     /**
      * Dismiss the loading overlay after it has been presented.
      */
-    dismiss(data?: any, role?: string): Promise<void>;
+    dismiss(data?: any, role?: string): Promise<boolean>;
     /**
-     * Returns a promise that resolves when the loading did dismiss. It also accepts a callback
-     * that is called in the same circumstances.
+     * Returns a promise that resolves when the loading did dismiss.
      */
-    onDidDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onDidDismiss(): Promise<OverlayEventDetail>;
     /**
-     * Returns a promise that resolves when the loading will dismiss. It also accepts a callback
-     * that is called in the same circumstances.
+     * Returns a promise that resolves when the loading will dismiss.
      */
-    onWillDismiss(callback?: (detail: OverlayEventDetail) => void): Promise<OverlayEventDetail>;
+    onWillDismiss(): Promise<OverlayEventDetail>;
     hostData(): {
         style: {
             zIndex: number;

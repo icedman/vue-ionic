@@ -1,34 +1,33 @@
 <template>
-<ion-app id="app">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Header</ion-title>
+  <ion-app id="app">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Header</ion-title>
 
-      <ion-buttons slot="end">
-      <!-- <ion-item button> -->
-        <router-link to="/">
-        <ion-label>
-          Save
-        </ion-label>
-        </router-link>
-      <!-- </ion-item> -->
-      </ion-buttons>
+        <ion-buttons slot="end">
+          <!-- <ion-item button> -->
+          <router-link to="/">
+            <ion-label>
+              Save
+            </ion-label>
+          </router-link>
+          <!-- </ion-item> -->
+        </ion-buttons>
 
-    </ion-toolbar>
-  </ion-header>
+      </ion-toolbar>
+    </ion-header>
 
-  <ion-content main>
-    <router-view/>
-  </ion-content>
+    <ion-content main>
+      <router-view />
+    </ion-content>
 
-</ion-app>
+  </ion-app>
 </template>
 
 <script>
 export default {
   data () {
-    return {
-    }
+    return {}
   }
 }
 </script>

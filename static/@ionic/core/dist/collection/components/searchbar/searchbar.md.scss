@@ -5,16 +5,15 @@
 // --------------------------------------------------
 
 :host {
-  --clear-button-color: currentColor;
+  --clear-button-color: initial;
   --cancel-button-color: #{$searchbar-md-cancel-button-color};
+  --color: #{$searchbar-md-input-text-color};
+  --icon-color: #{$searchbar-md-input-search-icon-color};
+  --background: #{$searchbar-md-input-background-color};
 
   @include padding($searchbar-md-padding-top, $searchbar-md-padding-end, $searchbar-md-padding-bottom, $searchbar-md-padding-start);
 
   background: $searchbar-md-background;
-
-  color: $searchbar-md-input-text-color;
-
-  font-family: $searchbar-md-font-family;
 }
 
 
@@ -26,8 +25,6 @@
 
   width: $searchbar-md-input-search-icon-size + 1;
   height: $searchbar-md-input-search-icon-size + 1;
-
-  color: $searchbar-md-input-search-icon-color;
 }
 
 
@@ -73,8 +70,6 @@
 
   height: $searchbar-md-input-height;
 
-  background-color: $searchbar-md-input-background-color;
-
   font-size: 16px;
   font-weight: 400;
 
@@ -107,8 +102,6 @@
 .searchbar-clear-icon {
   width: $searchbar-md-input-clear-icon-size;
   height: 100%;
-
-  color: $searchbar-md-input-clear-icon-color;
 }
 
 

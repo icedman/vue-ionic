@@ -23,7 +23,6 @@ export interface Animation {
     beforeClearStyles(propertyNames: string[]): Animation;
     beforeAddRead(domReadFn: () => void): Animation;
     beforeAddWrite(domWriteFn: () => void): Animation;
-    duringAddClass(className: string): Animation;
     afterAddClass(className: string): Animation;
     afterRemoveClass(className: string): Animation;
     afterStyles(styles: {
@@ -40,7 +39,7 @@ export interface Animation {
     progressEnd(shouldComplete: boolean, currentStepValue: number, dur: number): void;
     onFinish(callback: (animation?: Animation) => void, opts?: {
         oneTimeCallback?: boolean;
-        clearExistingCallacks?: boolean;
+        clearExistingCallbacks?: boolean;
     }): Animation;
     destroy(): void;
     isRoot(): boolean;

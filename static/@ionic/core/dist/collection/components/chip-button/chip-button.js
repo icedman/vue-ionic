@@ -1,14 +1,8 @@
 import { createColorClasses } from '../../utils/theme';
 export class ChipButton {
     constructor() {
-        /**
-         * If true, the user cannot interact with the chip button. Defaults to `false`.
-         */
         this.disabled = false;
-        /**
-         * Set to `"clear"` for a transparent button style.
-         */
-        this.fill = 'default';
+        this.fill = 'clear';
     }
     hostData() {
         return {
@@ -16,11 +10,11 @@ export class ChipButton {
         };
     }
     render() {
-        const TagType = this.href ? 'a' : 'button';
-        return (h(TagType, { class: "chip-button-native", disabled: this.disabled, href: this.href },
-            h("span", { class: "chip-button-inner" },
+        const TagType = this.href === undefined ? 'button' : 'a';
+        return (h(TagType, { type: "button", class: "button-native", disabled: this.disabled, href: this.href },
+            h("span", { class: "button-inner" },
                 h("slot", null)),
-            this.mode === 'md' && h("ion-ripple-effect", { tapClick: true })));
+            this.mode === 'md' && h("ion-ripple-effect", null)));
     }
     static get is() { return "ion-chip-button"; }
     static get encapsulation() { return "shadow"; }

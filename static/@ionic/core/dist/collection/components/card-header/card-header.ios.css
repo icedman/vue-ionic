@@ -1,9 +1,16 @@
 :host {
   display: block;
   position: relative;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden; }
+  background: var(--background);
+  color: var(--color); }
+
+:host(.ion-color) {
+  background: var(--ion-color-base);
+  color: var(--ion-color-contrast); }
+
+:host(.ion-color) ::slotted(ion-card-title),
+:host(.ion-color) ::slotted(ion-card-subtitle) {
+  color: currentColor; }
 
 :host {
   padding: 20px 20px 16px; }

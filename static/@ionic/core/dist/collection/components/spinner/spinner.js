@@ -2,37 +2,18 @@ import { createColorClasses } from '../../utils/theme';
 import { SPINNERS } from './spinner-configs';
 export class Spinner {
     constructor() {
-        /**
-         * If true, the spinner's animation will be paused. Defaults to `false`.
-         */
         this.paused = false;
     }
     getName() {
-        let name = this.name || this.config.get('spinner');
-        if (!name) {
-            // fallback
-            if (this.mode === 'md') {
-                return 'crescent';
-            }
-            else {
-                return 'lines';
-            }
+        const name = this.name || this.config.get('spinner');
+        if (name) {
+            return name;
         }
-        if (name === 'ios') {
-            // deprecation warning, renamed in v4
-            console.warn(`spinner "ios" has been renamed to "lines"`);
-            name = 'lines';
-        }
-        else if (name === 'ios-small') {
-            // deprecation warning, renamed in v4
-            console.warn(`spinner "ios-small" has been renamed to "lines-small"`);
-            name = 'lines-small';
-        }
-        return name;
+        return (this.mode === 'ios') ? 'lines' : 'crescent';
     }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color), { [`spinner-${this.getName()}`]: true, 'spinner-paused': !!this.paused })
+            class: Object.assign({}, createColorClasses(this.color), { [`spinner-${this.getName()}`]: true, 'spinner-paused': !!this.paused || this.config.getBoolean('_testing') })
         };
     }
     render() {
@@ -40,12 +21,12 @@ export class Spinner {
         const spinner = SPINNERS[name] || SPINNERS['lines'];
         const duration = (typeof this.duration === 'number' && this.duration > 10 ? this.duration : spinner.dur);
         const svgs = [];
-        if (spinner.circles) {
+        if (spinner.circles !== undefined) {
             for (let i = 0; i < spinner.circles; i++) {
                 svgs.push(buildCircle(spinner, duration, i, spinner.circles));
             }
         }
-        else if (spinner.lines) {
+        else if (spinner.lines !== undefined) {
             for (let i = 0; i < spinner.lines; i++) {
                 svgs.push(buildLine(spinner, duration, i, spinner.lines));
             }
@@ -66,12 +47,8 @@ export class Spinner {
             "type": Number,
             "attr": "duration"
         },
-        "mode": {
-            "type": String,
-            "attr": "mode"
-        },
         "name": {
-            "type": String,
+            "type": "Any",
             "attr": "name"
         },
         "paused": {
@@ -80,7 +57,6 @@ export class Spinner {
         }
     }; }
     static get style() { return "/**style-placeholder:ion-spinner:**/"; }
-    static get styleMode() { return "/**style-id-placeholder:ion-spinner:**/"; }
 }
 function buildCircle(spinner, duration, index, total) {
     const data = spinner.fn(duration, index, total);

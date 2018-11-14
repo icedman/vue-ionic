@@ -5,7 +5,6 @@ export function enableHideCaretOnScroll(componentEl, inputEl, scrollEl) {
     }
     console.debug('Input: enableHideCaretOnScroll');
     const scrollHideCaret = (shouldHideCaret) => {
-        // console.log('scrollHideCaret', shouldHideCaret)
         if (isFocused(inputEl)) {
             relocateInput(componentEl, inputEl, shouldHideCaret);
         }
@@ -13,10 +12,8 @@ export function enableHideCaretOnScroll(componentEl, inputEl, scrollEl) {
     const onBlur = () => relocateInput(componentEl, inputEl, false);
     const hideCaret = () => scrollHideCaret(true);
     const showCaret = () => scrollHideCaret(false);
-    if (scrollEl) {
-        scrollEl.addEventListener('ionScrollStart', hideCaret);
-        scrollEl.addEventListener('ionScrollEnd', showCaret);
-    }
+    scrollEl.addEventListener('ionScrollStart', hideCaret);
+    scrollEl.addEventListener('ionScrollEnd', showCaret);
     inputEl.addEventListener('blur', onBlur);
     return () => {
         scrollEl.removeEventListener('ionScrollStart', hideCaret);

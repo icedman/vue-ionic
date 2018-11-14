@@ -2,7 +2,8 @@ ion-virtual-scroll {
   display: block;
   position: relative;
   width: 100%;
-  contain: strict; }
+  contain: strict;
+  user-select: none; }
 
 .virtual-loading {
   opacity: 0; }

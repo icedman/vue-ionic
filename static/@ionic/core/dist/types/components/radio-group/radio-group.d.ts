@@ -1,22 +1,23 @@
-import { ComponentDidLoad, EventEmitter } from '../../stencil.core';
-import { InputChangeEvent, RadioGroupInput } from '../../interface';
-export declare class RadioGroup implements ComponentDidLoad, RadioGroupInput {
+import { ComponentInterface, EventEmitter } from '../../stencil.core';
+import { InputChangeEvent } from '../../interface';
+export declare class RadioGroup implements ComponentInterface {
     private inputId;
     private labelId;
     private radios;
     el: HTMLElement;
+    /**
+     * If `true`, the radios can be deselected. Defaults to `false`.
+     */
     allowEmptySelection: boolean;
     /**
      * The name of the control, which is submitted with the form data.
      */
     name: string;
-    disabled: boolean;
-    disabledChanged(): void;
     /**
      * the value of the radio group.
      */
-    value?: string;
-    valueChanged(value: string | undefined): void;
+    value?: any | null;
+    valueChanged(value: any | undefined): void;
     /**
      * Emitted when the value has changed.
      */
@@ -26,5 +27,8 @@ export declare class RadioGroup implements ComponentDidLoad, RadioGroupInput {
     onRadioSelect(ev: Event): void;
     componentDidLoad(): void;
     private updateRadios;
-    hostData(): any;
+    hostData(): {
+        'role': string;
+        'aria-labelledby': string;
+    };
 }

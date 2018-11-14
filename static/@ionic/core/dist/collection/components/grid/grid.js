@@ -1,8 +1,5 @@
 export class Grid {
     constructor() {
-        /**
-         * If true, the grid will have a fixed width based on the screen size. Defaults to `false`.
-         */
         this.fixed = false;
     }
     hostData() {

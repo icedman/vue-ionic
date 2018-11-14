@@ -4,7 +4,7 @@ export declare class GestureController {
     private requestedStart;
     private disabledGestures;
     private disabledScroll;
-    private capturedId;
+    private capturedId?;
     constructor(doc: Document);
     /**
      * Creates a gesture delegate based on the GestureConfig passed
@@ -33,7 +33,7 @@ export declare class GestureDelegate {
     private priority;
     private disableScroll;
     private ctrl?;
-    constructor(ctrl: any, id: number, name: string, priority: number, disableScroll: boolean);
+    constructor(ctrl: GestureController, id: number, name: string, priority: number, disableScroll: boolean);
     canStart(): boolean;
     start(): boolean;
     capture(): boolean;
@@ -45,7 +45,7 @@ export declare class BlockerDelegate {
     private disable;
     private disableScroll;
     private ctrl?;
-    constructor(id: number, ctrl: any, disable: string[] | undefined, disableScroll: boolean);
+    constructor(ctrl: GestureController, id: number, disable: string[] | undefined, disableScroll: boolean);
     block(): void;
     unblock(): void;
     destroy(): void;
@@ -59,4 +59,4 @@ export interface BlockerConfig {
     disable?: string[];
     disableScroll?: boolean;
 }
-export declare const gestureController: GestureController;
+export declare const GESTURE_CONTROLLER: GestureController;

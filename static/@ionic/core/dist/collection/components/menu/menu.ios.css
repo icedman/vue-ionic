@@ -1,4 +1,7 @@
 :host {
+  --width: 304px;
+  --width-small: 264px;
+  --background: var(--ion-background-color, #fff);
   left: 0;
   right: 0;
   top: 0;
@@ -20,16 +23,19 @@
   position: absolute;
   flex-direction: column;
   justify-content: space-between;
-  width: 304px;
+  width: var(--width);
   height: 100%;
+  background: var(--background);
   contain: strict; }
 
 :host(.menu-side-start) .menu-inner {
+  --ion-safe-area-right: 0px;
   /* stylelint-disable property-blacklist */
   right: auto;
   left: 0; }
 
 :host(.menu-side-end) .menu-inner {
+  --ion-safe-area-left: 0px;
   right: 0;
   left: auto;
   /* stylelint-enable property-blacklist */ }
@@ -39,22 +45,9 @@ ion-backdrop {
   opacity: .01;
   z-index: -1; }
 
-.menu-content {
-  transform: translate3d(0,  0,  0); }
-
-.menu-content-open {
-  cursor: pointer;
-  touch-action: manipulation; }
-
-.menu-content-open ion-pane,
-.menu-content-open .ion-pane,
-.menu-content-open ion-content,
-.menu-content-open .toolbar {
-  pointer-events: none; }
-
 @media (max-width: 340px) {
   .menu-inner {
-    width: 264px; } }
+    width: var(--width-small); } }
 
 :host(.menu-type-reveal) {
   z-index: 0; }
@@ -81,14 +74,8 @@ ion-backdrop {
   display: hidden !important;
   /* stylelint-enable declaration-no-important */ }
 
-.menu-inner {
-  background: var(--ion-background-color, #fff); }
-
 :host(.menu-type-push) {
   z-index: 80; }
 
 :host(.menu-type-push) .show-backdrop {
   display: block; }
-
-.app-ios .menu-content-reveal {
-  box-shadow: -8px 0 42px rgba(0, 0, 0, 0.08); }

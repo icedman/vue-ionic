@@ -1,54 +1,27 @@
 @import "../../themes/ionic.globals";
 
 :host {
-  @include border-radius(0);
-  @include margin(0);
-
-  display: block;
-  position: relative;
+  --badge-end: 4%;
 
   flex: 1;
 
   height: 100%;
 
-  border: 0;
-
-  background: var(--background);
   color: var(--color);
-
-  text-align: center;
-  text-decoration: none;
-
-  overflow: hidden;
-  user-select: none;
-  z-index: 0;
-  box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-:host(.focused) {
-  background: var(--background-focused);
-}
-
-:host(:hover),
-:host(.tab-selected) {
-  color: var(--color-selected);
-}
-
-:host(.tab-hidden) {
-  /* stylelint-disable-next-line declaration-no-important */
-  display: none !important;
 }
 
 a {
-  text-decoration: none;
-}
-
-.tab-button-native {
+  @include text-inherit();
   @include margin(0);
-  @include padding(0);
+  @include padding(
+    var(--padding-top),
+    var(--padding-end),
+    var(--padding-bottom),
+    var(--padding-start),
+  );
 
   display: flex;
+  position: relative;
 
   flex-direction: column;
   align-items: center;
@@ -59,29 +32,56 @@ a {
 
   border: 0;
 
-  background: transparent;
-  color: inherit;
+  outline: none;
+
+  background: var(--background);
+
+  text-decoration: none;
 
   cursor: pointer;
+  overflow: hidden;
   box-sizing: border-box;
+  -webkit-user-drag: none;
+}
 
-  &:active,
-  &:focus {
-    outline: none;
+a:focus-visible {
+  background: var(--background-focused);
+}
+
+@media (any-hover: hover) {
+  a:hover {
+    color: var(--color-selected);
   }
 }
 
-:host(.tab-button-disabled) {
-  pointer-events: none;
+:host(.tab-selected) {
+  color: var(--color-selected);
 }
 
-:host(.tab-button-disabled) .tab-button-native {
+:host(.tab-hidden) {
+  /* stylelint-disable-next-line declaration-no-important */
+  display: none !important;
+}
+
+:host(.tab-disabled) {
+  pointer-events: none;
+
   opacity: .4;
 }
 
-.tab-button-text,
-.tab-button-icon {
-  display: none;
+::slotted(ion-label) {
+  order: 0;
+}
+
+::slotted(ion-icon) {
+  order: -1;
+
+  height: 1em;
+}
+
+::slotted(ion-label),
+::slotted(ion-icon) {
+  display: block;
 
   align-self: center;
 
@@ -96,27 +96,17 @@ a {
   box-sizing: border-box;
 }
 
-:host(.has-icon) .tab-button-icon,
-:host(.has-label) .tab-button-text {
-  display: block;
-}
-
-:host(.has-label-only) .tab-button-text {
+:host(.tab-has-label-only) ::slotted(ion-label) {
   white-space: normal;
 }
 
-:host(.has-icon-only) .tab-button-native,
-:host(.has-label-only) .tab-button-native {
-  justify-content: center;
-}
 
 
 // Tab Badges
 // --------------------------------------------------
 
-.tab-badge {
-  @include position(6%, 4%, null, null); // 4% fallback
-  @include position(null, calc(50% - 50px), null, null);
+::slotted(ion-badge) {
+  @include position(null, var(--badge-end), null, null);
   @include padding(1px, 6px);
 
   box-sizing: border-box;
@@ -130,42 +120,50 @@ a {
   line-height: 16px;
 }
 
-:host(.has-icon) .tab-badge {
-  @include position(null, calc(50% - 30px), null, null);
-}
 
-
-
-// Tab Badges
+// Tab Button Layout
 // --------------------------------------------------
 
-.layout-icon-start .tab-button {
+:host(.tab-layout-icon-start) a {
   flex-direction: row;
 }
 
-.layout-icon-end .tab-button {
+:host(.tab-layout-icon-end) a {
   flex-direction: row-reverse;
 }
 
-.layout-icon-bottom .tab-button {
+:host(.tab-layout-icon-bottom) a {
   flex-direction: column-reverse;
 }
 
-.layout-icon-start .tab-button,
-.layout-icon-end .tab-button,
-.layout-icon-hide .tab-button,
-.layout-label-hide .tab-button {
+:host(.tab-layout-icon-start) a,
+:host(.tab-layout-icon-end) a,
+:host(.tab-layout-icon-hide) a,
+:host(.tab-layout-label-hide) a,
+:host(.tab-has-icon-only) a,
+:host(.tab-has-label-only) a {
   justify-content: center;
 }
 
-.layout-icon-hide .tab-button-icon,
-.layout-label-hide .tab-button-text {
+:host(.tab-layout-icon-hide) ::slotted(ion-icon) {
   display: none;
 }
 
+:host(.tab-layout-label-hide) ::slotted(ion-label) {
+  display: none;
+}
 
-.layout-icon-bottom .tab-badge,
-.layout-icon-start .tab-badge,
-.layout-icon-end .tab-badge {
-  @include position(null, calc(50% - 50px), null, null);
+:host(.tab-layout-icon-top),
+:host(.tab-layout-icon-bottom),
+:host(.tab-layout-icon-only),
+:host(.tab-layout-label-hide),
+:host(.tab-has-icon-only) {
+  --badge-end: #{calc(50% - 30px)};
+}
+
+:host(.tab-layout-icon-hide),
+:host(.tab-layout-icon-start),
+:host(.tab-layout-icon-end),
+:host(.tab-has-label-only) {
+  --badge-end: #{calc(50% - 50px)};
 }

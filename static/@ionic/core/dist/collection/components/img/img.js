@@ -6,15 +6,12 @@ export class Img {
         this.addIO();
     }
     addIO() {
-        if (!this.src) {
+        if (this.src === undefined) {
             return;
         }
         if ('IntersectionObserver' in window) {
             this.removeIO();
             this.io = new IntersectionObserver(data => {
-                // because there will only ever be one instance
-                // of the element we are observing
-                // we can just use data[0]
                 if (data[0].isIntersecting) {
                     this.loadSrc = this.src;
                     this.removeIO();
@@ -24,7 +21,6 @@ export class Img {
             this.io.observe(this.el);
         }
         else {
-            // fall back to setTimeout for Safari and IE
             setTimeout(() => this.loadSrc = this.src, 200);
         }
     }

@@ -1,11 +1,7 @@
-import { ToastOptions } from '../../interface';
-import { OverlayController } from '../../utils/overlays';
-export declare class ToastController implements OverlayController {
-    private toasts;
+import { ComponentInterface } from '../../stencil.core';
+import { OverlayController, ToastOptions } from '../../interface';
+export declare class ToastController implements ComponentInterface, OverlayController {
     doc: Document;
-    protected toastWillPresent(ev: any): void;
-    protected toastWillDismiss(ev: any): void;
-    protected escapeKeyUp(): void;
     /**
      * Create a toast overlay with toast options.
      */
@@ -13,9 +9,9 @@ export declare class ToastController implements OverlayController {
     /**
      * Dismiss the open toast overlay.
      */
-    dismiss(data?: any, role?: string, toastId?: number): Promise<void>;
+    dismiss(data?: any, role?: string, id?: string): Promise<boolean>;
     /**
      * Get the most recently opened toast overlay.
      */
-    getTop(): HTMLIonToastElement;
+    getTop(): Promise<HTMLIonToastElement | undefined>;
 }

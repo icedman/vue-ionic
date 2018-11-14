@@ -2,7 +2,7 @@ import { createThemedClasses } from '../../utils/theme';
 export class ItemGroup {
     hostData() {
         return {
-            class: createThemedClasses(this.mode, 'item-group')
+            class: Object.assign({}, createThemedClasses(this.mode, 'item-group'), { 'item': true })
         };
     }
     static get is() { return "ion-item-group"; }

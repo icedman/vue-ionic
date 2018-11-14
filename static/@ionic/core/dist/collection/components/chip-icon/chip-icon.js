@@ -1,12 +1,15 @@
 import { createColorClasses } from '../../utils/theme';
 export class ChipIcon {
+    constructor() {
+        this.fill = 'clear';
+    }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color))
+            class: Object.assign({}, createColorClasses(this.color), { [`chip-icon-${this.fill}`]: true })
         };
     }
     render() {
-        return h("ion-icon", { name: this.name });
+        return h("ion-icon", { name: this.name, src: this.src, mode: this.mode });
     }
     static get is() { return "ion-chip-icon"; }
     static get encapsulation() { return "shadow"; }
@@ -15,6 +18,10 @@ export class ChipIcon {
             "type": String,
             "attr": "color"
         },
+        "fill": {
+            "type": String,
+            "attr": "fill"
+        },
         "mode": {
             "type": String,
             "attr": "mode"
@@ -22,6 +29,10 @@ export class ChipIcon {
         "name": {
             "type": String,
             "attr": "name"
+        },
+        "src": {
+            "type": String,
+            "attr": "src"
         }
     }; }
     static get style() { return "/**style-placeholder:ion-chip-icon:**/"; }

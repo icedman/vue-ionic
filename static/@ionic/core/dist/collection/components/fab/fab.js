@@ -1,10 +1,5 @@
 export class Fab {
     constructor() {
-        /**
-         * If true, the fab will display on the edge of the header if
-         * `vertical` is `"top"`, and on the edge of the footer if
-         * it is `"bottom"`. Should be used with a `fixed` slot.
-         */
         this.edge = false;
         this.activated = false;
     }
@@ -19,7 +14,9 @@ export class Fab {
         });
     }
     componentDidLoad() {
-        this.activatedChanged();
+        if (this.activated) {
+            this.activatedChanged();
+        }
     }
     onClick() {
         const hasList = !!this.el.querySelector('ion-fab-list');
@@ -27,9 +24,6 @@ export class Fab {
             this.activated = !this.activated;
         }
     }
-    /**
-     * Close an active FAB list container
-     */
     close() {
         this.activated = false;
     }
@@ -38,7 +32,7 @@ export class Fab {
             class: {
                 [`fab-horizontal-${this.horizontal}`]: !!this.horizontal,
                 [`fab-vertical-${this.vertical}`]: !!this.vertical,
-                ['fab-edge']: this.edge
+                'fab-edge': this.edge
             }
         };
     }

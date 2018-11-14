@@ -11,8 +11,10 @@
   position: fixed;
   align-items: center;
   justify-content: center;
+  font-family: var(--ion-font-family, inherit);
   contain: strict;
   touch-action: none;
+  user-select: none;
   z-index: 1000; }
 
 :host(.alert-top) {
@@ -108,14 +110,13 @@
   box-sizing: border-box; }
 
 :host {
-  --background: var(--ion-overlay-background-color, #fafafa);
+  --background: var(--ion-overlay-background-color, #fff);
   --max-width: 280px;
-  font-family: var(--ion-font-family, inherit);
   font-size: 14px; }
 
 .alert-wrapper {
-  border-radius: 2px;
-  box-shadow: 0 16px 20px rgba(0, 0, 0, 0.4); }
+  border-radius: 4px;
+  box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2), 0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12); }
 
 .alert-head {
   padding: 20px 23px 15px;
@@ -132,22 +133,25 @@
 
 .alert-message,
 .alert-input-group {
-  padding: 0 24px 24px;
+  padding: 20px 24px;
   color: var(--ion-text-color-step-450, #737373); }
 
 .alert-message {
   max-height: 240px;
-  font-size: 15px; }
+  font-size: 16px; }
 
 .alert-message:empty {
   padding: 0; }
+
+.alert-head + .alert-message {
+  padding-top: 0; }
 
 .alert-input {
   margin: 5px 0;
   border-bottom: 1px solid var(--ion-background-color-step-150, #d9d9d9);
   color: var(--ion-text-color, #000); }
   .alert-input::placeholder {
-    color: var(--ion-placeholder-text-color, #999);
+    color: var(--ion-placeholder-color, var(--ion-text-color-step-600, #999999));
     font-family: inherit;
     font-weight: inherit; }
 
@@ -250,7 +254,7 @@
   border-color: var(--ion-color-primary-contrast, #fff); }
 
 .alert-button-group {
-  padding: 5px 12px 7px 24px;
+  padding: 8px;
   box-sizing: border-box;
   flex-wrap: wrap-reverse;
   justify-content: flex-end; }

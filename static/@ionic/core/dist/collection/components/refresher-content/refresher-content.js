@@ -1,10 +1,10 @@
 export class RefresherContent {
     componentDidLoad() {
-        if (!this.pullingIcon) {
-            this.pullingIcon = this.config.get('ionPullIcon', 'arrow-down');
+        if (this.pullingIcon === undefined) {
+            this.pullingIcon = this.config.get('refreshingIcon', 'arrow-down');
         }
-        if (!this.refreshingSpinner) {
-            this.refreshingSpinner = this.config.get('ionRefreshingSpinner', this.config.get('spinner', 'lines'));
+        if (this.refreshingSpinner === undefined) {
+            this.refreshingSpinner = this.config.get('refreshingSpinner', this.config.get('spinner', 'lines'));
         }
     }
     render() {
