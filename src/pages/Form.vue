@@ -47,7 +47,7 @@
       </ion-item>
       <ion-item>
         <ion-label>Toggle [{{toggled}}]</ion-label>
-        <ion-toggle :checked="toggled" @click="toggled=!toggled"></ion-toggle>
+        <ion-toggle :value="toggled" @ionChange="toggled=$event.target.checked ? true : false"></ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label>Checkbox [{{checkboxed}}]</ion-label>
