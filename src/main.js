@@ -17,7 +17,7 @@ router.beforeEach((to, from, next) => {
   //   next('/auth/login')
   //   return
   // }
-  
+
   let layout
   to.matched.forEach(record => {
     if (record.meta) {

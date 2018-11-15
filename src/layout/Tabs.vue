@@ -21,7 +21,6 @@
   </ion-tab>
   -->
 
-
   <ion-tab-bar slot="bottom">
     <!-- No ion-tab, just a link that looks like a tab -->
     <ion-tab-button tab="globle"  @click="$router.push('/yetAnother')">
@@ -42,13 +41,13 @@
       <ion-label>Home</ion-label>
     </ion-tab-button>
 
-    <!-- 
+    <!--
     <router-link>
       does not seem to work
     -->
 
   </ion-tab-bar>
- </ion-tabs> 
+ </ion-tabs>
 
   </ion-app>
 
