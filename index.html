@@ -20,6 +20,7 @@
   <link rel="stylesheet" type="text/css" href="static/ionicons/dist/css/ionicons.min.css"/>
   <link rel="stylesheet" type="text/css" href="static/@ionic/core/css/ionic.bundle.css"/>
   
+  <%= htmlWebpackPlugin.options.cordova %>
   <script type="text/javascript" src="static/@ionic/core/dist/ionic.js"></script>
   </head>
   <body class="noselect" >
@@ -40,9 +41,7 @@
                                   supported by Chrome and Opera */
   }
   </style>
-  <style id="theme_data">
-  </style>
-  <template id="theme1">
+  <style>
   :root {
     --ion-color-primary: #ff0000;
     --ion-color-primary-rgb: 255,0,0;
@@ -107,5 +106,5 @@
     --ion-color-light-shade: #d7d8da;
     --ion-color-light-tint: #f5f6f9;
   }
-  </template>
+  </style>
 </html>

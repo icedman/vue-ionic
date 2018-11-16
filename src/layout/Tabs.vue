@@ -1,6 +1,5 @@
 <template>
   <ion-app id="app">
-
 <ion-tabs>
 
 <ion-tab tab="home-view">
@@ -20,7 +19,6 @@
   <!--
   </ion-tab>
   -->
-
   <ion-tab-bar slot="bottom">
     <!-- No ion-tab, just a link that looks like a tab -->
     <ion-tab-button tab="globle"  @click="$router.push('/yetAnother')">
@@ -45,7 +43,6 @@
     <router-link>
       does not seem to work
     -->
-
   </ion-tab-bar>
  </ion-tabs>
 

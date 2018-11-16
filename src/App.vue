@@ -17,7 +17,7 @@ export default {
   },
   computed: {
     layout () {
-      return this.$store.state.ui.layout || 'Header'
+      return this.$store.state.ui.layout || 'Menu'
     }
   },
   components: {

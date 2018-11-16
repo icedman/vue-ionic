@@ -1,7 +1,8 @@
 <template>
   <ion-app id="app">
     <ion-split-pane when="sm">
-      <ion-menu>
+      <ion-menu type="overlay">
+        <div class="ion-page">
         <ion-header>
           <ion-toolbar color="primary">
             <ion-title>Menu</ion-title>
@@ -33,7 +34,7 @@
           </router-link>
         </ion-list>
       </ion-content>
-
+        </div>
       </ion-menu>
 
       <div class="ion-page" main>

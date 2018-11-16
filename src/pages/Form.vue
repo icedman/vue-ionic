@@ -3,6 +3,9 @@
     <h1>{{ msg }}</h1>
     <ion-list>
       <ion-item>
+        <ion-label fixed>{{$store.getters.DEVICE_READY}}</ion-label>
+      </ion-item>
+      <ion-item>
         <ion-label fixed>App Layout</ion-label>
       </ion-item>
       <ion-item>

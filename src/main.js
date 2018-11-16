@@ -41,6 +41,12 @@ Vue.prototype.$ionic = {
   toast: document.querySelector('ion-toast-controller')
 }
 
+/* cordova */
+document.addEventListener('deviceready', onDeviceReady, false)
+function onDeviceReady () {
+  store.commit('SET_DEVICE_READY', true)
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

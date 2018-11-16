@@ -1,6 +1,7 @@
 <template>
   <ion-app id="app">
     <ion-menu name="menu" :type="type">
+      <div class="ion-page">
       <ion-header>
         <ion-toolbar color="primary">
           <ion-title>Menu</ion-title>
@@ -32,6 +33,7 @@
           </router-link>
         </ion-list>
       </ion-content>
+      </div>
     </ion-menu>
 
     <div class="ion-page" main>
@@ -60,7 +62,8 @@
 export default {
   data () {
     return {
-      type: 'reveal' // reveal, push, overlay
+      type: 'push' // reveal, push, overlay
+      // reveal is buggy on ios
     }
   }
 }
