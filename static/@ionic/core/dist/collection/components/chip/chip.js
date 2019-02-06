@@ -1,12 +1,21 @@
 import { createColorClasses } from '../../utils/theme';
 export class Chip {
+    constructor() {
+        this.outline = false;
+    }
     hostData() {
         return {
-            class: createColorClasses(this.color),
+            class: Object.assign({}, createColorClasses(this.color), { 'chip-outline': this.outline, 'ion-activatable': true })
         };
     }
+    render() {
+        return [
+            h("slot", null),
+            this.mode === 'md' ? h("ion-ripple-effect", null) : null
+        ];
+    }
     static get is() { return "ion-chip"; }
-    static get encapsulation() { return "scoped"; }
+    static get encapsulation() { return "shadow"; }
     static get properties() { return {
         "color": {
             "type": String,
@@ -15,6 +24,10 @@ export class Chip {
         "mode": {
             "type": String,
             "attr": "mode"
+        },
+        "outline": {
+            "type": Boolean,
+            "attr": "outline"
         }
     }; }
     static get style() { return "/**style-placeholder:ion-chip:**/"; }

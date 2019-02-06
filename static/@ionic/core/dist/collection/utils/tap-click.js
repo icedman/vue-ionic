@@ -1,17 +1,15 @@
 import { now, pointerCoord } from './helpers';
-export function startTapClick(doc) {
+export function startTapClick(doc, config) {
     let lastTouch = -MOUSE_WAIT * 10;
     let lastActivated = 0;
-    let cancelled = false;
-    let scrolling = false;
+    let scrollingEl;
     let activatableEle;
+    let activeRipple;
     let activeDefer;
+    const useRippleEffect = config.getBoolean('animated', true) && config.getBoolean('rippleEffect', true);
     const clearDefers = new WeakMap();
-    function onBodyClick(ev) {
-        if (cancelled || scrolling) {
-            ev.preventDefault();
-            ev.stopPropagation();
-        }
+    function isScrolling() {
+        return scrollingEl !== undefined && scrollingEl.parentElement !== null;
     }
     function onTouchStart(ev) {
         lastTouch = now(ev);
@@ -40,23 +38,16 @@ export function startTapClick(doc) {
             removeActivated(false);
             activatableEle = undefined;
         }
-        cancelled = true;
     }
     function pointerDown(ev) {
-        if (activatableEle || scrolling) {
+        if (activatableEle || isScrolling()) {
             return;
         }
-        cancelled = false;
+        scrollingEl = undefined;
         setActivatedElement(getActivatableTarget(ev), ev);
     }
     function pointerUp(ev) {
-        if (scrolling) {
-            return;
-        }
         setActivatedElement(undefined, ev);
-        if (cancelled && ev.cancelable) {
-            ev.preventDefault();
-        }
     }
     function setActivatedElement(el, ev) {
         if (el && el === activatableEle) {
@@ -80,29 +71,33 @@ export function startTapClick(doc) {
                 clearTimeout(deferId);
                 clearDefers.delete(el);
             }
+            const delay = isInstant(el) ? 0 : ADD_ACTIVATED_DEFERS;
             el.classList.remove(ACTIVATED);
             activeDefer = setTimeout(() => {
                 addActivated(el, x, y);
                 activeDefer = undefined;
-            }, ADD_ACTIVATED_DEFERS);
+            }, delay);
         }
         activatableEle = el;
     }
     function addActivated(el, x, y) {
         lastActivated = Date.now();
         el.classList.add(ACTIVATED);
-        const rippleEffect = getRippleEffect(el);
+        const rippleEffect = useRippleEffect && getRippleEffect(el);
         if (rippleEffect && rippleEffect.addRipple) {
-            rippleEffect.addRipple(x, y);
+            activeRipple = rippleEffect.addRipple(x, y);
         }
     }
     function removeActivated(smooth) {
+        if (activeRipple !== undefined) {
+            activeRipple.then(remove => remove());
+        }
         const active = activatableEle;
         if (!active) {
             return;
         }
         const time = CLEAR_STATE_DEFERS - Date.now() + lastActivated;
-        if (smooth && time > 0) {
+        if (smooth && time > 0 && !isInstant(active)) {
             const deferId = setTimeout(() => {
                 active.classList.remove(ACTIVATED);
                 clearDefers.delete(active);
@@ -113,15 +108,14 @@ export function startTapClick(doc) {
             active.classList.remove(ACTIVATED);
         }
     }
-    doc.body.addEventListener('click', onBodyClick, true);
-    doc.body.addEventListener('ionScrollStart', () => {
-        scrolling = true;
+    doc.addEventListener('ionScrollStart', ev => {
+        scrollingEl = ev.target;
         cancelActive();
     });
-    doc.body.addEventListener('ionScrollEnd', () => {
-        scrolling = false;
+    doc.addEventListener('ionScrollEnd', () => {
+        scrollingEl = undefined;
     });
-    doc.body.addEventListener('ionGestureCaptured', cancelActive);
+    doc.addEventListener('ionGestureCaptured', cancelActive);
     doc.addEventListener('touchstart', onTouchStart, true);
     doc.addEventListener('touchcancel', onTouchEnd, true);
     doc.addEventListener('touchend', onTouchEnd, true);
@@ -133,14 +127,17 @@ function getActivatableTarget(ev) {
         const path = ev.composedPath();
         for (let i = 0; i < path.length - 2; i++) {
             const el = path[i];
-            if (el.hasAttribute && el.hasAttribute('ion-activatable')) {
+            if (el.classList && el.classList.contains('ion-activatable')) {
                 return el;
             }
         }
     }
     else {
-        return ev.target.closest('[ion-activatable]');
+        return ev.target.closest('.ion-activatable');
     }
+}
+function isInstant(el) {
+    return el.classList.contains('ion-activatable-instant');
 }
 function getRippleEffect(el) {
     if (el.shadowRoot) {

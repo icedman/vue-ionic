@@ -13,7 +13,18 @@
   color: currentColor; }
 
 :host {
-  padding: 16px; }
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: 16px;
+      padding-inline-start: 16px;
+      -webkit-padding-end: 16px;
+      padding-inline-end: 16px; } }
 
 ::slotted(ion-card-title:not(:first-child)),
 ::slotted(ion-card-subtitle:not(:first-child)) {

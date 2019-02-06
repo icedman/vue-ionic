@@ -30,9 +30,6 @@ export class Content {
         this.scrollY = true;
         this.scrollEvents = false;
     }
-    onNavChanged() {
-        this.resize();
-    }
     componentWillLoad() {
         if (this.forceOverscroll === undefined) {
             this.forceOverscroll = this.mode === 'ios' && isPlatform(this.win, 'mobile');
@@ -42,8 +39,12 @@ export class Content {
         this.resize();
     }
     componentDidUnload() {
-        if (this.watchDog) {
-            clearInterval(this.watchDog);
+        this.onScrollEnd();
+    }
+    onClick(ev) {
+        if (this.isScrolling) {
+            ev.preventDefault();
+            ev.stopPropagation();
         }
     }
     resize() {
@@ -153,10 +154,12 @@ export class Content {
     onScrollEnd() {
         clearInterval(this.watchDog);
         this.watchDog = null;
-        this.isScrolling = false;
-        this.ionScrollEnd.emit({
-            isScrolling: false
-        });
+        if (this.isScrolling) {
+            this.isScrolling = false;
+            this.ionScrollEnd.emit({
+                isScrolling: false
+            });
+        }
     }
     hostData() {
         return {
@@ -257,8 +260,9 @@ export class Content {
             "composed": true
         }]; }
     static get listeners() { return [{
-            "name": "body:ionNavDidChange",
-            "method": "onNavChanged"
+            "name": "click",
+            "method": "onClick",
+            "capture": true
         }]; }
     static get style() { return "/**style-placeholder:ion-content:**/"; }
 }

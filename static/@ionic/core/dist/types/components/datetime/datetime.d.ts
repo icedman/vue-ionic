@@ -1,20 +1,18 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter } from '../../stencil.core';
-import { DatetimeOptions, InputChangeEvent, Mode, StyleEvent } from '../../interface';
+import { DatetimeChangeEventDetail, DatetimeOptions, Mode, StyleEventDetail } from '../../interface';
 export declare class Datetime implements ComponentInterface {
     private inputId;
-    private labelId;
-    private picker?;
     private locale;
     private datetimeMin;
     private datetimeMax;
     private datetimeValue;
+    private buttonEl?;
     el: HTMLIonDatetimeElement;
-    text?: string | null;
+    isExpanded: boolean;
     pickerCtrl: HTMLIonPickerControllerElement;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -22,9 +20,13 @@ export declare class Datetime implements ComponentInterface {
      */
     name: string;
     /**
-     * If `true`, the user cannot interact with the datetime. Defaults to `false`.
+     * If `true`, the user cannot interact with the datetime.
      */
     disabled: boolean;
+    /**
+     * If `true`, the datetime appears normal but is not interactive.
+     */
+    readonly: boolean;
     protected disabledChanged(): void;
     /**
      * The minimum datetime allowed. Value must be a date string
@@ -62,11 +64,11 @@ export declare class Datetime implements ComponentInterface {
      */
     pickerFormat?: string;
     /**
-     * The text to display on the picker's cancel button. Default: `Cancel`.
+     * The text to display on the picker's cancel button.
      */
     cancelText: string;
     /**
-     * The text to display on the picker's "Done" button. Default: `Done`.
+     * The text to display on the picker's "Done" button.
      */
     doneText: string;
     /**
@@ -155,12 +157,22 @@ export declare class Datetime implements ComponentInterface {
     /**
      * Emitted when the value (selected date) has changed.
      */
-    ionChange: EventEmitter<InputChangeEvent>;
+    ionChange: EventEmitter<DatetimeChangeEventDetail>;
+    /**
+     * Emitted when the datetime has focus.
+     */
+    ionFocus: EventEmitter<void>;
+    /**
+     * Emitted when the datetime loses focus.
+     */
+    ionBlur: EventEmitter<void>;
     /**
      * Emitted when the styles change.
+     * @internal
      */
-    ionStyle: EventEmitter<StyleEvent>;
+    ionStyle: EventEmitter<StyleEventDetail>;
     componentWillLoad(): void;
+    onClick(): void;
     /**
      * Opens the datetime overlay.
      */
@@ -172,11 +184,20 @@ export declare class Datetime implements ComponentInterface {
     private validate;
     private calcMinMax;
     private validateColumn;
-    private updateText;
+    private getText;
     private hasValue;
+    private setFocus;
+    private onFocus;
+    private onBlur;
     hostData(): {
+        'role': string;
+        'aria-disabled': string | null;
+        'aria-expanded': string;
+        'aria-haspopup': string;
+        'aria-labelledby': string;
         class: {
             'datetime-disabled': boolean;
+            'datetime-readonly': boolean;
             'datetime-placeholder': boolean;
             'in-item': boolean;
         };

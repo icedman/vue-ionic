@@ -29,8 +29,7 @@ export declare class VirtualScroll implements ComponentInterface {
      * the scrollable area. This height value can only use `px` units.
      * Note that the actual rendered size of each cell comes from the
      * app's CSS, whereas this approximation is used to help calculate
-     * initial dimensions before the item has been rendered. Default is
-     * `45`.
+     * initial dimensions before the item has been rendered.
      */
     approxItemHeight: number;
     /**
@@ -40,17 +39,17 @@ export declare class VirtualScroll implements ComponentInterface {
      * the scrollable area. This height value can only use `px` units.
      * Note that the actual rendered size of each cell comes from the
      * app's CSS, whereas this approximation is used to help calculate
-     * initial dimensions before the item has been rendered. Default is `40px`.
+     * initial dimensions before the item has been rendered.
      */
     approxHeaderHeight: number;
     /**
      * The approximate width of each footer template's cell.
      * This dimension is used to help determine how many cells should
      * be created when initialized, and to help calculate the height of
-     * the scrollable area. This value can use either `px` or `%` units.
+     * the scrollable area. This height value can only use `px` units.
      * Note that the actual rendered size of each cell comes from the
      * app's CSS, whereas this approximation is used to help calculate
-     * initial dimensions before the item has been rendered. Default is `100%`.
+     * initial dimensions before the item has been rendered.
      */
     approxFooterHeight: number;
     /**
@@ -128,17 +127,17 @@ export declare class VirtualScroll implements ComponentInterface {
      *
      * The subset of items to be updated can are specifing by an offset and a length.
      */
-    markDirty(offset: number, len?: number): void;
+    checkRange(offset: number, len?: number): void;
     /**
      * This method marks the tail the items array as dirty, so they can be re-rendered.
      *
      * It's equivalent to calling:
      *
-     * ```
-     * virtualScroll.markDirty(lastItemLen, items.length - lastItemLen);
+     * ```js
+     * virtualScroll.checkRange(lastItemLen);
      * ```
      */
-    markDirtyTail(): void;
+    checkEnd(): void;
     private updateVirtualScroll;
     private readVS;
     private writeVS;

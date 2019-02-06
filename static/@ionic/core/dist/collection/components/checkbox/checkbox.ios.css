@@ -1,11 +1,11 @@
 :host {
   /**
+   * @prop --size: Size of the checkbox icon
    * @prop --background: Background of the checkbox icon
    * @prop --border-color: Border color of the checkbox icon
    * @prop --border-radius: Border radius of the checkbox icon
    * @prop --border-width: Border width of the checkbox icon
    * @prop --border-style: Border style of the checkbox icon
-   * @prop --size: Size of the checkbox icon
    * @prop --transition: Transition of the checkbox icon
    * @prop --background-checked: Background of the checkbox icon when checked
    * @prop --border-color-checked: Border color of the checkbox icon when checked
@@ -14,6 +14,7 @@
   --background-checked: var(--ion-color-primary, #3880ff);
   --border-color-checked: var(--ion-color-primary, #3880ff);
   --checkmark-color: var(--ion-color-primary-contrast, #fff);
+  --transition: none;
   display: inline-block;
   position: relative;
   user-select: none;
@@ -24,10 +25,13 @@
   --border-color-checked: var(--ion-color-base);
   --checkmark-color: var(--ion-color-contrast); }
 
-input {
+button {
   left: 0;
   top: 0;
-  margin: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -36,72 +40,80 @@ input {
   cursor: pointer;
   appearance: none;
   outline: none; }
+  :host-context([dir=rtl]) button {
+    right: 0; }
+  button::-moz-focus-inner {
+    border: 0; }
 
 .checkbox-icon {
   border-radius: var(--border-radius);
+  display: block;
   position: relative;
-  width: var(--size);
-  height: var(--size);
+  width: 100%;
+  height: 100%;
   transition: var(--transition);
   border-width: var(--border-width);
   border-style: var(--border-style);
   border-color: var(--border-color);
   background: var(--background);
-  contain: strict; }
+  contain: strict;
+  box-sizing: border-box; }
 
-.checkbox-inner {
-  border-color: var(--checkmark-color);
+.checkbox-icon path {
+  fill: none;
+  stroke: var(--checkmark-color);
+  stroke-width: 1;
   opacity: 0; }
 
 :host(.checkbox-checked) .checkbox-icon {
   border-color: var(--border-color-checked);
   background: var(--background-checked); }
 
-:host(.checkbox-checked) .checkbox-inner {
+:host(.checkbox-checked) .checkbox-icon path {
   opacity: 1; }
 
 :host(.checkbox-disabled) {
   pointer-events: none; }
 
 :host {
-  --size: 24px;
   --border-radius: 50%;
   --border-width: 1px;
   --border-style: solid;
-  --border-color: var(--ion-item-border-color, var(--ion-border-color, #c8c7cc));
-  --background: var(--ion-item-background, var(--ion-background-color, #fff)); }
-
-.checkbox-inner {
-  left: calc(var(--size) / 2.5 - 1px);
-  top: calc(var(--size) / 6);
-  position: absolute;
-  width: calc(var(--size) / 6 + 1px);
-  height: calc(var(--size) / 2);
-  transform: rotate(45deg);
-  border-width: 1px;
-  border-top-width: 0;
-  border-left-width: 0;
-  border-style: solid; }
+  --border-color: var(--ion-item-border-color, var(--ion-border-color, var(--ion-color-step-150, #c8c7cc)));
+  --background: var(--ion-item-background, var(--ion-background-color, #fff));
+  --size: 26px;
+  width: var(--size);
+  height: var(--size); }
 
 :host(.checkbox-disabled) {
   opacity: 0.3; }
 
-:host(.checkbox-key) .checkbox-icon::after {
-  border-radius: 50%;
-  left: -9px;
-  top: -9px;
-  display: block;
-  position: absolute;
-  width: 36px;
-  height: 36px;
-  background: var(--ion-color-primary-tint, #4c8dff);
-  content: "";
-  opacity: .2; }
-
 :host(.in-item) {
-  margin: 10px 8px 9px 0;
+  margin-left: 0;
+  margin-right: 8px;
+  margin-top: 10px;
+  margin-bottom: 9px;
   display: block;
   position: static; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host(.in-item) {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: 0;
+      margin-inline-start: 0;
+      -webkit-margin-end: 8px;
+      margin-inline-end: 8px; } }
 
 :host(.in-item[slot="start"]) {
-  margin: 8px 16px 8px 2px; }
+  margin-left: 2px;
+  margin-right: 16px;
+  margin-top: 8px;
+  margin-bottom: 8px; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host(.in-item[slot="start"]) {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: 2px;
+      margin-inline-start: 2px;
+      -webkit-margin-end: 16px;
+      margin-inline-end: 16px; } }

@@ -1,5 +1,5 @@
 import { BACKDROP, dismiss, eventMethod, present } from '../../utils/overlays';
-import { createThemedClasses, getClassMap } from '../../utils/theme';
+import { getClassMap } from '../../utils/theme';
 import { iosEnterAnimation } from './animations/ios.enter';
 import { iosLeaveAnimation } from './animations/ios.leave';
 import { mdEnterAnimation } from './animations/md.enter';
@@ -18,12 +18,6 @@ export class Loading {
         if (this.spinner === undefined) {
             this.spinner = this.config.get('loadingSpinner', this.mode === 'ios' ? 'lines' : 'crescent');
         }
-    }
-    componentDidLoad() {
-        this.ionLoadingDidLoad.emit();
-    }
-    componentDidUnload() {
-        this.ionLoadingDidUnload.emit();
     }
     onBackdropTap() {
         this.dismiss(undefined, BACKDROP);
@@ -47,33 +41,28 @@ export class Loading {
         return eventMethod(this.el, 'ionLoadingWillDismiss');
     }
     hostData() {
-        const themedClasses = this.translucent
-            ? createThemedClasses(this.mode, 'loading-translucent')
-            : {};
         return {
             style: {
                 zIndex: 40000 + this.overlayIndex
             },
-            class: Object.assign({}, createThemedClasses(this.mode, 'loading'), themedClasses, getClassMap(this.cssClass))
+            class: Object.assign({}, getClassMap(this.cssClass), { 'loading-translucent': this.translucent })
         };
     }
     render() {
         return [
-            h("ion-backdrop", { visible: this.showBackdrop, tappable: false }),
+            h("ion-backdrop", { visible: this.showBackdrop, tappable: this.backdropDismiss }),
             h("div", { class: "loading-wrapper", role: "dialog" },
-                this.spinner !== 'hide' && (h("div", { class: "loading-spinner" },
+                this.spinner && (h("div", { class: "loading-spinner" },
                     h("ion-spinner", { name: this.spinner }))),
                 this.message && h("div", { class: "loading-content" }, this.message))
         ];
     }
     static get is() { return "ion-loading"; }
+    static get encapsulation() { return "scoped"; }
     static get properties() { return {
         "animated": {
             "type": Boolean,
             "attr": "animated"
-        },
-        "animationCtrl": {
-            "connect": "ion-animation-controller"
         },
         "backdropDismiss": {
             "type": Boolean,
@@ -144,18 +133,6 @@ export class Loading {
         }
     }; }
     static get events() { return [{
-            "name": "ionLoadingDidUnload",
-            "method": "ionLoadingDidUnload",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
-            "name": "ionLoadingDidLoad",
-            "method": "ionLoadingDidLoad",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
             "name": "ionLoadingDidPresent",
             "method": "didPresent",
             "bubbles": true,

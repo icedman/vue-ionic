@@ -3,11 +3,9 @@ import { ComponentInterface, EventEmitter } from '../../stencil.core';
 import { Color, Mode, RouterDirection } from '../../interface';
 export declare class FabButton implements ComponentInterface {
     el: HTMLElement;
-    keyFocus: boolean;
     win: Window;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -17,11 +15,11 @@ export declare class FabButton implements ComponentInterface {
      */
     color?: Color;
     /**
-     * If `true`, the fab button will be show a close icon. Defaults to `false`.
+     * If `true`, the fab button will be show a close icon.
      */
     activated: boolean;
     /**
-     * If `true`, the user cannot interact with the fab button. Defaults to `false`.
+     * If `true`, the user cannot interact with the fab button.
      */
     disabled: boolean;
     /**
@@ -33,21 +31,23 @@ export declare class FabButton implements ComponentInterface {
      * When using a router, it specifies the transition direction when navigating to
      * another page using `href`.
      */
-    routerDirection?: RouterDirection;
+    routerDirection: RouterDirection;
     /**
      * If `true`, the fab button will show when in a fab-list.
      */
     show: boolean;
     /**
-     * If `true`, the fab button will be translucent. Defaults to `false`.
+     * If `true`, the fab button will be translucent.
      */
     translucent: boolean;
     /**
      * The type of the button.
-     * Possible values are: `"submit"`, `"reset"` and `"button"`.
-     * Default value is: `"button"`
      */
     type: 'submit' | 'reset' | 'button';
+    /**
+     * The size of the button. Set this to `small` in order to have a mini fab.
+     */
+    size?: 'small';
     /**
      * Emitted when the button has focus.
      */
@@ -57,10 +57,9 @@ export declare class FabButton implements ComponentInterface {
      */
     ionBlur: EventEmitter<void>;
     private onFocus;
-    private onKeyUp;
     private onBlur;
     hostData(): {
-        'ion-activatable': boolean;
+        'aria-disabled': string | null;
         class: {
             'fab-button-in-list': boolean;
             'fab-button-translucent-in-list': boolean;
@@ -68,15 +67,18 @@ export declare class FabButton implements ComponentInterface {
             'fab-button-show': boolean;
             'fab-button-disabled': boolean;
             'fab-button-translucent': boolean;
-            'focused': boolean;
+            'ion-activatable': boolean;
+            'ion-focusable': boolean;
         } | {
+            [x: string]: boolean;
             'fab-button-in-list': boolean;
             'fab-button-translucent-in-list': boolean;
             'fab-button-close-active': boolean;
             'fab-button-show': boolean;
             'fab-button-disabled': boolean;
             'fab-button-translucent': boolean;
-            'focused': boolean;
+            'ion-activatable': boolean;
+            'ion-focusable': boolean;
         };
     };
     render(): JSX.Element;

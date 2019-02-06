@@ -1,5 +1,1 @@
-/*!
- * (C) Ionic http://ionicframework.com - MIT License
- * Built with http://stenciljs.com
- */
-const{h:o}=window.Ionic;export{l as PLATFORMS_MAP,m as getPlatforms,k as isPlatform,n as setupPlatforms}from"./chunk-c23403d0.js";function i(o){const n=window,i=n.Ionic;if(!i||!i.config||"Object"===i.config.constructor.name)return n.Ionic=n.Ionic||{},n.Ionic.config=Object.assign({},n.Ionic.config,o),n.Ionic.config;console.error("ionic config was already initialized")}export{i as setupConfig};
+export{b as PLATFORMS_MAP,c as getPlatforms,a as isPlatform,d as setupPlatforms}from"./chunk-99b2d1db.js";export{b as LIFECYCLE_WILL_ENTER,c as LIFECYCLE_DID_ENTER,a as LIFECYCLE_WILL_LEAVE,d as LIFECYCLE_DID_LEAVE,e as LIFECYCLE_WILL_UNLOAD}from"./chunk-90d954cd.js";function o(o){const n=window,c=n.Ionic;if(!c||!c.config||"Object"===c.config.constructor.name)return n.Ionic=n.Ionic||{},n.Ionic.config=Object.assign({},n.Ionic.config,o),n.Ionic.config;console.error("ionic config was already initialized")}export{o as setupConfig};

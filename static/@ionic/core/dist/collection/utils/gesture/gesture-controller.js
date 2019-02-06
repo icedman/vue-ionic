@@ -1,4 +1,4 @@
-export class GestureController {
+class GestureController {
     constructor(doc) {
         this.doc = doc;
         this.gestureId = 0;
@@ -32,8 +32,8 @@ export class GestureController {
         if (maxPriority === priority) {
             this.capturedId = id;
             requestedStart.clear();
-            const event = new CustomEvent('ionGestureCaptured', { detail: gestureName });
-            this.doc.body.dispatchEvent(event);
+            const event = new CustomEvent('ionGestureCaptured', { detail: { gestureName } });
+            this.doc.dispatchEvent(event);
             return true;
         }
         requestedStart.delete(id);
@@ -98,12 +98,12 @@ export class GestureController {
         return this.gestureId;
     }
 }
-export class GestureDelegate {
+class GestureDelegate {
     constructor(ctrl, id, name, priority, disableScroll) {
         this.id = id;
         this.name = name;
-        this.priority = priority;
         this.disableScroll = disableScroll;
+        this.priority = priority * 1000000 + id;
         this.ctrl = ctrl;
     }
     canStart() {
@@ -141,7 +141,7 @@ export class GestureDelegate {
         this.ctrl = undefined;
     }
 }
-export class BlockerDelegate {
+class BlockerDelegate {
     constructor(ctrl, id, disable, disableScroll) {
         this.id = id;
         this.disable = disable;

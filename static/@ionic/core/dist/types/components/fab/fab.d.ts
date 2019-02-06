@@ -4,12 +4,10 @@ export declare class Fab implements ComponentInterface {
     el: HTMLElement;
     /**
      * Where to align the fab horizontally in the viewport.
-     * Possible values are: `"center"`, `"start"`, `"end"`.
      */
     horizontal?: 'start' | 'end' | 'center';
     /**
      * Where to align the fab vertically in the viewport.
-     * Possible values are: `"top"`, `"center"`, `"bottom"`.
      */
     vertical?: 'top' | 'bottom' | 'center';
     /**

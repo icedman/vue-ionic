@@ -1,4 +1,4 @@
-import { hapticSelectionChanged } from '../../utils';
+import { hapticSelectionChanged } from '../../utils/haptic';
 import { clamp } from '../../utils/helpers';
 export class PickerColumnCmp {
     constructor() {
@@ -25,7 +25,7 @@ export class PickerColumnCmp {
             this.optHeight = (colEl.firstElementChild ? colEl.firstElementChild.clientHeight : 0);
         }
         this.refresh();
-        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
+        this.gesture = (await import('../../utils/gesture')).createGesture({
             el: this.el,
             queue: this.queue,
             gestureName: 'picker-swipe',
@@ -44,6 +44,10 @@ export class PickerColumnCmp {
     componentDidUnload() {
         cancelAnimationFrame(this.rafId);
         clearTimeout(this.tmrId);
+        if (this.gesture) {
+            this.gesture.destroy();
+            this.gesture = undefined;
+        }
     }
     setSelected(selectedIndex, duration) {
         const y = (selectedIndex > -1) ? -(selectedIndex * this.optHeight) : 0;
@@ -59,7 +63,7 @@ export class PickerColumnCmp {
         let translateZ = 0;
         const { col, rotateFactor } = this;
         const selectedIndex = col.selectedIndex = this.indexForY(-y);
-        const durationStr = (duration === 0) ? null : duration + 'ms';
+        const durationStr = (duration === 0) ? '' : duration + 'ms';
         const scaleStr = `scale(${this.scaleFactor})`;
         const children = this.optsEl.children;
         for (let i = 0; i < children.length; i++) {
@@ -253,6 +257,8 @@ export class PickerColumnCmp {
             "context": "queue"
         }
     }; }
+    static get style() { return "/**style-placeholder:ion-picker-column:**/"; }
+    static get styleMode() { return "/**style-id-placeholder:ion-picker-column:**/"; }
 }
 const PICKER_OPT_SELECTED = 'picker-opt-selected';
 const DECELERATION_FRICTION = 0.97;

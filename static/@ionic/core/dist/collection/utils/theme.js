@@ -10,7 +10,7 @@ export function createColorClasses(color) {
 export function createThemedClasses(mode, name) {
     return {
         [name]: true,
-        [`${name}-${mode}`]: !!mode
+        [`${name}-${mode}`]: mode !== undefined
     };
 }
 export function getClassList(classes) {
@@ -28,8 +28,9 @@ export function getClassMap(classes) {
     getClassList(classes).forEach(c => map[c] = true);
     return map;
 }
+const SCHEME = /^[a-z][a-z0-9+\-.]*:/;
 export async function openURL(win, url, ev, direction) {
-    if (url != null && url[0] !== '#' && url.indexOf('://') === -1) {
+    if (url != null && url[0] !== '#' && !SCHEME.test(url)) {
         const router = win.document.querySelector('ion-router');
         if (router) {
             if (ev != null) {

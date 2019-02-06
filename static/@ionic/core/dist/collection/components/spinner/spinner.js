@@ -48,7 +48,7 @@ export class Spinner {
             "attr": "duration"
         },
         "name": {
-            "type": "Any",
+            "type": String,
             "attr": "name"
         },
         "paused": {

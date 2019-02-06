@@ -1,19 +1,26 @@
-import { clamp, renderHiddenInput } from '../../utils/helpers';
+import { clamp, findItemLabel, renderHiddenInput } from '../../utils/helpers';
 import { hostContext } from '../../utils/theme';
 import { convertDataToISO, convertFormatToKey, convertToArrayOfNumbers, convertToArrayOfStrings, dateDataSortValue, dateSortValue, dateValueRange, daysInMonth, getValueFromFormat, parseDate, parseTemplate, renderDatetime, renderTextFormat, updateDate } from './datetime-util';
 export class Datetime {
     constructor() {
         this.inputId = `ion-dt-${datetimeIds++}`;
-        this.labelId = `${this.inputId}-lbl`;
         this.locale = {};
         this.datetimeMin = {};
         this.datetimeMax = {};
         this.datetimeValue = {};
+        this.isExpanded = false;
         this.name = this.inputId;
         this.disabled = false;
+        this.readonly = false;
         this.displayFormat = 'MMM D, YYYY';
         this.cancelText = 'Cancel';
         this.doneText = 'Done';
+        this.onFocus = () => {
+            this.ionFocus.emit();
+        };
+        this.onBlur = () => {
+            this.ionBlur.emit();
+        };
     }
     disabledChanged() {
         this.emitStyle();
@@ -35,29 +42,38 @@ export class Datetime {
         this.updateDatetimeValue(this.value);
         this.emitStyle();
     }
+    onClick() {
+        this.setFocus();
+        this.open();
+    }
     async open() {
-        if (this.disabled) {
+        if (this.disabled || this.isExpanded) {
             return;
         }
         const pickerOptions = this.generatePickerOptions();
-        const picker = this.picker = await this.pickerCtrl.create(pickerOptions);
-        await this.validate();
+        const picker = await this.pickerCtrl.create(pickerOptions);
+        this.isExpanded = true;
+        picker.onDidDismiss().then(() => {
+            this.isExpanded = false;
+            this.setFocus();
+        });
+        await this.validate(picker);
         await picker.present();
     }
     emitStyle() {
         this.ionStyle.emit({
             'interactive': true,
             'datetime': true,
+            'has-placeholder': this.placeholder != null,
             'has-value': this.hasValue(),
             'interactive-disabled': this.disabled,
         });
     }
     updateDatetimeValue(value) {
         updateDate(this.datetimeValue, value);
-        this.updateText();
     }
     generatePickerOptions() {
-        const pickerOptions = Object.assign({}, this.pickerOptions, { columns: this.generateColumns() });
+        const pickerOptions = Object.assign({ mode: this.mode }, this.pickerOptions, { columns: this.generateColumns() });
         const buttons = pickerOptions.buttons;
         if (!buttons || buttons.length === 0) {
             pickerOptions.buttons = [
@@ -121,11 +137,11 @@ export class Datetime {
         });
         return divyColumns(columns);
     }
-    async validate() {
+    async validate(picker) {
         const today = new Date();
         const minCompareVal = dateDataSortValue(this.datetimeMin);
         const maxCompareVal = dateDataSortValue(this.datetimeMax);
-        const yearCol = await this.picker.getColumn('year');
+        const yearCol = await picker.getColumn('year');
         let selectedYear = today.getFullYear();
         if (yearCol) {
             if (!yearCol.options.find(col => col.value === today.getFullYear())) {
@@ -139,21 +155,21 @@ export class Datetime {
                 }
             }
         }
-        const selectedMonth = await this.validateColumn('month', 1, minCompareVal, maxCompareVal, [selectedYear, 0, 0, 0, 0], [selectedYear, 12, 31, 23, 59]);
+        const selectedMonth = await this.validateColumn(picker, 'month', 1, minCompareVal, maxCompareVal, [selectedYear, 0, 0, 0, 0], [selectedYear, 12, 31, 23, 59]);
         const numDaysInMonth = daysInMonth(selectedMonth, selectedYear);
-        const selectedDay = await this.validateColumn('day', 2, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, 0, 0, 0], [selectedYear, selectedMonth, numDaysInMonth, 23, 59]);
-        const selectedHour = await this.validateColumn('hour', 3, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, selectedDay, 0, 0], [selectedYear, selectedMonth, selectedDay, 23, 59]);
-        await this.validateColumn('minute', 4, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, selectedDay, selectedHour, 0], [selectedYear, selectedMonth, selectedDay, selectedHour, 59]);
+        const selectedDay = await this.validateColumn(picker, 'day', 2, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, 0, 0, 0], [selectedYear, selectedMonth, numDaysInMonth, 23, 59]);
+        const selectedHour = await this.validateColumn(picker, 'hour', 3, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, selectedDay, 0, 0], [selectedYear, selectedMonth, selectedDay, 23, 59]);
+        await this.validateColumn(picker, 'minute', 4, minCompareVal, maxCompareVal, [selectedYear, selectedMonth, selectedDay, selectedHour, 0], [selectedYear, selectedMonth, selectedDay, selectedHour, 59]);
     }
-    calcMinMax(now) {
-        const todaysYear = (now || new Date()).getFullYear();
+    calcMinMax() {
+        const todaysYear = new Date().getFullYear();
         if (this.yearValues !== undefined) {
             const years = convertToArrayOfNumbers(this.yearValues, 'year');
             if (this.min === undefined) {
-                this.min = Math.min.apply(Math, years);
+                this.min = Math.min(...years).toString();
             }
             if (this.max === undefined) {
-                this.max = Math.max.apply(Math, years);
+                this.max = Math.max(...years).toString();
             }
         }
         else {
@@ -193,8 +209,8 @@ export class Datetime {
             }
         }
     }
-    async validateColumn(name, index, min, max, lowerBounds, upperBounds) {
-        const column = await this.picker.getColumn(name);
+    async validateColumn(picker, name, index, min, max, lowerBounds, upperBounds) {
+        const column = await picker.getColumn(name);
         if (!column) {
             return 0;
         }
@@ -224,34 +240,50 @@ export class Datetime {
         }
         return 0;
     }
-    updateText() {
+    getText() {
         const template = this.displayFormat || this.pickerFormat || DEFAULT_FORMAT;
-        this.text = renderDatetime(template, this.datetimeValue, this.locale);
+        return renderDatetime(template, this.datetimeValue, this.locale);
     }
     hasValue() {
         const val = this.datetimeValue;
         return Object.keys(val).length > 0;
     }
+    setFocus() {
+        if (this.buttonEl) {
+            this.buttonEl.focus();
+        }
+    }
     hostData() {
-        const addPlaceholderClass = (this.text == null && this.placeholder != null) ? true : false;
+        const { inputId, disabled, readonly, isExpanded, el, placeholder } = this;
+        const addPlaceholderClass = (this.getText() === undefined && placeholder != null) ? true : false;
+        const labelId = inputId + '-lbl';
+        const label = findItemLabel(el);
+        if (label) {
+            label.id = labelId;
+        }
         return {
+            'role': 'combobox',
+            'aria-disabled': disabled ? 'true' : null,
+            'aria-expanded': `${isExpanded}`,
+            'aria-haspopup': 'true',
+            'aria-labelledby': labelId,
             class: {
-                'datetime-disabled': this.disabled,
+                'datetime-disabled': disabled,
+                'datetime-readonly': readonly,
                 'datetime-placeholder': addPlaceholderClass,
-                'in-item': hostContext('ion-item', this.el)
+                'in-item': hostContext('ion-item', el)
             }
         };
     }
     render() {
-        let datetimeText = this.text;
-        if (datetimeText == null) {
+        let datetimeText = this.getText();
+        if (datetimeText === undefined) {
             datetimeText = this.placeholder != null ? this.placeholder : '';
         }
-        renderHiddenInput(this.el, this.name, this.value, this.disabled);
+        renderHiddenInput(true, this.el, this.name, this.value, this.disabled);
         return [
             h("div", { class: "datetime-text" }, datetimeText),
-            h("button", { type: "button", "aria-haspopup": "true", "aria-labelledby": this.labelId, "aria-disabled": this.disabled ? 'true' : null, onClick: this.open.bind(this), class: "datetime-cover" }),
-            h("slot", null)
+            h("button", { type: "button", onFocus: this.onFocus, onBlur: this.onBlur, disabled: this.disabled, ref: el => this.buttonEl = el })
         ];
     }
     static get is() { return "ion-datetime"; }
@@ -292,6 +324,9 @@ export class Datetime {
         "hourValues": {
             "type": "Any",
             "attr": "hour-values"
+        },
+        "isExpanded": {
+            "state": true
         },
         "max": {
             "type": String,
@@ -345,8 +380,9 @@ export class Datetime {
             "type": String,
             "attr": "placeholder"
         },
-        "text": {
-            "state": true
+        "readonly": {
+            "type": Boolean,
+            "attr": "readonly"
         },
         "value": {
             "type": String,
@@ -372,11 +408,27 @@ export class Datetime {
             "cancelable": true,
             "composed": true
         }, {
+            "name": "ionFocus",
+            "method": "ionFocus",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "ionBlur",
+            "method": "ionBlur",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
             "name": "ionStyle",
             "method": "ionStyle",
             "bubbles": true,
             "cancelable": true,
             "composed": true
+        }]; }
+    static get listeners() { return [{
+            "name": "click",
+            "method": "onClick"
         }]; }
     static get style() { return "/**style-placeholder:ion-datetime:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-datetime:**/"; }

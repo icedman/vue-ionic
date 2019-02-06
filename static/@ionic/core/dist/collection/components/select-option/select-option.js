@@ -5,7 +5,7 @@ export class SelectOption {
         this.selected = false;
     }
     componentWillLoad() {
-        if (this.value == null) {
+        if (this.value === undefined) {
             this.value = this.el.textContent || '';
         }
     }
@@ -22,6 +22,7 @@ export class SelectOption {
         };
     }
     static get is() { return "ion-select-option"; }
+    static get encapsulation() { return "shadow"; }
     static get properties() { return {
         "disabled": {
             "type": Boolean,
@@ -53,5 +54,6 @@ export class SelectOption {
             "cancelable": true,
             "composed": true
         }]; }
+    static get style() { return "/**style-placeholder:ion-select-option:**/"; }
 }
 let selectOptionIds = 0;

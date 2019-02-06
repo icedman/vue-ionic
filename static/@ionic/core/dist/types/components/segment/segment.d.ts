@@ -1,5 +1,5 @@
 import { ComponentInterface, EventEmitter } from '../../stencil.core';
-import { Color, Mode, TextInputChangeEvent } from '../../interface';
+import { Color, Mode, SegmentChangeEventDetail, StyleEventDetail } from '../../interface';
 export declare class Segment implements ComponentInterface {
     el: HTMLElement;
     /**
@@ -10,13 +10,16 @@ export declare class Segment implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
-     * If `true`, the user cannot interact with the segment. Defaults to `false`.
+     * If `true`, the user cannot interact with the segment.
      */
     disabled: boolean;
+    /**
+     * If `true`, the segment buttons will overflow and the user can swipe to see them.
+     */
+    scrollable: boolean;
     /**
      * the value of the segment.
      */
@@ -25,16 +28,24 @@ export declare class Segment implements ComponentInterface {
     /**
      * Emitted when the value property has changed.
      */
-    ionChange: EventEmitter<TextInputChangeEvent>;
+    ionChange: EventEmitter<SegmentChangeEventDetail>;
+    /**
+     * Emitted when the styles change.
+     */
+    ionStyle: EventEmitter<StyleEventDetail>;
     segmentClick(ev: CustomEvent): void;
+    componentWillLoad(): void;
     componentDidLoad(): void;
+    private emitStyle;
     private updateButtons;
     private getButtons;
     hostData(): {
         class: {
             'segment-disabled': boolean;
+            'segment-scrollable': boolean;
         } | {
             'segment-disabled': boolean;
+            'segment-scrollable': boolean;
         };
     };
 }

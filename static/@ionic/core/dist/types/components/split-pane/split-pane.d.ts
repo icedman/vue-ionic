@@ -8,7 +8,21 @@ export declare class SplitPane implements ComponentInterface {
     isServer: boolean;
     win: Window;
     /**
-     * If `true`, the split pane will be hidden. Defaults to `false`.
+     * The content `id` of the split-pane's main content.
+     * This property can be used instead of the `[main]` attribute to select the `main`
+     * content of the split-pane.
+     *
+     * ```html
+     * <ion-split-pane content-id="my-content">
+     *   <ion-menu></ion-menu>
+     *   <div id="my-content">
+     * </ion-split-pane>
+     * ```
+     *
+     */
+    contentId?: string;
+    /**
+     * If `true`, the split pane will be hidden.
      */
     disabled: boolean;
     /**
@@ -18,15 +32,11 @@ export declare class SplitPane implements ComponentInterface {
      */
     when: string | boolean;
     /**
-     * Emitted when the split pane is visible.
-     */
-    ionChange: EventEmitter<{
-        visible: boolean;
-    }>;
-    /**
      * Expression to be called when the split-pane visibility has changed
      */
-    ionSplitPaneVisible: EventEmitter;
+    ionSplitPaneVisible: EventEmitter<{
+        visible: boolean;
+    }>;
     visibleChanged(visible: boolean): void;
     componentDidLoad(): void;
     componentDidUnload(): void;

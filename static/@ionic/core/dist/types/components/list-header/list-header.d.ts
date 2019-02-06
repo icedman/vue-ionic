@@ -4,7 +4,6 @@ import { Color, Mode } from '../../interface';
 export declare class ListHeader implements ComponentInterface {
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -14,7 +13,7 @@ export declare class ListHeader implements ComponentInterface {
      */
     color?: Color;
     hostData(): {
-        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap | undefined;
+        class: import("../../interface").CssClassMap | undefined;
     };
     render(): JSX.Element;
 }

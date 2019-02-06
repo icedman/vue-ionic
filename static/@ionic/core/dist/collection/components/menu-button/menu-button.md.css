@@ -1,6 +1,8 @@
 :host {
+  /**
+   * @prop --color: Color of the menu button
+   */
   color: var(--color);
-  pointer-events: all;
   text-align: center;
   text-decoration: none;
   text-overflow: ellipsis;
@@ -20,8 +22,14 @@ button {
   text-align: inherit;
   white-space: inherit;
   color: inherit;
-  margin: 0;
-  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   display: flex;
@@ -41,8 +49,14 @@ button {
   appearance: none; }
 
 ion-icon {
-  margin: 0;
-  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   pointer-events: none; }
 
 :host(.ion-color) .button-native {
@@ -52,7 +66,18 @@ ion-icon {
   --color: initial; }
 
 button {
-  padding: 0 8px; }
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 0;
+  padding-bottom: 0; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    button {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: 8px;
+      padding-inline-start: 8px;
+      -webkit-padding-end: 8px;
+      padding-inline-end: 8px; } }
 
 ion-icon {
   font-size: 26px; }

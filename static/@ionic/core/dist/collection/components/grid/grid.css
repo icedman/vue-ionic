@@ -14,22 +14,85 @@
    * @prop --ion-grid-width-lg: Width of the fixed Grid on lg screens
    * @prop --ion-grid-width-xl: Width of the fixed Grid on xl screens
    */
-  padding: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+  padding-left: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+  padding-right: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+  padding-top: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+  padding-bottom: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
   margin-left: auto;
   margin-right: auto;
   display: block; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+      padding-inline-start: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+      -webkit-padding-end: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+      padding-inline-end: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px)); } }
   @media (min-width: 576px) {
     :host {
-      padding: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px)); } }
+      padding-left: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+      padding-right: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+      padding-top: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+      padding-bottom: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px)); }
+      @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+        :host {
+          padding-left: unset;
+          padding-right: unset;
+          -webkit-padding-start: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+          padding-inline-start: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+          -webkit-padding-end: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+          padding-inline-end: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px)); } } }
   @media (min-width: 768px) {
     :host {
-      padding: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px)); } }
+      padding-left: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+      padding-right: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+      padding-top: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+      padding-bottom: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px)); }
+      @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+        :host {
+          padding-left: unset;
+          padding-right: unset;
+          -webkit-padding-start: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+          padding-inline-start: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+          -webkit-padding-end: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+          padding-inline-end: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px)); } } }
   @media (min-width: 992px) {
     :host {
-      padding: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px)); } }
+      padding-left: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+      padding-right: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+      padding-top: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+      padding-bottom: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px)); }
+      @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+        :host {
+          padding-left: unset;
+          padding-right: unset;
+          -webkit-padding-start: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+          padding-inline-start: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+          -webkit-padding-end: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+          padding-inline-end: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px)); } } }
   @media (min-width: 1200px) {
     :host {
-      padding: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px)); } }
+      padding-left: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+      padding-right: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+      padding-top: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+      padding-bottom: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px)); }
+      @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+        :host {
+          padding-left: unset;
+          padding-right: unset;
+          -webkit-padding-start: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+          padding-inline-start: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+          -webkit-padding-end: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+          padding-inline-end: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px)); } } }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: auto;
+      margin-inline-start: auto;
+      -webkit-margin-end: auto;
+      margin-inline-end: auto; } }
 
 :host(.grid-fixed) {
   width: var(--ion-grid-width-xs, var(--ion-grid-width, 100%));
@@ -48,7 +111,13 @@
       width: var(--ion-grid-width-xl, var(--ion-grid-width, 1140px)); } }
 
 :host([no-padding]) {
-  padding: 0; }
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0; }
 
 :host([no-padding]) ::slotted(ion-col) {
-  padding: 0; }
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0; }

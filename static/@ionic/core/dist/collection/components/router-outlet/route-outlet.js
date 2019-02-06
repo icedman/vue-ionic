@@ -1,26 +1,34 @@
-import { transition } from '../../utils';
 import { attachComponent, detachComponent } from '../../utils/framework-delegate';
+import { transition } from '../../utils/transition';
 export class RouterOutlet {
     constructor() {
         this.animated = true;
     }
+    swipeHandlerChanged() {
+        if (this.gesture) {
+            this.gesture.setDisabled(this.swipeHandler === undefined);
+        }
+    }
     componentWillLoad() {
         this.ionNavWillLoad.emit();
     }
+    async componentDidLoad() {
+        this.gesture = (await import('../../utils/gesture/swipe-back')).createSwipeBackGesture(this.el, this.queue, () => !!this.swipeHandler && this.swipeHandler.canStart(), () => this.swipeHandler && this.swipeHandler.onStart(), step => this.ani && this.ani.progressStep(step), (shouldComplete, step, dur) => {
+            if (this.ani) {
+                this.ani.progressEnd(shouldComplete, step, dur);
+            }
+            if (this.swipeHandler) {
+                this.swipeHandler.onEnd(shouldComplete);
+            }
+        });
+        this.swipeHandlerChanged();
+    }
     componentDidUnload() {
         this.activeEl = this.activeComponent = undefined;
-    }
-    async setRoot(component, params, opts) {
-        if (this.activeComponent === component) {
-            return false;
+        if (this.gesture) {
+            this.gesture.destroy();
+            this.gesture = undefined;
         }
-        const leavingEl = this.activeEl;
-        const enteringEl = await attachComponent(this.delegate, this.el, component, ['ion-page', 'ion-page-invisible'], params);
-        this.activeComponent = component;
-        this.activeEl = enteringEl;
-        await this.commit(enteringEl, leavingEl, opts);
-        await detachComponent(this.delegate, leavingEl);
-        return true;
     }
     async commit(enteringEl, leavingEl, opts) {
         const unlock = await this.lock();
@@ -36,8 +44,8 @@ export class RouterOutlet {
     }
     async setRouteId(id, params, direction) {
         const changed = await this.setRoot(id, params, {
-            duration: direction === 0 ? 0 : undefined,
-            direction: direction === -1 ? 'back' : 'forward',
+            duration: direction === 'root' ? 0 : undefined,
+            direction: direction === 'back' ? 'back' : 'forward',
         });
         return {
             changed,
@@ -51,6 +59,36 @@ export class RouterOutlet {
             element: active,
         } : undefined;
     }
+    async setRoot(component, params, opts) {
+        if (this.activeComponent === component) {
+            return false;
+        }
+        const leavingEl = this.activeEl;
+        const enteringEl = await attachComponent(this.delegate, this.el, component, ['ion-page', 'ion-page-invisible'], params);
+        this.activeComponent = component;
+        this.activeEl = enteringEl;
+        await this.commit(enteringEl, leavingEl, opts);
+        await detachComponent(this.delegate, leavingEl);
+        return true;
+    }
+    async transition(enteringEl, leavingEl, opts = {}) {
+        if (leavingEl === enteringEl) {
+            return false;
+        }
+        this.ionNavWillChange.emit();
+        const { mode, queue, win, el } = this;
+        const animated = this.animated && this.config.getBoolean('animated', true);
+        const animationBuilder = this.animation || opts.animationBuilder || this.config.get('navAnimation');
+        await transition(Object.assign({ mode,
+            queue,
+            animated,
+            animationBuilder, window: win, enteringEl,
+            leavingEl, baseEl: el, progressCallback: (opts.progressAnimation
+                ? ani => this.ani = ani
+                : undefined) }, opts));
+        this.ionNavDidChange.emit();
+        return true;
+    }
     async lock() {
         const p = this.waitPromise;
         let resolve;
@@ -60,29 +98,8 @@ export class RouterOutlet {
         }
         return resolve;
     }
-    async transition(enteringEl, leavingEl, opts) {
-        if (leavingEl === enteringEl) {
-            return false;
-        }
-        this.ionNavWillChange.emit();
-        opts = opts || {};
-        const { mode, queue, animationCtrl, win, el } = this;
-        const animated = this.animated && this.config.getBoolean('animated', true);
-        const animationBuilder = this.animation || opts.animationBuilder || this.config.get('navAnimation');
-        await transition(Object.assign({ mode,
-            queue,
-            animated,
-            animationCtrl,
-            animationBuilder, window: win, enteringEl,
-            leavingEl, baseEl: el }, opts));
-        this.ionNavDidChange.emit();
-        return true;
-    }
     render() {
-        return [
-            this.mode === 'ios' && h("div", { class: "nav-decor" }),
-            h("slot", null)
-        ];
+        return (h("slot", null));
     }
     static get is() { return "ion-router-outlet"; }
     static get encapsulation() { return "shadow"; }
@@ -94,9 +111,6 @@ export class RouterOutlet {
         "animation": {
             "type": "Any",
             "attr": "animation"
-        },
-        "animationCtrl": {
-            "connect": "ion-animation-controller"
         },
         "commit": {
             "method": true
@@ -114,14 +128,20 @@ export class RouterOutlet {
         "getRouteId": {
             "method": true
         },
+        "mode": {
+            "type": String,
+            "attr": "mode"
+        },
         "queue": {
             "context": "queue"
         },
-        "setRoot": {
-            "method": true
-        },
         "setRouteId": {
             "method": true
+        },
+        "swipeHandler": {
+            "type": "Any",
+            "attr": "swipe-handler",
+            "watchCallbacks": ["swipeHandlerChanged"]
         },
         "win": {
             "context": "window"
@@ -136,13 +156,13 @@ export class RouterOutlet {
         }, {
             "name": "ionNavWillChange",
             "method": "ionNavWillChange",
-            "bubbles": true,
+            "bubbles": false,
             "cancelable": true,
             "composed": true
         }, {
             "name": "ionNavDidChange",
             "method": "ionNavDidChange",
-            "bubbles": true,
+            "bubbles": false,
             "cancelable": true,
             "composed": true
         }]; }

@@ -14,12 +14,6 @@ export class Modal {
         this.showBackdrop = true;
         this.animated = true;
     }
-    componentDidLoad() {
-        this.ionModalDidLoad.emit();
-    }
-    componentDidUnload() {
-        this.ionModalDidUnload.emit();
-    }
     onDismiss(ev) {
         ev.stopPropagation();
         ev.preventDefault();
@@ -69,6 +63,7 @@ export class Modal {
     hostData() {
         return {
             'no-router': true,
+            'aria-modal': 'true',
             class: Object.assign({}, createThemedClasses(this.mode, 'modal'), getClassMap(this.cssClass)),
             style: {
                 zIndex: 20000 + this.overlayIndex,
@@ -83,13 +78,11 @@ export class Modal {
         ];
     }
     static get is() { return "ion-modal"; }
+    static get encapsulation() { return "scoped"; }
     static get properties() { return {
         "animated": {
             "type": Boolean,
             "attr": "animated"
-        },
-        "animationCtrl": {
-            "connect": "ion-animation-controller"
         },
         "backdropDismiss": {
             "type": Boolean,
@@ -155,18 +148,6 @@ export class Modal {
         }
     }; }
     static get events() { return [{
-            "name": "ionModalDidLoad",
-            "method": "ionModalDidLoad",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
-            "name": "ionModalDidUnload",
-            "method": "ionModalDidUnload",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
             "name": "ionModalDidPresent",
             "method": "didPresent",
             "bubbles": true,

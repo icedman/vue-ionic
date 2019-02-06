@@ -8,7 +8,7 @@ export function mdLeaveAnimation(AnimationC, baseEl) {
     wrapperAnimation
         .fromTo('opacity', 0.99, 0)
         .fromTo('translateY', '0px', '40px');
-    backdropAnimation.fromTo('opacity', 0.4, 0.0);
+    backdropAnimation.fromTo('opacity', 0.32, 0.0);
     return Promise.resolve(baseAnimation
         .addElement(baseEl)
         .easing('cubic-bezier(0.47,0,0.745,0.715)')

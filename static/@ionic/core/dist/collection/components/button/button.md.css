@@ -8,9 +8,6 @@
    * @prop --color-activated: Text color of the button when activated
    * @prop --color-focused: Text color of the button when focused
    *
-   * @prop --width: Width of the button
-   * @prop --height: Height of the button
-   *
    * @prop --transition: Transition of the button
    *
    * @prop --border-radius: Border radius of the button
@@ -23,23 +20,21 @@
    * @prop --box-shadow: Box shadow of the button
    * @prop --opacity: Opacity of the button
    *
-   * @prop --margin-top: Margin top of the button
-   * @prop --margin-end: Margin end of the button
-   * @prop --margin-bottom: Margin bottom of the button
-   * @prop --margin-start: Margin start of the button
-   *
    * @prop --padding-top: Padding top of the button
    * @prop --padding-end: Padding end of the button
    * @prop --padding-bottom: Padding bottom of the button
    * @prop --padding-start: Padding start of the button
    */
-  --width: auto;
   --overflow: hidden;
   --ripple-color: currentColor;
+  --border-width: initial;
+  --border-color: initial;
+  --border-style: initial;
+  --box-shadow: none;
   display: inline-block;
+  width: auto;
   color: var(--color);
   font-family: var(--ion-font-family, inherit);
-  pointer-events: auto;
   text-align: center;
   text-decoration: none;
   text-overflow: ellipsis;
@@ -47,14 +42,19 @@
   user-select: none;
   vertical-align: top;
   vertical-align: -webkit-baseline-middle;
+  pointer-events: auto;
   font-kerning: none; }
 
 :host(.button-disabled) {
   pointer-events: none; }
 
+:host(.button-disabled) .button-native {
+  cursor: default;
+  opacity: .5;
+  pointer-events: none; }
+
 :host(.button-solid) {
   --background: var(--ion-color-primary, #3880ff);
-  --background-activated: var(--ion-color-primary-shade, #3171e0);
   --background-focused: var(--ion-color-primary-shade, #3171e0);
   --color: var(--ion-color-primary-contrast, #fff);
   --color-activated: var(--ion-color-primary-contrast, #fff);
@@ -64,8 +64,7 @@
   background: var(--ion-color-base);
   color: var(--ion-color-contrast); }
 
-:host(.button-solid.ion-color.focused) .button-native,
-:host(.button-solid.ion-color.activated) .button-native {
+:host(.button-solid.ion-color.ion-focused) .button-native {
   background: var(--ion-color-shade); }
 
 :host(.button-outline) {
@@ -79,7 +78,7 @@
   background: transparent;
   color: var(--ion-color-base); }
 
-:host(.button-outline.focused.ion-color) .button-native {
+:host(.button-outline.ion-focused.ion-color) .button-native {
   background: rgba(var(--ion-color-base-rgb), 0.1);
   color: var(--ion-color-base); }
 
@@ -92,7 +91,7 @@
   background: transparent;
   color: var(--ion-color-base); }
 
-:host(.button-clear.focused.ion-color) .button-native {
+:host(.button-clear.ion-focused.ion-color) .button-native {
   background: rgba(var(--ion-color-base-rgb), 0.1);
   color: var(--ion-color-base); }
 
@@ -108,7 +107,7 @@
   display: block;
   width: 100%;
   clear: both;
-  contain: strict; }
+  contain: content; }
 
 :host(.button-block) .button-native::after {
   clear: both; }
@@ -121,7 +120,7 @@
   margin-right: 0;
   display: block;
   width: 100%;
-  contain: strict; }
+  contain: content; }
 
 :host(.button-full:not(.button-round)) .button-native {
   border-radius: 0;
@@ -132,8 +131,14 @@
   border-radius: var(--border-radius);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  margin: var(--margin-top) var(--margin-end) var(--margin-bottom) var(--margin-start);
-  padding: var(--padding-top) var(--padding-end) var(--padding-bottom) var(--padding-start);
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: var(--padding-start);
+  padding-right: var(--padding-end);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
   font-family: inherit;
   font-size: inherit;
   font-style: inherit;
@@ -147,8 +152,8 @@
   color: inherit;
   display: block;
   position: relative;
-  width: var(--width);
-  height: var(--height);
+  width: 100%;
+  height: 100%;
   transition: var(--transition);
   border-width: var(--border-width);
   border-style: var(--border-style);
@@ -157,20 +162,26 @@
   background: var(--background);
   line-height: 1;
   box-shadow: var(--box-shadow);
-  contain: content;
+  contain: layout style;
   cursor: pointer;
   opacity: var(--opacity);
   overflow: var(--overflow);
   z-index: 0;
   box-sizing: border-box;
   appearance: none; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    .button-native {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: var(--padding-start);
+      padding-inline-start: var(--padding-start);
+      -webkit-padding-end: var(--padding-end);
+      padding-inline-end: var(--padding-end); } }
 
-.button-native[disabled] {
-  cursor: default;
-  opacity: .5;
-  pointer-events: none; }
+.button-native::-moz-focus-inner {
+  border: 0; }
 
-:host(.focused) .button-native {
+:host(.ion-focused) .button-native {
   background: var(--background-focused);
   color: var(--color-focused); }
 
@@ -192,10 +203,32 @@
   pointer-events: none; }
 
 ::slotted(ion-icon[slot="start"]) {
-  margin: 0 0.3em 0 -0.3em; }
+  margin-left: -0.3em;
+  margin-right: 0.3em;
+  margin-top: 0;
+  margin-bottom: 0; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    ::slotted(ion-icon[slot="start"]) {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: -0.3em;
+      margin-inline-start: -0.3em;
+      -webkit-margin-end: 0.3em;
+      margin-inline-end: 0.3em; } }
 
 ::slotted(ion-icon[slot="end"]) {
-  margin: 0 -0.2em 0 0.3em; }
+  margin-left: 0.3em;
+  margin-right: -0.2em;
+  margin-top: 0;
+  margin-bottom: 0; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    ::slotted(ion-icon[slot="end"]) {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: 0.3em;
+      margin-inline-start: 0.3em;
+      -webkit-margin-end: -0.2em;
+      margin-inline-end: -0.2em; } }
 
 ::slotted(ion-icon[slot="icon-only"]) {
   font-size: 1.8em; }
@@ -205,24 +238,33 @@ ion-ripple-effect {
 
 :host {
   --border-radius: 4px;
-  --margin-top: 4px;
-  --margin-bottom: 4px;
-  --margin-start: 2px;
-  --margin-end: 2px;
   --padding-top: 0;
   --padding-bottom: 0;
   --padding-start: 1.1em;
   --padding-end: 1.1em;
-  --height: 36px;
   --transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),
                 background-color 15ms linear,
                 color 15ms linear;
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  height: 36px;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: 2px;
+      margin-inline-start: 2px;
+      -webkit-margin-end: 2px;
+      margin-inline-end: 2px; } }
 
 :host(.button-solid) {
+  --background-activated: var(--background);
   --box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12); }
 
 :host(.button-solid.activated) {
@@ -236,12 +278,6 @@ ion-ripple-effect {
   --background-focused: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.1);
   --color-activated: var(--ion-color-primary, #3880ff); }
 
-:host(.button-outline:hover) .button-native {
-  background: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.04); }
-
-:host(.button-outline.ion-color:hover) .button-native {
-  background: rgba(var(--ion-color-base-rgb), 0.04); }
-
 :host(.button-outline.activated.ion-color) .button-native {
   background: transparent; }
 
@@ -251,12 +287,6 @@ ion-ripple-effect {
   --background-focused: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.1);
   --color-activated: var(--ion-color-primary, #3880ff);
   --color-focused: var(--ion-color-primary, #3880ff); }
-
-:host(.button-clear:hover) .button-native {
-  background: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.04); }
-
-:host(.button-clear.ion-color:hover) .button-native {
-  background: rgba(var(--ion-color-base-rgb), 0.04); }
 
 :host(.button-round) {
   --border-radius: 64px;
@@ -270,7 +300,7 @@ ion-ripple-effect {
   --padding-start: 1em;
   --padding-end: 1em;
   --padding-bottom: 0;
-  --height: 2.8em;
+  height: 2.8em;
   font-size: 20px; }
 
 :host(.button-small) {
@@ -278,11 +308,24 @@ ion-ripple-effect {
   --padding-start: 0.9em;
   --padding-end: 0.9em;
   --padding-bottom: 0;
-  --height: 2.1em;
+  height: 2.1em;
   font-size: 13px; }
 
 :host(.button-strong) {
   font-weight: bold; }
 
 ::slotted(ion-icon[slot="icon-only"]) {
-  padding: 0; }
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0; }
+
+@media (any-hover: hover) {
+  :host(.button-outline:hover) .button-native {
+    background: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.04); }
+  :host(.button-outline.ion-color:hover) .button-native {
+    background: rgba(var(--ion-color-base-rgb), 0.04); }
+  :host(.button-clear:hover) .button-native {
+    background: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.04); }
+  :host(.button-clear.ion-color:hover) .button-native {
+    background: rgba(var(--ion-color-base-rgb), 0.04); } }

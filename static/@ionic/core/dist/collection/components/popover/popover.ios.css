@@ -1,4 +1,21 @@
 :host {
+  /**
+   * @prop --background: Background of the popover
+   * @prop --box-shadow: Box shadow of the popover
+   *
+   * @prop --min-width: Minimum width of the popover
+   * @prop --width: Width of the popover
+   * @prop --max-width: Maximum width of the popover
+   *
+   * @prop --min-height: Minimum height of the popover
+   * @prop --height: Height of the popover
+   * @prop --max-height: Maximum height of the popover
+   */
+  --background: var(--ion-background-color, #fff);
+  --min-width: 0;
+  --min-height: 0;
+  --max-width: auto;
+  --height: auto;
   left: 0;
   right: 0;
   top: 0;
@@ -7,7 +24,11 @@
   position: absolute;
   align-items: center;
   justify-content: center;
+  color: var(--ion-text-color, #000);
   z-index: 1000; }
+
+:host(.overlay-hidden) {
+  display: none; }
 
 .popover-wrapper {
   opacity: 0;
@@ -17,6 +38,14 @@
   display: flex;
   position: absolute;
   flex-direction: column;
+  width: var(--width);
+  min-width: var(--min-width);
+  max-width: var(--max-width);
+  height: var(--height);
+  min-height: var(--min-height);
+  max-height: var(--max-height);
+  background: var(--background);
+  box-shadow: var(--box-shadow);
   overflow: auto;
   z-index: 10; }
 
@@ -26,14 +55,13 @@
   --ion-safe-area-bottom: 0px;
   --ion-safe-area-left: 0px; }
 
+:host {
+  --width: 200px;
+  --max-height: 90%;
+  --box-shadow: none; }
+
 .popover-content {
-  border-radius: 10px;
-  width: 200px;
-  min-width: 0;
-  min-height: 0;
-  max-height: 90%;
-  background-color: var(--ion-background-color, #fff);
-  color: var(--ion-text-color, #000); }
+  border-radius: 10px; }
 
 .popover-arrow {
   display: block;
@@ -50,9 +78,11 @@
   width: 14px;
   height: 14px;
   transform: rotate(45deg);
-  background-color: var(--ion-background-color, #fff);
+  background: var(--background);
   content: "";
   z-index: 10; }
+  :host-context([dir=rtl]) .popover-arrow::after {
+    right: 3px; }
 
 :host(.popover-bottom) .popover-arrow {
   top: auto;

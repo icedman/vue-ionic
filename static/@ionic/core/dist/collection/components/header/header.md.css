@@ -18,6 +18,10 @@ ion-header ion-toolbar:first-child {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAIBAMAAAACWGKkAAAAFVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAASAQCkAAAAB3RSTlMFTEIzJBcOYhQUIwAAAB9JREFUCNdjEIQCBiUoYDCGAgYXKGAIhQKGNChgwAAAorMLKSCkL40AAAAASUVORK5CYII=");
   background-repeat: repeat-x;
   content: ""; }
+  :host-context([dir=rtl]) .header-md::after {
+    right: 0; }
+  :host-context([dir=rtl]) .header-md::after {
+    background-position: right 0 top 0; }
 
 .header-md[no-border]::after {
   display: none; }

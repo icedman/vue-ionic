@@ -12,7 +12,7 @@ export declare class Tab implements ComponentInterface {
      * A tab id must be provided for each `ion-tab`. It's used internally to reference
      * the selected tab or by the router to switch between them.
      */
-    tab?: string;
+    tab: string;
     /**
      * The component to display inside of the tab.
      */
@@ -25,7 +25,6 @@ export declare class Tab implements ComponentInterface {
         'role': string;
         'aria-hidden': string | null;
         'aria-labelledby': string;
-        'id': string;
         'class': {
             'ion-page': boolean;
             'tab-hidden': boolean;

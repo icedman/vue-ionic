@@ -1,26 +1,26 @@
-import { createColorClasses } from '../../utils/theme';
 export class TabButton {
     constructor() {
         this.selected = false;
-        this.layout = 'icon-top';
         this.disabled = false;
     }
-    onTabbarChanged(ev) {
+    onTabBarChanged(ev) {
         this.selected = this.tab === ev.detail.tab;
     }
     onClick(ev) {
-        if (!this.disabled) {
-            this.ionTabButtonClick.emit({
-                tab: this.tab,
-                href: this.href
-            });
+        if (this.tab !== undefined) {
+            if (!this.disabled) {
+                this.ionTabButtonClick.emit({
+                    tab: this.tab,
+                    href: this.href,
+                    selected: this.selected
+                });
+            }
+            ev.preventDefault();
         }
-        ev.preventDefault();
     }
     componentWillLoad() {
-        if (this.tab === undefined) {
-            console.warn(`ion-tab-button needs a tab name, so it can be selected.
-  <ion-tab-button tab="TAB_NAME">`);
+        if (this.layout === undefined) {
+            this.layout = this.config.get('tabButtonLayout', 'icon-top');
         }
     }
     get hasLabel() {
@@ -30,28 +30,34 @@ export class TabButton {
         return !!this.el.querySelector('ion-icon');
     }
     hostData() {
-        const { color, tab, selected, layout, disabled, hasLabel, hasIcon } = this;
+        const { disabled, hasIcon, hasLabel, layout, selected, tab } = this;
         return {
             'role': 'tab',
-            'ion-activatable': true,
             'aria-selected': selected ? 'true' : null,
-            'id': `tab-button-${tab}`,
-            'aria-controls': `tab-view-${tab}`,
-            class: Object.assign({}, createColorClasses(color), { 'tab-selected': selected, 'tab-disabled': disabled, 'tab-has-label': hasLabel, 'tab-has-icon': hasIcon, 'tab-has-label-only': hasLabel && !hasIcon, 'tab-has-icon-only': hasIcon && !hasLabel, [`tab-layout-${layout}`]: true })
+            'id': tab !== undefined ? `tab-button-${tab}` : null,
+            class: {
+                'tab-selected': selected,
+                'tab-disabled': disabled,
+                'tab-has-label': hasLabel,
+                'tab-has-icon': hasIcon,
+                'tab-has-label-only': hasLabel && !hasIcon,
+                'tab-has-icon-only': hasIcon && !hasLabel,
+                [`tab-layout-${layout}`]: true,
+                'ion-activatable': true,
+            }
         };
     }
     render() {
         const { mode, href } = this;
-        return (h("a", { href: href || '#' },
+        return (h("a", { href: href },
             h("slot", null),
-            mode === 'md' && h("ion-ripple-effect", null)));
+            mode === 'md' && h("ion-ripple-effect", { type: "unbounded" })));
     }
     static get is() { return "ion-tab-button"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
-        "color": {
-            "type": String,
-            "attr": "color"
+        "config": {
+            "context": "config"
         },
         "disabled": {
             "type": Boolean,
@@ -69,7 +75,8 @@ export class TabButton {
         },
         "layout": {
             "type": String,
-            "attr": "layout"
+            "attr": "layout",
+            "mutable": true
         },
         "mode": {
             "type": String,
@@ -79,7 +86,9 @@ export class TabButton {
             "context": "queue"
         },
         "selected": {
-            "state": true
+            "type": Boolean,
+            "attr": "selected",
+            "mutable": true
         },
         "tab": {
             "type": String,
@@ -95,7 +104,7 @@ export class TabButton {
         }]; }
     static get listeners() { return [{
             "name": "parent:ionTabBarChanged",
-            "method": "onTabbarChanged"
+            "method": "onTabBarChanged"
         }, {
             "name": "click",
             "method": "onClick"

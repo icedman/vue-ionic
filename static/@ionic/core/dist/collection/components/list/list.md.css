@@ -1,6 +1,12 @@
 ion-list {
-  margin: 0;
-  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   display: block;
   contain: content;
   list-style-type: none; }
@@ -10,19 +16,35 @@ ion-list.list-inset {
   overflow: hidden; }
 
 .list-md {
-  margin: -1px 0 16px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
   background: var(--ion-item-background, var(--ion-background-color, #fff)); }
 
 .list-md > .input:last-child::after {
   left: 0; }
-
-.list-md:not(.list-inset):not(.list-md-lines-none) .item:last-child {
-  --inner-border-width: 0;
-  --border-width: 0 0 1px 0; }
+  :host-context([dir=rtl]) .list-md > .input:last-child::after {
+    right: 0; }
 
 .list-md.list-inset {
-  margin: 16px;
+  margin-left: 16px;
+  margin-right: 16px;
+  margin-top: 16px;
+  margin-bottom: 16px;
   border-radius: 2px; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    .list-md.list-inset {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: 16px;
+      margin-inline-start: 16px;
+      -webkit-margin-end: 16px;
+      margin-inline-end: 16px; } }
 
 .list-md.list-inset ion-item:first-child {
   --border-radius: 2px 2px 0 0;
@@ -58,4 +80,8 @@ ion-list.list-inset {
   --border-width: 0; }
 
 .list-md .item-lines-full {
+  --inner-border-width: 0; }
+
+.list-md .item-lines-none {
+  --border-width: 0;
   --inner-border-width: 0; }

@@ -28,9 +28,6 @@ export function enableInputBlurring(doc) {
         if (tapped.matches(SKIP_SELECTOR) || tapped.closest(SKIP_SELECTOR)) {
             return;
         }
-        if (tapped.classList.contains('input-cover')) {
-            return;
-        }
         focused = false;
         setTimeout(() => {
             if (!focused) {

@@ -13,6 +13,7 @@ export class Searchbar {
         this.cancelButtonText = 'Cancel';
         this.debounce = 250;
         this.placeholder = 'Search';
+        this.searchIcon = 'search';
         this.showCancelButton = false;
         this.spellcheck = false;
         this.type = 'search';
@@ -82,6 +83,9 @@ export class Searchbar {
         if (this.nativeInput) {
             this.nativeInput.focus();
         }
+    }
+    getInputElement() {
+        return Promise.resolve(this.nativeInput);
     }
     positionElements() {
         const value = this.getValue();
@@ -162,15 +166,16 @@ export class Searchbar {
     hostData() {
         const animated = this.animated && this.config.getBoolean('animated', true);
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'searchbar-animated': animated, 'searchbar-no-animate': animated && this.noAnimate, 'searchbar-has-value': (this.getValue() !== ''), 'searchbar-show-cancel': this.showCancelButton, 'searchbar-left-aligned': this.shouldAlignLeft, 'searchbar-has-focus': this.focused })
+            class: Object.assign({}, createColorClasses(this.color), { 'searchbar-animated': animated, 'searchbar-no-animate': animated && this.noAnimate, 'searchbar-has-value': (this.getValue() !== ''), 'searchbar-left-aligned': this.shouldAlignLeft, 'searchbar-has-focus': this.focused })
         };
     }
     render() {
         const clearIcon = this.clearIcon || (this.mode === 'ios' ? 'ios-close-circle' : 'md-close');
-        const searchIcon = this.searchIcon || 'search';
-        const cancelButton = this.showCancelButton && (h("button", { type: "button", tabIndex: this.mode === 'ios' && !this.focused ? -1 : undefined, onMouseDown: this.onCancelSearchbar, onTouchStart: this.onCancelSearchbar, class: "searchbar-cancel-button" }, this.mode === 'md'
-            ? h("ion-icon", { mode: this.mode, icon: this.cancelButtonIcon, lazy: false })
-            : this.cancelButtonText));
+        const searchIcon = this.searchIcon;
+        const cancelButton = this.showCancelButton && (h("button", { type: "button", tabIndex: this.mode === 'ios' && !this.focused ? -1 : undefined, onMouseDown: this.onCancelSearchbar, onTouchStart: this.onCancelSearchbar, class: "searchbar-cancel-button" },
+            h("div", null, this.mode === 'md'
+                ? h("ion-icon", { mode: this.mode, icon: this.cancelButtonIcon, lazy: false })
+                : this.cancelButtonText)));
         return [
             h("div", { class: "searchbar-input-container" },
                 h("input", { ref: el => this.nativeInput = el, class: "searchbar-input", onInput: this.onInput, onBlur: this.onBlur, onFocus: this.onFocus, placeholder: this.placeholder, type: this.type, value: this.getValue(), autoComplete: this.autocomplete, autoCorrect: this.autocorrect, spellCheck: this.spellcheck }),
@@ -228,6 +233,9 @@ export class Searchbar {
         },
         "focused": {
             "state": true
+        },
+        "getInputElement": {
+            "method": true
         },
         "mode": {
             "type": String,

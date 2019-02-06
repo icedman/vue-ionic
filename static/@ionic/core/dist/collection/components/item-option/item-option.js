@@ -4,19 +4,20 @@ export class ItemOption {
         this.disabled = false;
         this.expandable = false;
     }
-    clickedOptionButton(ev) {
+    onClick(ev) {
         const el = ev.target.closest('ion-item-option');
-        return !!el;
+        if (el) {
+            ev.preventDefault();
+        }
     }
     hostData() {
         return {
-            'ion-activatable': true,
-            class: Object.assign({}, createColorClasses(this.color), { 'item-option-expandable': this.expandable })
+            class: Object.assign({}, createColorClasses(this.color), { 'item-option-expandable': this.expandable, 'ion-activatable': true })
         };
     }
     render() {
         const TagType = this.href === undefined ? 'button' : 'a';
-        return (h(TagType, { type: "button", class: "button-native", disabled: this.disabled, href: this.href, onClick: this.clickedOptionButton.bind(this) },
+        return (h(TagType, { type: "button", class: "button-native", disabled: this.disabled, href: this.href },
             h("span", { class: "button-inner" },
                 h("slot", { name: "start" }),
                 h("slot", { name: "top" }),
@@ -53,6 +54,10 @@ export class ItemOption {
             "attr": "mode"
         }
     }; }
+    static get listeners() { return [{
+            "name": "click",
+            "method": "onClick"
+        }]; }
     static get style() { return "/**style-placeholder:ion-item-option:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-item-option:**/"; }
 }

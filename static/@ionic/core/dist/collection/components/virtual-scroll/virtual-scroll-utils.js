@@ -1,7 +1,8 @@
+import { CELL_TYPE_FOOTER, CELL_TYPE_HEADER, CELL_TYPE_ITEM, NODE_CHANGE_CELL, NODE_CHANGE_NONE, NODE_CHANGE_POSITION } from './constants';
 const MIN_READS = 2;
 export function updateVDom(dom, heightIndex, cells, range) {
     for (const node of dom) {
-        node.change = 0;
+        node.change = NODE_CHANGE_NONE;
         node.d = true;
     }
     const toMutate = [];
@@ -13,7 +14,7 @@ export function updateVDom(dom, heightIndex, cells, range) {
             const top = heightIndex[i];
             if (top !== node.top) {
                 node.top = top;
-                node.change = 1;
+                node.change = NODE_CHANGE_POSITION;
             }
             node.d = false;
         }
@@ -27,7 +28,7 @@ export function updateVDom(dom, heightIndex, cells, range) {
         const index = cell.index;
         if (node) {
             node.d = false;
-            node.change = 2;
+            node.change = NODE_CHANGE_CELL;
             node.cell = cell;
             node.top = heightIndex[index];
         }
@@ -36,7 +37,7 @@ export function updateVDom(dom, heightIndex, cells, range) {
                 d: false,
                 cell,
                 visible: true,
-                change: 2,
+                change: NODE_CHANGE_CELL,
                 top: heightIndex[index],
             });
         }
@@ -44,7 +45,7 @@ export function updateVDom(dom, heightIndex, cells, range) {
     dom
         .filter(n => n.d && n.top !== -9999)
         .forEach(n => {
-        n.change = 1;
+        n.change = NODE_CHANGE_POSITION;
         n.top = -9999;
     });
 }
@@ -55,7 +56,7 @@ export function doRender(el, nodeRender, dom, updateCellHeight) {
     for (let i = 0; i < dom.length; i++) {
         const node = dom[i];
         const cell = node.cell;
-        if (node.change === 2) {
+        if (node.change === NODE_CHANGE_CELL) {
             if (i < childrenNu) {
                 child = children[i];
                 nodeRender(child, cell, i);
@@ -71,7 +72,7 @@ export function doRender(el, nodeRender, dom, updateCellHeight) {
         else {
             child = children[i];
         }
-        if (node.change !== 0) {
+        if (node.change !== NODE_CHANGE_NONE) {
             child.style.transform = `translate3d(0,${node.top}px,0)`;
         }
         const visible = cell.visible;
@@ -92,16 +93,16 @@ export function doRender(el, nodeRender, dom, updateCellHeight) {
 }
 function createNode(el, type) {
     const template = getTemplate(el, type);
-    if (template) {
+    if (template && el.ownerDocument) {
         return el.ownerDocument.importNode(template.content, true).children[0];
     }
     return null;
 }
 function getTemplate(el, type) {
     switch (type) {
-        case 0: return el.querySelector('template:not([name])');
-        case 1: return el.querySelector('template[name=header]');
-        case 2: return el.querySelector('template[name=footer]');
+        case CELL_TYPE_ITEM: return el.querySelector('template:not([name])');
+        case CELL_TYPE_HEADER: return el.querySelector('template[name=header]');
+        case CELL_TYPE_FOOTER: return el.querySelector('template[name=footer]');
     }
 }
 export function getViewport(scrollTop, vierportHeight, margin) {
@@ -136,10 +137,16 @@ export function getShouldUpdate(dirtyIndex, currentRange, range) {
         currentRange.length !== range.length);
 }
 export function findCellIndex(cells, index) {
+    const max = cells[cells.length - 1].index || 0;
     if (index === 0) {
         return 0;
     }
-    return cells.findIndex(c => c.index === index);
+    else if (index === max + 1) {
+        return cells.length;
+    }
+    else {
+        return cells.findIndex(c => c.index === index);
+    }
 }
 export function inplaceUpdate(dst, src, offset) {
     if (offset === 0 && src.length >= dst.length) {
@@ -160,7 +167,7 @@ export function calcCells(items, itemHeight, headerFn, footerFn, approxHeaderHei
             if (value != null) {
                 cells.push({
                     i: j++,
-                    type: 1,
+                    type: CELL_TYPE_HEADER,
                     value,
                     index: i,
                     height: approxHeaderHeight,
@@ -171,7 +178,7 @@ export function calcCells(items, itemHeight, headerFn, footerFn, approxHeaderHei
         }
         cells.push({
             i: j++,
-            type: 0,
+            type: CELL_TYPE_ITEM,
             value: item,
             index: i,
             height: itemHeight ? itemHeight(item, i) : approxItemHeight,
@@ -183,7 +190,7 @@ export function calcCells(items, itemHeight, headerFn, footerFn, approxHeaderHei
             if (value != null) {
                 cells.push({
                     i: j++,
-                    type: 2,
+                    type: CELL_TYPE_FOOTER,
                     value,
                     index: i,
                     height: approxFooterHeight,
@@ -220,7 +227,7 @@ export function resizeBuffer(buf, len) {
     }
 }
 export function positionForIndex(index, cells, heightIndex) {
-    const cell = cells.find(c => c.type === 0 && c.index === index);
+    const cell = cells.find(c => c.type === CELL_TYPE_ITEM && c.index === index);
     if (cell) {
         return heightIndex[cell.i];
     }

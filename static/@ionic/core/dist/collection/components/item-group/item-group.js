@@ -2,6 +2,7 @@ import { createThemedClasses } from '../../utils/theme';
 export class ItemGroup {
     hostData() {
         return {
+            'role': 'group',
             class: Object.assign({}, createThemedClasses(this.mode, 'item-group'), { 'item': true })
         };
     }

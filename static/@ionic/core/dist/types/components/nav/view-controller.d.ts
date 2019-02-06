@@ -1,13 +1,11 @@
 import { ComponentProps, FrameworkDelegate } from '../../interface';
-export declare const enum ViewState {
-    New = 1,
-    Attached = 2,
-    Destroyed = 3
-}
+export declare const VIEW_STATE_NEW = 1;
+export declare const VIEW_STATE_ATTACHED = 2;
+export declare const VIEW_STATE_DESTROYED = 3;
 export declare class ViewController {
     component: any;
     params: ComponentProps | undefined;
-    state: ViewState;
+    state: number;
     nav?: any;
     element?: HTMLElement;
     delegate?: FrameworkDelegate;

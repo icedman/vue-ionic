@@ -21,7 +21,7 @@ export class ItemSliding {
     async componentDidLoad() {
         this.item = this.el.querySelector('ion-item');
         await this.updateOptions();
-        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
+        this.gesture = (await import('../../utils/gesture')).createGesture({
             el: this.el,
             queue: this.queue,
             gestureName: 'item-swipe',
@@ -37,6 +37,7 @@ export class ItemSliding {
     componentDidUnload() {
         if (this.gesture) {
             this.gesture.destroy();
+            this.gesture = undefined;
         }
         this.item = null;
         this.leftOptions = this.rightOptions = undefined;

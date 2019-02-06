@@ -1,27 +1,24 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter } from '../../stencil.core';
-import { Color, Mode } from '../../interface';
+import { Mode, SegmentButtonLayout } from '../../interface';
 export declare class SegmentButton implements ComponentInterface {
     el: HTMLElement;
     /**
-     * The color to use from your application's color palette.
-     * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
-     * For more information on colors, see [theming](/docs/theming/basics).
-     */
-    color?: Color;
-    /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
-     * If `true`, the segment button is selected. Defaults to `false`.
+     * If `true`, the segment button is selected.
      */
     checked: boolean;
     /**
-     * If `true`, the user cannot interact with the segment button. Defaults to `false`.
+     * If `true`, the user cannot interact with the segment button.
      */
     disabled: boolean;
+    /**
+     * Set the layout of the text and icon in the segment.
+     */
+    layout?: SegmentButtonLayout;
     /**
      * The value of the segment button.
      */
@@ -31,14 +28,21 @@ export declare class SegmentButton implements ComponentInterface {
      */
     ionSelect: EventEmitter<void>;
     checkedChanged(checked: boolean, prev: boolean): void;
+    onClick(): void;
+    private readonly hasLabel;
+    private readonly hasIcon;
     hostData(): {
-        'ion-activatable': boolean;
+        'aria-disabled': string | null;
         class: {
+            [x: string]: boolean;
+            'segment-button-has-label': boolean;
+            'segment-button-has-icon': boolean;
+            'segment-button-has-label-only': boolean;
+            'segment-button-has-icon-only': boolean;
             'segment-button-disabled': boolean;
             'segment-button-checked': boolean;
-        } | {
-            'segment-button-disabled': boolean;
-            'segment-button-checked': boolean;
+            'ion-activatable': boolean;
+            'ion-activatable-instant': boolean;
         };
     };
     render(): JSX.Element[];

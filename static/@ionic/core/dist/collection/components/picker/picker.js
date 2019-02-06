@@ -13,12 +13,6 @@ export class Picker {
         this.backdropDismiss = true;
         this.animated = true;
     }
-    componentDidLoad() {
-        this.ionPickerDidLoad.emit();
-    }
-    componentDidUnload() {
-        this.ionPickerDidUnload.emit();
-    }
     onBackdropTap() {
         const cancelBtn = this.buttons.find(b => b.role === 'cancel');
         if (cancelBtn) {
@@ -77,6 +71,7 @@ export class Picker {
     }
     hostData() {
         return {
+            'aria-modal': 'true',
             class: Object.assign({}, createThemedClasses(this.mode, 'picker'), getClassMap(this.cssClass)),
             style: {
                 zIndex: 20000 + this.overlayIndex
@@ -88,21 +83,19 @@ export class Picker {
             h("ion-backdrop", { visible: this.showBackdrop, tappable: this.backdropDismiss }),
             h("div", { class: "picker-wrapper", role: "dialog" },
                 h("div", { class: "picker-toolbar" }, this.buttons.map(b => (h("div", { class: buttonWrapperClass(b) },
-                    h("button", { type: "button", "ion-activatable": true, onClick: () => this.buttonClick(b), class: buttonClass(b) }, b.text))))),
+                    h("button", { type: "button", onClick: () => this.buttonClick(b), class: buttonClass(b) }, b.text))))),
                 h("div", { class: "picker-columns" },
                     h("div", { class: "picker-above-highlight" }),
-                    this.columns.map(c => h("ion-picker-column", { col: c })),
+                    this.presented && this.columns.map(c => h("ion-picker-column", { col: c })),
                     h("div", { class: "picker-below-highlight" })))
         ];
     }
     static get is() { return "ion-picker"; }
+    static get encapsulation() { return "scoped"; }
     static get properties() { return {
         "animated": {
             "type": Boolean,
             "attr": "animated"
-        },
-        "animationCtrl": {
-            "connect": "ion-animation-controller"
         },
         "backdropDismiss": {
             "type": Boolean,
@@ -165,18 +158,15 @@ export class Picker {
         "present": {
             "method": true
         },
+        "presented": {
+            "state": true
+        },
         "showBackdrop": {
             "type": Boolean,
             "attr": "show-backdrop"
         }
     }; }
     static get events() { return [{
-            "name": "ionPickerDidLoad",
-            "method": "ionPickerDidLoad",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
             "name": "ionPickerDidPresent",
             "method": "didPresent",
             "bubbles": true,
@@ -200,12 +190,6 @@ export class Picker {
             "bubbles": true,
             "cancelable": true,
             "composed": true
-        }, {
-            "name": "ionPickerDidUnload",
-            "method": "ionPickerDidUnload",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
         }]; }
     static get listeners() { return [{
             "name": "ionBackdropTap",
@@ -221,5 +205,5 @@ function buttonWrapperClass(button) {
     };
 }
 function buttonClass(button) {
-    return Object.assign({ 'picker-button': true }, getClassMap(button.cssClass));
+    return Object.assign({ 'picker-button': true, 'ion-activatable': true }, getClassMap(button.cssClass));
 }

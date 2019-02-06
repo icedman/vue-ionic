@@ -17,7 +17,7 @@
 $font-family-base:                  var(--ion-font-family, inherit) !default;
 
 // Global app direction
-$app-direction: ltr !default;
+$app-direction: null !default;
 
 // Global font path
 $font-path: "/dist/fonts" !default;
@@ -46,7 +46,7 @@ $z-index-click-block:            99999;
 
 $z-index-fixed-content:          999;
 $z-index-scroll-content:         1;
-$z-index-refresher:              0;
+$z-index-refresher:              -1;
 
 $z-index-page-container:         0;
 $z-index-toolbar:                10;

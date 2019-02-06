@@ -1,6 +1,9 @@
 import '../../stencil.core';
 import { ComponentInterface } from '../../stencil.core';
 import { Mode, SelectPopoverOption } from '../../interface';
+/**
+ * @internal
+ */
 export declare class SelectPopover implements ComponentInterface {
     mode: Mode;
     /** Header text for the popover */

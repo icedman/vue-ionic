@@ -18,10 +18,14 @@ export declare class Anchor implements ComponentInterface {
      * When using a router, it specifies the transition direction when navigating to
      * another page using `href`.
      */
-    routerDirection?: RouterDirection;
+    routerDirection: RouterDirection;
+    onClick(ev: Event): void;
     hostData(): {
-        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap | undefined;
-        'ion-activatable': boolean;
+        class: {
+            'ion-activatable': boolean;
+        } | {
+            'ion-activatable': boolean;
+        };
     };
     render(): JSX.Element;
 }

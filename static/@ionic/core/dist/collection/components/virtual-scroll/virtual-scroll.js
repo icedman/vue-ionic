@@ -1,3 +1,4 @@
+import { CELL_TYPE_FOOTER, CELL_TYPE_HEADER, CELL_TYPE_ITEM } from './constants';
 import { calcCells, calcHeightIndex, doRender, findCellIndex, getRange, getShouldUpdate, getViewport, inplaceUpdate, positionForIndex, resizeBuffer, updateVDom } from './virtual-scroll-utils';
 export class VirtualScroll {
     constructor() {
@@ -12,8 +13,8 @@ export class VirtualScroll {
         this.lastItemLen = 0;
         this.totalHeight = 0;
         this.approxItemHeight = 45;
-        this.approxHeaderHeight = 40;
-        this.approxFooterHeight = 40;
+        this.approxHeaderHeight = 30;
+        this.approxFooterHeight = 30;
     }
     itemsChanged() {
         this.calcCells();
@@ -46,39 +47,24 @@ export class VirtualScroll {
     positionForItem(index) {
         return Promise.resolve(positionForIndex(index, this.cells, this.getHeightIndex()));
     }
-    markDirty(offset, len = -1) {
+    checkRange(offset, len = -1) {
         if (!this.items) {
             return;
         }
         const length = (len === -1)
             ? this.items.length - offset
             : len;
-        const max = this.lastItemLen;
-        let j = 0;
-        if (offset > 0 && offset < max) {
-            j = findCellIndex(this.cells, offset);
-        }
-        else if (offset === 0) {
-            j = 0;
-        }
-        else if (offset === max) {
-            j = this.cells.length;
-        }
-        else {
-            console.warn('bad values for markDirty');
-            return;
-        }
-        const cells = calcCells(this.items, this.itemHeight, this.headerFn, this.footerFn, this.approxHeaderHeight, this.approxFooterHeight, this.approxItemHeight, j, offset, length);
+        const cellIndex = findCellIndex(this.cells, offset);
+        const cells = calcCells(this.items, this.itemHeight, this.headerFn, this.footerFn, this.approxHeaderHeight, this.approxFooterHeight, this.approxItemHeight, cellIndex, offset, length);
         console.debug('[virtual] cells recalculated', cells.length);
-        this.cells = inplaceUpdate(this.cells, cells, offset);
+        this.cells = inplaceUpdate(this.cells, cells, cellIndex);
         this.lastItemLen = this.items.length;
         this.indexDirty = Math.max(offset - 1, 0);
         this.scheduleUpdate();
     }
-    markDirtyTail() {
+    checkEnd() {
         if (this.items) {
-            const offset = this.lastItemLen;
-            this.markDirty(offset, this.items.length - offset);
+            this.checkRange(this.lastItemLen);
         }
     }
     updateVirtualScroll() {
@@ -200,9 +186,9 @@ export class VirtualScroll {
     renderVirtualNode(node) {
         const { type, value, index } = node.cell;
         switch (type) {
-            case 0: return this.renderItem(value, index);
-            case 1: return this.renderHeader(value, index);
-            case 2: return this.renderFooter(value, index);
+            case CELL_TYPE_ITEM: return this.renderItem(value, index);
+            case CELL_TYPE_HEADER: return this.renderHeader(value, index);
+            case CELL_TYPE_FOOTER: return this.renderFooter(value, index);
         }
     }
     hostData() {
@@ -232,6 +218,12 @@ export class VirtualScroll {
             "type": Number,
             "attr": "approx-item-height"
         },
+        "checkEnd": {
+            "method": true
+        },
+        "checkRange": {
+            "method": true
+        },
         "domRender": {
             "type": "Any",
             "attr": "dom-render"
@@ -259,12 +251,6 @@ export class VirtualScroll {
             "type": "Any",
             "attr": "items",
             "watchCallbacks": ["itemsChanged"]
-        },
-        "markDirty": {
-            "method": true
-        },
-        "markDirtyTail": {
-            "method": true
         },
         "nodeRender": {
             "type": "Any",

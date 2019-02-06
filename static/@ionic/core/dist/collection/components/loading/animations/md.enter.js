@@ -4,7 +4,7 @@ export function mdEnterAnimation(AnimationC, baseEl) {
     backdropAnimation.addElement(baseEl.querySelector('ion-backdrop'));
     const wrapperAnimation = new AnimationC();
     wrapperAnimation.addElement(baseEl.querySelector('.loading-wrapper'));
-    backdropAnimation.fromTo('opacity', 0.01, 0.5);
+    backdropAnimation.fromTo('opacity', 0.01, 0.32);
     wrapperAnimation.fromTo('opacity', 0.01, 1).fromTo('scale', 1.1, 1);
     return Promise.resolve(baseAnimation
         .addElement(baseEl)

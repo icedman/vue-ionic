@@ -1,5 +1,0 @@
-/*!
- * (C) Ionic http://ionicframework.com - MIT License
- * Built with http://stenciljs.com
- */
-const{h:e}=window.Ionic,o="translateY",n="40px",i="0px";function t(e,t,a){const c=a.leavingEl,s=r(a.enteringEl),d=new e;d.addElement(s).beforeRemoveClass("ion-page-invisible");const u="back"===a.direction;u?d.duration(a.duration||200).easing("cubic-bezier(0.47,0,0.745,0.715)"):d.duration(a.duration||280).easing("cubic-bezier(0.36,0.66,0.04,1)").fromTo(o,n,i,!0).fromTo("opacity",.01,1,!0);const l=s.querySelector("ion-toolbar");if(l){const o=new e;o.addElement(l),d.add(o)}if(c&&u){d.duration(a.duration||200).easing("cubic-bezier(0.47,0,0.745,0.715)");const t=new e;t.addElement(r(c)).fromTo(o,i,n).fromTo("opacity",1,0),d.add(t)}return Promise.resolve(d)}function r(e){if(e.classList.contains("ion-page"))return e;return e.querySelector(":scope > .ion-page, :scope > ion-nav, :scope > ion-tabs")||e}export{t as mdTransitionAnimation};

@@ -2,6 +2,7 @@ import { createColorClasses } from '../../utils/theme';
 export class Segment {
     constructor() {
         this.disabled = false;
+        this.scrollable = false;
     }
     valueChanged(value) {
         this.updateButtons();
@@ -11,6 +12,9 @@ export class Segment {
         const selectedButton = ev.target;
         this.value = selectedButton.value;
     }
+    componentWillLoad() {
+        this.emitStyle();
+    }
     componentDidLoad() {
         if (this.value == null) {
             const checked = this.getButtons().find(b => b.checked);
@@ -19,6 +23,11 @@ export class Segment {
             }
         }
         this.updateButtons();
+    }
+    emitStyle() {
+        this.ionStyle.emit({
+            'segment': true
+        });
     }
     updateButtons() {
         const value = this.value;
@@ -31,7 +40,7 @@ export class Segment {
     }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'segment-disabled': this.disabled })
+            class: Object.assign({}, createColorClasses(this.color), { 'segment-disabled': this.disabled, 'segment-scrollable': this.scrollable })
         };
     }
     static get is() { return "ion-segment"; }
@@ -52,6 +61,10 @@ export class Segment {
             "type": String,
             "attr": "mode"
         },
+        "scrollable": {
+            "type": Boolean,
+            "attr": "scrollable"
+        },
         "value": {
             "type": String,
             "attr": "value",
@@ -62,6 +75,12 @@ export class Segment {
     static get events() { return [{
             "name": "ionChange",
             "method": "ionChange",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "ionStyle",
+            "method": "ionStyle",
             "bubbles": true,
             "cancelable": true,
             "composed": true

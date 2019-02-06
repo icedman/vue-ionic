@@ -16,15 +16,15 @@ export function startHardwareBackButton(win) {
         win.document.dispatchEvent(ev);
         if (handlers.length > 0) {
             let selectedPriority = Number.MIN_SAFE_INTEGER;
-            let handler;
-            handlers.forEach(h => {
-                if (h.priority >= selectedPriority) {
-                    selectedPriority = h.priority;
-                    handler = h.handler;
+            let selectedHandler;
+            handlers.forEach(({ priority, handler }) => {
+                if (priority >= selectedPriority) {
+                    selectedPriority = priority;
+                    selectedHandler = handler;
                 }
             });
             busy = true;
-            executeAction(handler).then(() => busy = false);
+            executeAction(selectedHandler).then(() => busy = false);
         }
     });
 }

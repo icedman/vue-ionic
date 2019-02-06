@@ -1,8 +1,9 @@
 export function iosLeaveAnimation(AnimationC, baseEl, position) {
     const baseAnimation = new AnimationC();
     const wrapperAnimation = new AnimationC();
-    const wrapperEle = baseEl.querySelector('.toast-wrapper');
-    wrapperAnimation.addElement(wrapperEle);
+    const hostEl = baseEl.host || baseEl;
+    const wrapperEl = baseEl.querySelector('.toast-wrapper');
+    wrapperAnimation.addElement(wrapperEl);
     const bottom = `calc(-10px - var(--ion-safe-area-bottom, 0px))`;
     const top = `calc(10px + var(--ion-safe-area-top, 0px))`;
     switch (position) {
@@ -17,7 +18,7 @@ export function iosLeaveAnimation(AnimationC, baseEl, position) {
             break;
     }
     return Promise.resolve(baseAnimation
-        .addElement(baseEl)
+        .addElement(hostEl)
         .easing('cubic-bezier(.36,.66,.04,1)')
         .duration(300)
         .add(wrapperAnimation));

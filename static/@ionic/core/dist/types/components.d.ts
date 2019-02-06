@@ -15,20 +15,20 @@ import {
   AlertButton,
   AlertInput,
   AlertOptions,
-  Animation,
   AnimationBuilder,
-  CheckedInputChangeEvent,
+  CheckboxChangeEventDetail,
   Color,
   ComponentProps,
   ComponentRef,
+  DatetimeChangeEventDetail,
   DatetimeOptions,
   DomRenderFn,
   FrameworkDelegate,
   HeaderFn,
-  InputChangeEvent,
+  InputChangeEventDetail,
   ItemHeightFn,
   ItemRenderFn,
-  ItemReorderDetail,
+  ItemReorderEventDetail,
   LoadingOptions,
   MenuChangeEventDetail,
   MenuControllerI,
@@ -42,6 +42,9 @@ import {
   PickerColumn,
   PickerOptions,
   PopoverOptions,
+  RadioChangeEventDetail,
+  RadioGroupChangeEventDetail,
+  RangeChangeEventDetail,
   RangeValue,
   RefresherEventDetail,
   RouteID,
@@ -51,18 +54,23 @@ import {
   RouteWrite,
   ScrollBaseDetail,
   ScrollDetail,
-  SelectInputChangeEvent,
+  SearchbarChangeEventDetail,
+  SegmentButtonLayout,
+  SegmentChangeEventDetail,
+  SelectChangeEventDetail,
   SelectInterface,
   SelectPopoverOption,
   Side,
   SpinnerTypes,
-  StyleEvent,
-  TabbarChangedDetail,
-  TabbarClickDetail,
-  TabbarLayout,
+  StyleEventDetail,
+  SwipeGestureHandler,
+  TabBarChangedEventDetail,
+  TabButtonClickEventDetail,
+  TabButtonLayout,
+  TextareaChangeEventDetail,
   TextFieldTypes,
-  TextInputChangeEvent,
   ToastOptions,
+  ToggleChangeEventDetail,
   TransitionDoneFn,
   TransitionInstruction,
   ViewController,
@@ -92,11 +100,11 @@ export namespace Components {
 
   interface IonActionSheet {
     /**
-    * If `true`, the action sheet will animate. Defaults to `true`.
+    * If `true`, the action sheet will animate.
     */
     'animated': boolean;
     /**
-    * If `true`, the action sheet will be dismissed when the backdrop is clicked. Defaults to `true`.
+    * If `true`, the action sheet will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss': boolean;
     /**
@@ -128,7 +136,7 @@ export namespace Components {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -149,23 +157,23 @@ export namespace Components {
     */
     'subHeader'?: string;
     /**
-    * If `true`, the action sheet will be translucent. Defaults to `false`.
+    * If `true`, the action sheet will be translucent. Only applies when the mode is `"ios"` and the device supports backdrop-filter.
     */
     'translucent': boolean;
   }
   interface IonActionSheetAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the action sheet will animate. Defaults to `true`.
+    * If `true`, the action sheet will animate.
     */
     'animated'?: boolean;
     /**
-    * If `true`, the action sheet will be dismissed when the backdrop is clicked. Defaults to `true`.
+    * If `true`, the action sheet will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss'?: boolean;
     /**
     * An array of buttons for the action sheet.
     */
-    'buttons'?: (ActionSheetButton | string)[];
+    'buttons': (ActionSheetButton | string)[];
     /**
     * Additional classes to apply for custom CSS. If multiple classes are provided they should be separated by spaces.
     */
@@ -187,7 +195,7 @@ export namespace Components {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -195,17 +203,9 @@ export namespace Components {
     */
     'onIonActionSheetDidDismiss'?: (event: CustomEvent<OverlayEventDetail>) => void;
     /**
-    * Emitted after the alert has loaded.
-    */
-    'onIonActionSheetDidLoad'?: (event: CustomEvent<void>) => void;
-    /**
     * Emitted after the alert has presented.
     */
     'onIonActionSheetDidPresent'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted after the alert has unloaded.
-    */
-    'onIonActionSheetDidUnload'?: (event: CustomEvent<void>) => void;
     /**
     * Emitted before the alert has dismissed.
     */
@@ -214,13 +214,12 @@ export namespace Components {
     * Emitted before the alert has presented.
     */
     'onIonActionSheetWillPresent'?: (event: CustomEvent<void>) => void;
-    'overlayIndex'?: number;
     /**
     * Subtitle for the action sheet.
     */
     'subHeader'?: string;
     /**
-    * If `true`, the action sheet will be translucent. Defaults to `false`.
+    * If `true`, the action sheet will be translucent. Only applies when the mode is `"ios"` and the device supports backdrop-filter.
     */
     'translucent'?: boolean;
   }
@@ -243,11 +242,11 @@ export namespace Components {
 
   interface IonAlert {
     /**
-    * If `true`, the alert will animate. Defaults to `true`.
+    * If `true`, the alert will animate.
     */
     'animated': boolean;
     /**
-    * If `true`, the alert will be dismissed when the backdrop is clicked. Defaults to `true`.
+    * If `true`, the alert will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss': boolean;
     /**
@@ -287,7 +286,7 @@ export namespace Components {
     */
     'message'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -308,17 +307,17 @@ export namespace Components {
     */
     'subHeader'?: string;
     /**
-    * If `true`, the alert will be translucent. Defaults to `false`.
+    * If `true`, the alert will be translucent.
     */
     'translucent': boolean;
   }
   interface IonAlertAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the alert will animate. Defaults to `true`.
+    * If `true`, the alert will animate.
     */
     'animated'?: boolean;
     /**
-    * If `true`, the alert will be dismissed when the backdrop is clicked. Defaults to `true`.
+    * If `true`, the alert will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss'?: boolean;
     /**
@@ -354,7 +353,7 @@ export namespace Components {
     */
     'message'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -364,15 +363,7 @@ export namespace Components {
     /**
     * Emitted after the alert has presented.
     */
-    'onIonAlertDidLoad'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted after the alert has presented.
-    */
     'onIonAlertDidPresent'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted before the alert has presented.
-    */
-    'onIonAlertDidUnload'?: (event: CustomEvent<void>) => void;
     /**
     * Emitted before the alert has dismissed.
     */
@@ -381,13 +372,12 @@ export namespace Components {
     * Emitted before the alert has presented.
     */
     'onIonAlertWillPresent'?: (event: CustomEvent<void>) => void;
-    'overlayIndex'?: number;
     /**
     * The subtitle in the heading of the alert. Displayed under the title.
     */
     'subHeader'?: string;
     /**
-    * If `true`, the alert will be translucent. Defaults to `false`.
+    * If `true`, the alert will be translucent.
     */
     'translucent'?: boolean;
   }
@@ -404,7 +394,7 @@ export namespace Components {
     /**
     * When using a router, it specifies the transition direction when navigating to another page using `href`.
     */
-    'routerDirection'?: RouterDirection;
+    'routerDirection': RouterDirection;
   }
   interface IonAnchorAttributes extends StencilHTMLAttributes {
     /**
@@ -420,14 +410,6 @@ export namespace Components {
     */
     'routerDirection'?: RouterDirection;
   }
-
-  interface IonAnimationController {
-    /**
-    * Creates an animation instance
-    */
-    'create': (animationBuilder?: AnimationBuilder | undefined, baseEl?: any, opts?: any) => Promise<Animation>;
-  }
-  interface IonAnimationControllerAttributes extends StencilHTMLAttributes {}
 
   interface IonApp {}
   interface IonAppAttributes extends StencilHTMLAttributes {}
@@ -449,7 +431,7 @@ export namespace Components {
     */
     'icon'?: string | null;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -471,7 +453,7 @@ export namespace Components {
     */
     'icon'?: string | null;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -482,15 +464,15 @@ export namespace Components {
 
   interface IonBackdrop {
     /**
-    * If `true`, the backdrop will stop propagation on tap. Defaults to `true`.
+    * If `true`, the backdrop will stop propagation on tap.
     */
     'stopPropagation': boolean;
     /**
-    * If `true`, the backdrop will can be clicked and will emit the `ionBackdropTap` event. Defaults to `true`.
+    * If `true`, the backdrop will can be clicked and will emit the `ionBackdropTap` event.
     */
     'tappable': boolean;
     /**
-    * If `true`, the backdrop will be visible. Defaults to `true`.
+    * If `true`, the backdrop will be visible.
     */
     'visible': boolean;
   }
@@ -500,15 +482,15 @@ export namespace Components {
     */
     'onIonBackdropTap'?: (event: CustomEvent<void>) => void;
     /**
-    * If `true`, the backdrop will stop propagation on tap. Defaults to `true`.
+    * If `true`, the backdrop will stop propagation on tap.
     */
     'stopPropagation'?: boolean;
     /**
-    * If `true`, the backdrop will can be clicked and will emit the `ionBackdropTap` event. Defaults to `true`.
+    * If `true`, the backdrop will can be clicked and will emit the `ionBackdropTap` event.
     */
     'tappable'?: boolean;
     /**
-    * If `true`, the backdrop will be visible. Defaults to `true`.
+    * If `true`, the backdrop will be visible.
     */
     'visible'?: boolean;
   }
@@ -519,7 +501,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
@@ -529,14 +511,14 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
 
   interface IonButton {
     /**
-    * The type of button. Possible values are: `"button"`, `"bar-button"`.
+    * The type of button.
     */
     'buttonType': string;
     /**
@@ -544,7 +526,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the button. Defaults to `false`.
+    * If `true`, the user cannot interact with the button.
     */
     'disabled': boolean;
     /**
@@ -560,19 +542,19 @@ export namespace Components {
     */
     'href'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
     * When using a router, it specifies the transition direction when navigating to another page using `href`.
     */
-    'routerDirection'?: RouterDirection;
+    'routerDirection': RouterDirection;
     /**
-    * The button shape. Possible values are: `"round"`.
+    * The button shape.
     */
     'shape'?: 'round';
     /**
-    * The button size. Possible values are: `"small"`, `"default"`, `"large"`.
+    * The button size.
     */
     'size'?: 'small' | 'default' | 'large';
     /**
@@ -580,13 +562,13 @@ export namespace Components {
     */
     'strong': boolean;
     /**
-    * The type of the button. Possible values are: `"submit"`, `"reset"` and `"button"`. Default value is: `"button"`
+    * The type of the button.
     */
     'type': 'submit' | 'reset' | 'button';
   }
   interface IonButtonAttributes extends StencilHTMLAttributes {
     /**
-    * The type of button. Possible values are: `"button"`, `"bar-button"`.
+    * The type of button.
     */
     'buttonType'?: string;
     /**
@@ -594,7 +576,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the button. Defaults to `false`.
+    * If `true`, the user cannot interact with the button.
     */
     'disabled'?: boolean;
     /**
@@ -610,7 +592,7 @@ export namespace Components {
     */
     'href'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -626,11 +608,11 @@ export namespace Components {
     */
     'routerDirection'?: RouterDirection;
     /**
-    * The button shape. Possible values are: `"round"`.
+    * The button shape.
     */
     'shape'?: 'round';
     /**
-    * The button size. Possible values are: `"small"`, `"default"`, `"large"`.
+    * The button size.
     */
     'size'?: 'small' | 'default' | 'large';
     /**
@@ -638,7 +620,7 @@ export namespace Components {
     */
     'strong'?: boolean;
     /**
-    * The type of the button. Possible values are: `"submit"`, `"reset"` and `"button"`. Default value is: `"button"`
+    * The type of the button.
     */
     'type'?: 'submit' | 'reset' | 'button';
   }
@@ -648,13 +630,13 @@ export namespace Components {
 
   interface IonCardContent {
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
   interface IonCardContentAttributes extends StencilHTMLAttributes {
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
@@ -665,11 +647,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
-    * If `true`, the card header will be translucent. Defaults to `false`.
+    * If `true`, the card header will be translucent.
     */
     'translucent': boolean;
   }
@@ -679,11 +661,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
-    * If `true`, the card header will be translucent. Defaults to `false`.
+    * If `true`, the card header will be translucent.
     */
     'translucent'?: boolean;
   }
@@ -694,7 +676,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
@@ -704,7 +686,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
@@ -715,7 +697,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
@@ -725,7 +707,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
@@ -736,7 +718,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
@@ -746,14 +728,14 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
 
   interface IonCheckbox {
     /**
-    * If `true`, the checkbox is selected. Defaults to `false`.
+    * If `true`, the checkbox is selected.
     */
     'checked': boolean;
     /**
@@ -761,11 +743,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the checkbox. Defaults to `false`.
+    * If `true`, the user cannot interact with the checkbox.
     */
     'disabled': boolean;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -773,13 +755,13 @@ export namespace Components {
     */
     'name': string;
     /**
-    * The value of the toggle does not mean if it's checked or not, use the `checked` property for that.  The value of a toggle is analogous to the value of a `<input type="checkbox">`, it's only used when the toggle participates in a native `<form>`. Defaults to `on`.
+    * The value of the toggle does not mean if it's checked or not, use the `checked` property for that.  The value of a toggle is analogous to the value of a `<input type="checkbox">`, it's only used when the toggle participates in a native `<form>`.
     */
     'value': string;
   }
   interface IonCheckboxAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the checkbox is selected. Defaults to `false`.
+    * If `true`, the checkbox is selected.
     */
     'checked'?: boolean;
     /**
@@ -787,11 +769,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the checkbox. Defaults to `false`.
+    * If `true`, the user cannot interact with the checkbox.
     */
     'disabled'?: boolean;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -805,109 +787,15 @@ export namespace Components {
     /**
     * Emitted when the checked property has changed.
     */
-    'onIonChange'?: (event: CustomEvent<CheckedInputChangeEvent>) => void;
+    'onIonChange'?: (event: CustomEvent<CheckboxChangeEventDetail>) => void;
     /**
     * Emitted when the toggle has focus.
     */
     'onIonFocus'?: (event: CustomEvent<void>) => void;
     /**
-    * Emitted when the styles change.
-    */
-    'onIonStyle'?: (event: CustomEvent<StyleEvent>) => void;
-    /**
-    * The value of the toggle does not mean if it's checked or not, use the `checked` property for that.  The value of a toggle is analogous to the value of a `<input type="checkbox">`, it's only used when the toggle participates in a native `<form>`. Defaults to `on`.
+    * The value of the toggle does not mean if it's checked or not, use the `checked` property for that.  The value of a toggle is analogous to the value of a `<input type="checkbox">`, it's only used when the toggle participates in a native `<form>`.
     */
     'value'?: string;
-  }
-
-  interface IonChipButton {
-    /**
-    * The color to use from your application's color palette. Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`. For more information on colors, see [theming](/docs/theming/basics).
-    */
-    'color'?: Color;
-    /**
-    * If `true`, the user cannot interact with the chip button. Defaults to `false`.
-    */
-    'disabled': boolean;
-    /**
-    * Set to `"clear"` for a transparent button or to `"solid"` for a filled background. Defaults to `"clear"`.
-    */
-    'fill': 'clear' | 'solid';
-    /**
-    * Contains a URL or a URL fragment that the hyperlink points to. If this property is set, an anchor tag will be rendered.
-    */
-    'href'?: string;
-    /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
-    */
-    'mode': Mode;
-  }
-  interface IonChipButtonAttributes extends StencilHTMLAttributes {
-    /**
-    * The color to use from your application's color palette. Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`. For more information on colors, see [theming](/docs/theming/basics).
-    */
-    'color'?: Color;
-    /**
-    * If `true`, the user cannot interact with the chip button. Defaults to `false`.
-    */
-    'disabled'?: boolean;
-    /**
-    * Set to `"clear"` for a transparent button or to `"solid"` for a filled background. Defaults to `"clear"`.
-    */
-    'fill'?: 'clear' | 'solid';
-    /**
-    * Contains a URL or a URL fragment that the hyperlink points to. If this property is set, an anchor tag will be rendered.
-    */
-    'href'?: string;
-    /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
-    */
-    'mode'?: Mode;
-  }
-
-  interface IonChipIcon {
-    /**
-    * The color to use from your application's color palette. Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`. For more information on colors, see [theming](/docs/theming/basics).
-    */
-    'color'?: Color;
-    /**
-    * Set to `"clear"` for a transparent icon or to `"solid"` for a filled background. Defaults to `"clear"`.
-    */
-    'fill': 'clear' | 'solid';
-    /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
-    */
-    'mode': Mode;
-    /**
-    * The icon to use. Possible values are the same as `"ion-icon"`.
-    */
-    'name'?: string;
-    /**
-    * The icon src to use. Possible values are the same as `"ion-icon"`.
-    */
-    'src'?: string;
-  }
-  interface IonChipIconAttributes extends StencilHTMLAttributes {
-    /**
-    * The color to use from your application's color palette. Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`. For more information on colors, see [theming](/docs/theming/basics).
-    */
-    'color'?: Color;
-    /**
-    * Set to `"clear"` for a transparent icon or to `"solid"` for a filled background. Defaults to `"clear"`.
-    */
-    'fill'?: 'clear' | 'solid';
-    /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
-    */
-    'mode'?: Mode;
-    /**
-    * The icon to use. Possible values are the same as `"ion-icon"`.
-    */
-    'name'?: string;
-    /**
-    * The icon src to use. Possible values are the same as `"ion-icon"`.
-    */
-    'src'?: string;
   }
 
   interface IonChip {
@@ -916,9 +804,13 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
+    /**
+    * Display an outline style button.
+    */
+    'outline': boolean;
   }
   interface IonChipAttributes extends StencilHTMLAttributes {
     /**
@@ -926,82 +818,86 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
+    /**
+    * Display an outline style button.
+    */
+    'outline'?: boolean;
   }
 
   interface IonCol {
     /**
-    * The amount to offset the column, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column, in terms of how many columns it should shift to the end of the total available.
     */
     'offset'?: string;
     /**
-    * The amount to offset the column for lg screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column for lg screens, in terms of how many columns it should shift to the end of the total available.
     */
     'offsetLg'?: string;
     /**
-    * The amount to offset the column for md screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column for md screens, in terms of how many columns it should shift to the end of the total available.
     */
     'offsetMd'?: string;
     /**
-    * The amount to offset the column for sm screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column for sm screens, in terms of how many columns it should shift to the end of the total available.
     */
     'offsetSm'?: string;
     /**
-    * The amount to offset the column for xl screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column for xl screens, in terms of how many columns it should shift to the end of the total available.
     */
     'offsetXl'?: string;
     /**
-    * The amount to offset the column for xs screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column for xs screens, in terms of how many columns it should shift to the end of the total available.
     */
     'offsetXs'?: string;
     /**
-    * The amount to pull the column, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column, in terms of how many columns it should shift to the start of the total available.
     */
     'pull'?: string;
     /**
-    * The amount to pull the column for lg screens, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column for lg screens, in terms of how many columns it should shift to the start of the total available.
     */
     'pullLg'?: string;
     /**
-    * The amount to pull the column for md screens, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column for md screens, in terms of how many columns it should shift to the start of the total available.
     */
     'pullMd'?: string;
     /**
-    * The amount to pull the column for sm screens, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column for sm screens, in terms of how many columns it should shift to the start of the total available.
     */
     'pullSm'?: string;
     /**
-    * The amount to pull the column for xl screens, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column for xl screens, in terms of how many columns it should shift to the start of the total available.
     */
     'pullXl'?: string;
     /**
-    * The amount to pull the column for xs screens, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column for xs screens, in terms of how many columns it should shift to the start of the total available.
     */
     'pullXs'?: string;
     /**
-    * The amount to push the column, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column, in terms of how many columns it should shift to the end of the total available.
     */
     'push'?: string;
     /**
-    * The amount to push the column for lg screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column for lg screens, in terms of how many columns it should shift to the end of the total available.
     */
     'pushLg'?: string;
     /**
-    * The amount to push the column for md screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column for md screens, in terms of how many columns it should shift to the end of the total available.
     */
     'pushMd'?: string;
     /**
-    * The amount to push the column for sm screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column for sm screens, in terms of how many columns it should shift to the end of the total available.
     */
     'pushSm'?: string;
     /**
-    * The amount to push the column for xl screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column for xl screens, in terms of how many columns it should shift to the end of the total available.
     */
     'pushXl'?: string;
     /**
-    * The amount to push the column for xs screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column for xs screens, in terms of how many columns it should shift to the end of the total available.
     */
     'pushXs'?: string;
     /**
@@ -1031,75 +927,75 @@ export namespace Components {
   }
   interface IonColAttributes extends StencilHTMLAttributes {
     /**
-    * The amount to offset the column, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column, in terms of how many columns it should shift to the end of the total available.
     */
     'offset'?: string;
     /**
-    * The amount to offset the column for lg screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column for lg screens, in terms of how many columns it should shift to the end of the total available.
     */
     'offsetLg'?: string;
     /**
-    * The amount to offset the column for md screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column for md screens, in terms of how many columns it should shift to the end of the total available.
     */
     'offsetMd'?: string;
     /**
-    * The amount to offset the column for sm screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column for sm screens, in terms of how many columns it should shift to the end of the total available.
     */
     'offsetSm'?: string;
     /**
-    * The amount to offset the column for xl screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column for xl screens, in terms of how many columns it should shift to the end of the total available.
     */
     'offsetXl'?: string;
     /**
-    * The amount to offset the column for xs screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to offset the column for xs screens, in terms of how many columns it should shift to the end of the total available.
     */
     'offsetXs'?: string;
     /**
-    * The amount to pull the column, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column, in terms of how many columns it should shift to the start of the total available.
     */
     'pull'?: string;
     /**
-    * The amount to pull the column for lg screens, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column for lg screens, in terms of how many columns it should shift to the start of the total available.
     */
     'pullLg'?: string;
     /**
-    * The amount to pull the column for md screens, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column for md screens, in terms of how many columns it should shift to the start of the total available.
     */
     'pullMd'?: string;
     /**
-    * The amount to pull the column for sm screens, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column for sm screens, in terms of how many columns it should shift to the start of the total available.
     */
     'pullSm'?: string;
     /**
-    * The amount to pull the column for xl screens, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column for xl screens, in terms of how many columns it should shift to the start of the total available.
     */
     'pullXl'?: string;
     /**
-    * The amount to pull the column for xs screens, in terms of how many columns it should shift to the left of the total available.
+    * The amount to pull the column for xs screens, in terms of how many columns it should shift to the start of the total available.
     */
     'pullXs'?: string;
     /**
-    * The amount to push the column, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column, in terms of how many columns it should shift to the end of the total available.
     */
     'push'?: string;
     /**
-    * The amount to push the column for lg screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column for lg screens, in terms of how many columns it should shift to the end of the total available.
     */
     'pushLg'?: string;
     /**
-    * The amount to push the column for md screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column for md screens, in terms of how many columns it should shift to the end of the total available.
     */
     'pushMd'?: string;
     /**
-    * The amount to push the column for sm screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column for sm screens, in terms of how many columns it should shift to the end of the total available.
     */
     'pushSm'?: string;
     /**
-    * The amount to push the column for xl screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column for xl screens, in terms of how many columns it should shift to the end of the total available.
     */
     'pushXl'?: string;
     /**
-    * The amount to push the column for xs screens, in terms of how many columns it should shift to the right of the total available.
+    * The amount to push the column for xs screens, in terms of how many columns it should shift to the end of the total available.
     */
     'pushXs'?: string;
     /**
@@ -1215,7 +1111,7 @@ export namespace Components {
 
   interface IonDatetime {
     /**
-    * The text to display on the picker's cancel button. Default: `Cancel`.
+    * The text to display on the picker's cancel button.
     */
     'cancelText': string;
     /**
@@ -1231,7 +1127,7 @@ export namespace Components {
     */
     'dayValues'?: number[] | number | string;
     /**
-    * If `true`, the user cannot interact with the datetime. Defaults to `false`.
+    * If `true`, the user cannot interact with the datetime.
     */
     'disabled': boolean;
     /**
@@ -1239,7 +1135,7 @@ export namespace Components {
     */
     'displayFormat': string;
     /**
-    * The text to display on the picker's "Done" button. Default: `Done`.
+    * The text to display on the picker's "Done" button.
     */
     'doneText': string;
     /**
@@ -1259,7 +1155,7 @@ export namespace Components {
     */
     'minuteValues'?: number[] | number | string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -1295,6 +1191,10 @@ export namespace Components {
     */
     'placeholder'?: string | null;
     /**
+    * If `true`, the datetime appears normal but is not interactive.
+    */
+    'readonly': boolean;
+    /**
     * The value of the datetime as a valid ISO 8601 datetime string.
     */
     'value'?: string | null;
@@ -1305,7 +1205,7 @@ export namespace Components {
   }
   interface IonDatetimeAttributes extends StencilHTMLAttributes {
     /**
-    * The text to display on the picker's cancel button. Default: `Cancel`.
+    * The text to display on the picker's cancel button.
     */
     'cancelText'?: string;
     /**
@@ -1321,7 +1221,7 @@ export namespace Components {
     */
     'dayValues'?: number[] | number | string;
     /**
-    * If `true`, the user cannot interact with the datetime. Defaults to `false`.
+    * If `true`, the user cannot interact with the datetime.
     */
     'disabled'?: boolean;
     /**
@@ -1329,7 +1229,7 @@ export namespace Components {
     */
     'displayFormat'?: string;
     /**
-    * The text to display on the picker's "Done" button. Default: `Done`.
+    * The text to display on the picker's "Done" button.
     */
     'doneText'?: string;
     /**
@@ -1349,7 +1249,7 @@ export namespace Components {
     */
     'minuteValues'?: number[] | number | string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -1369,17 +1269,21 @@ export namespace Components {
     */
     'name'?: string;
     /**
+    * Emitted when the datetime loses focus.
+    */
+    'onIonBlur'?: (event: CustomEvent<void>) => void;
+    /**
     * Emitted when the datetime selection was cancelled.
     */
     'onIonCancel'?: (event: CustomEvent<void>) => void;
     /**
     * Emitted when the value (selected date) has changed.
     */
-    'onIonChange'?: (event: CustomEvent<InputChangeEvent>) => void;
+    'onIonChange'?: (event: CustomEvent<DatetimeChangeEventDetail>) => void;
     /**
-    * Emitted when the styles change.
+    * Emitted when the datetime has focus.
     */
-    'onIonStyle'?: (event: CustomEvent<StyleEvent>) => void;
+    'onIonFocus'?: (event: CustomEvent<void>) => void;
     /**
     * The format of the date and time picker columns the user selects. A datetime input can have one or many datetime parts, each getting their own column which allow individual selection of that particular datetime part. For example, year and month columns are two individually selectable columns which help choose an exact date from the datetime picker. Each column follows the string parse format. Defaults to use `displayFormat`.
     */
@@ -1393,6 +1297,10 @@ export namespace Components {
     */
     'placeholder'?: string | null;
     /**
+    * If `true`, the datetime appears normal but is not interactive.
+    */
+    'readonly'?: boolean;
+    /**
     * The value of the datetime as a valid ISO 8601 datetime string.
     */
     'value'?: string | null;
@@ -1404,7 +1312,7 @@ export namespace Components {
 
   interface IonFabButton {
     /**
-    * If `true`, the fab button will be show a close icon. Defaults to `false`.
+    * If `true`, the fab button will be show a close icon.
     */
     'activated': boolean;
     /**
@@ -1412,7 +1320,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the fab button. Defaults to `false`.
+    * If `true`, the user cannot interact with the fab button.
     */
     'disabled': boolean;
     /**
@@ -1420,29 +1328,33 @@ export namespace Components {
     */
     'href'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
     * When using a router, it specifies the transition direction when navigating to another page using `href`.
     */
-    'routerDirection'?: RouterDirection;
+    'routerDirection': RouterDirection;
     /**
     * If `true`, the fab button will show when in a fab-list.
     */
     'show': boolean;
     /**
-    * If `true`, the fab button will be translucent. Defaults to `false`.
+    * The size of the button. Set this to `small` in order to have a mini fab.
+    */
+    'size'?: 'small';
+    /**
+    * If `true`, the fab button will be translucent.
     */
     'translucent': boolean;
     /**
-    * The type of the button. Possible values are: `"submit"`, `"reset"` and `"button"`. Default value is: `"button"`
+    * The type of the button.
     */
     'type': 'submit' | 'reset' | 'button';
   }
   interface IonFabButtonAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the fab button will be show a close icon. Defaults to `false`.
+    * If `true`, the fab button will be show a close icon.
     */
     'activated'?: boolean;
     /**
@@ -1450,7 +1362,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the fab button. Defaults to `false`.
+    * If `true`, the user cannot interact with the fab button.
     */
     'disabled'?: boolean;
     /**
@@ -1458,7 +1370,7 @@ export namespace Components {
     */
     'href'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -1478,32 +1390,36 @@ export namespace Components {
     */
     'show'?: boolean;
     /**
-    * If `true`, the fab button will be translucent. Defaults to `false`.
+    * The size of the button. Set this to `small` in order to have a mini fab.
+    */
+    'size'?: 'small';
+    /**
+    * If `true`, the fab button will be translucent.
     */
     'translucent'?: boolean;
     /**
-    * The type of the button. Possible values are: `"submit"`, `"reset"` and `"button"`. Default value is: `"button"`
+    * The type of the button.
     */
     'type'?: 'submit' | 'reset' | 'button';
   }
 
   interface IonFabList {
     /**
-    * If `true`, the fab list will be show all fab buttons in the list. Defaults to `false`.
+    * If `true`, the fab list will be show all fab buttons in the list.
     */
     'activated': boolean;
     /**
-    * The side the fab list will show on relative to the main fab button. Defaults to `'bottom'`.
+    * The side the fab list will show on relative to the main fab button.
     */
     'side': 'start' | 'end' | 'top' | 'bottom';
   }
   interface IonFabListAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the fab list will be show all fab buttons in the list. Defaults to `false`.
+    * If `true`, the fab list will be show all fab buttons in the list.
     */
     'activated'?: boolean;
     /**
-    * The side the fab list will show on relative to the main fab button. Defaults to `'bottom'`.
+    * The side the fab list will show on relative to the main fab button.
     */
     'side'?: 'start' | 'end' | 'top' | 'bottom';
   }
@@ -1522,11 +1438,11 @@ export namespace Components {
     */
     'edge': boolean;
     /**
-    * Where to align the fab horizontally in the viewport. Possible values are: `"center"`, `"start"`, `"end"`.
+    * Where to align the fab horizontally in the viewport.
     */
     'horizontal'?: 'start' | 'end' | 'center';
     /**
-    * Where to align the fab vertically in the viewport. Possible values are: `"top"`, `"center"`, `"bottom"`.
+    * Where to align the fab vertically in the viewport.
     */
     'vertical'?: 'top' | 'bottom' | 'center';
   }
@@ -1540,66 +1456,66 @@ export namespace Components {
     */
     'edge'?: boolean;
     /**
-    * Where to align the fab horizontally in the viewport. Possible values are: `"center"`, `"start"`, `"end"`.
+    * Where to align the fab horizontally in the viewport.
     */
     'horizontal'?: 'start' | 'end' | 'center';
     /**
-    * Where to align the fab vertically in the viewport. Possible values are: `"top"`, `"center"`, `"bottom"`.
+    * Where to align the fab vertically in the viewport.
     */
     'vertical'?: 'top' | 'bottom' | 'center';
   }
 
   interface IonFooter {
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
-    * If `true`, the footer will be translucent. Note: In order to scroll content behind the footer, the `fullscreen` attribute needs to be set on the content. Defaults to `false`.
+    * If `true`, the footer will be translucent. Note: In order to scroll content behind the footer, the `fullscreen` attribute needs to be set on the content.
     */
     'translucent': boolean;
   }
   interface IonFooterAttributes extends StencilHTMLAttributes {
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
-    * If `true`, the footer will be translucent. Note: In order to scroll content behind the footer, the `fullscreen` attribute needs to be set on the content. Defaults to `false`.
+    * If `true`, the footer will be translucent. Note: In order to scroll content behind the footer, the `fullscreen` attribute needs to be set on the content.
     */
     'translucent'?: boolean;
   }
 
   interface IonGrid {
     /**
-    * If `true`, the grid will have a fixed width based on the screen size. Defaults to `false`.
+    * If `true`, the grid will have a fixed width based on the screen size.
     */
     'fixed': boolean;
   }
   interface IonGridAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the grid will have a fixed width based on the screen size. Defaults to `false`.
+    * If `true`, the grid will have a fixed width based on the screen size.
     */
     'fixed'?: boolean;
   }
 
   interface IonHeader {
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
-    * If `true`, the header will be translucent. Note: In order to scroll content behind the header, the `fullscreen` attribute needs to be set on the content. Defaults to `false`.
+    * If `true`, the header will be translucent. Note: In order to scroll content behind the header, the `fullscreen` attribute needs to be set on the content.
     */
     'translucent': boolean;
   }
   interface IonHeaderAttributes extends StencilHTMLAttributes {
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
-    * If `true`, the header will be translucent. Note: In order to scroll content behind the header, the `fullscreen` attribute needs to be set on the content. Defaults to `false`.
+    * If `true`, the header will be translucent. Note: In order to scroll content behind the header, the `fullscreen` attribute needs to be set on the content.
     */
     'translucent'?: boolean;
   }
@@ -1633,7 +1549,7 @@ export namespace Components {
     /**
     * An animated SVG spinner that shows while loading.
     */
-    'loadingSpinner'?: string;
+    'loadingSpinner'?: SpinnerTypes | null;
     /**
     * Optional text to display while loading.
     */
@@ -1643,7 +1559,7 @@ export namespace Components {
     /**
     * An animated SVG spinner that shows while loading.
     */
-    'loadingSpinner'?: string;
+    'loadingSpinner'?: SpinnerTypes | null;
     /**
     * Optional text to display while loading.
     */
@@ -1660,11 +1576,11 @@ export namespace Components {
     */
     'disabled': boolean;
     /**
-    * The position of the infinite scroll element. The value can be either `top` or `bottom`. Defaults to `bottom`.
+    * The position of the infinite scroll element. The value can be either `top` or `bottom`.
     */
     'position': 'top' | 'bottom';
     /**
-    * The threshold distance from the bottom of the content to call the `infinite` output event when scrolled. The threshold value can be either a percent, or in pixels. For example, use the value of `10%` for the `infinite` output event to get called when the user has scrolled 10% from the bottom of the page. Use the value `100px` when the scroll is within 100 pixels from the bottom of the page. Defaults to `15%`.
+    * The threshold distance from the bottom of the content to call the `infinite` output event when scrolled. The threshold value can be either a percent, or in pixels. For example, use the value of `10%` for the `infinite` output event to get called when the user has scrolled 10% from the bottom of the page. Use the value `100px` when the scroll is within 100 pixels from the bottom of the page.
     */
     'threshold': string;
   }
@@ -1678,11 +1594,11 @@ export namespace Components {
     */
     'onIonInfinite'?: (event: CustomEvent<void>) => void;
     /**
-    * The position of the infinite scroll element. The value can be either `top` or `bottom`. Defaults to `bottom`.
+    * The position of the infinite scroll element. The value can be either `top` or `bottom`.
     */
     'position'?: 'top' | 'bottom';
     /**
-    * The threshold distance from the bottom of the content to call the `infinite` output event when scrolled. The threshold value can be either a percent, or in pixels. For example, use the value of `10%` for the `infinite` output event to get called when the user has scrolled 10% from the bottom of the page. Use the value `100px` when the scroll is within 100 pixels from the bottom of the page. Defaults to `15%`.
+    * The threshold distance from the bottom of the content to call the `infinite` output event when scrolled. The threshold value can be either a percent, or in pixels. For example, use the value of `10%` for the `infinite` output event to get called when the user has scrolled 10% from the bottom of the page. Use the value `100px` when the scroll is within 100 pixels from the bottom of the page.
     */
     'threshold'?: string;
   }
@@ -1693,23 +1609,23 @@ export namespace Components {
     */
     'accept'?: string;
     /**
-    * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user. Defaults to `"none"`.
+    * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user.
     */
     'autocapitalize': string;
     /**
-    * Indicates whether the value of the control can be automatically completed by the browser. Defaults to `"off"`.
+    * Indicates whether the value of the control can be automatically completed by the browser.
     */
-    'autocomplete': string;
+    'autocomplete': 'on' | 'off';
     /**
-    * Whether autocorrection should be enabled when the user is entering/editing the text value. Defaults to `"off"`.
+    * Whether auto correction should be enabled when the user is entering/editing the text value.
     */
-    'autocorrect': string;
+    'autocorrect': 'on' | 'off';
     /**
-    * This Boolean attribute lets you specify that a form control should have input focus when the page loads. Defaults to `false`.
+    * This Boolean attribute lets you specify that a form control should have input focus when the page loads.
     */
     'autofocus': boolean;
     /**
-    * If `true`, a clear icon will appear in the input when there is a value. Clicking it clears the input. Defaults to `false`.
+    * If `true`, a clear icon will appear in the input when there is a value. Clicking it clears the input.
     */
     'clearInput': boolean;
     /**
@@ -1721,13 +1637,17 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `0`.
+    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke.
     */
     'debounce': number;
     /**
-    * If `true`, the user cannot interact with the input. Defaults to `false`.
+    * If `true`, the user cannot interact with the input.
     */
     'disabled': boolean;
+    /**
+    * Returns the native `<input>` element used under the hood.
+    */
+    'getInputElement': () => Promise<HTMLInputElement>;
     /**
     * A hint to the browser for which keyboard to display. This attribute applies when the value of the type attribute is `"text"`, `"password"`, `"email"`, or `"url"`. Possible values are: `"verbatim"`, `"latin"`, `"latin-name"`, `"latin-prose"`, `"full-width-latin"`, `"kana"`, `"katakana"`, `"numeric"`, `"tel"`, `"email"`, `"url"`.
     */
@@ -1749,7 +1669,7 @@ export namespace Components {
     */
     'minlength'?: number;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -1767,19 +1687,15 @@ export namespace Components {
     /**
     * Instructional text that shows before the input has a value.
     */
-    'placeholder'?: string;
+    'placeholder'?: string | null;
     /**
-    * If `true`, the user cannot modify the value. Defaults to `false`.
+    * If `true`, the user cannot modify the value.
     */
     'readonly': boolean;
     /**
     * If `true`, the user must fill in a value before submitting a form.
     */
     'required': boolean;
-    /**
-    * This is a nonstandard attribute supported by Safari that only applies when the type is `"search"`. Its value should be a nonnegative decimal integer.
-    */
-    'results'?: number;
     /**
     * Sets focus on the specified `ion-input`. Use this method instead of the global `input.focus()`.
     */
@@ -1789,7 +1705,7 @@ export namespace Components {
     */
     'size'?: number;
     /**
-    * If `true`, the element will have its spelling and grammar checked. Defaults to `false`.
+    * If `true`, the element will have its spelling and grammar checked.
     */
     'spellcheck': boolean;
     /**
@@ -1797,7 +1713,7 @@ export namespace Components {
     */
     'step'?: string;
     /**
-    * The type of control to display. The default type is text. Possible values are: `"text"`, `"password"`, `"email"`, `"number"`, `"search"`, `"tel"`, or `"url"`.
+    * The type of control to display. The default type is text.
     */
     'type': TextFieldTypes;
     /**
@@ -1811,23 +1727,23 @@ export namespace Components {
     */
     'accept'?: string;
     /**
-    * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user. Defaults to `"none"`.
+    * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user.
     */
     'autocapitalize'?: string;
     /**
-    * Indicates whether the value of the control can be automatically completed by the browser. Defaults to `"off"`.
+    * Indicates whether the value of the control can be automatically completed by the browser.
     */
-    'autocomplete'?: string;
+    'autocomplete'?: 'on' | 'off';
     /**
-    * Whether autocorrection should be enabled when the user is entering/editing the text value. Defaults to `"off"`.
+    * Whether auto correction should be enabled when the user is entering/editing the text value.
     */
-    'autocorrect'?: string;
+    'autocorrect'?: 'on' | 'off';
     /**
-    * This Boolean attribute lets you specify that a form control should have input focus when the page loads. Defaults to `false`.
+    * This Boolean attribute lets you specify that a form control should have input focus when the page loads.
     */
     'autofocus'?: boolean;
     /**
-    * If `true`, a clear icon will appear in the input when there is a value. Clicking it clears the input. Defaults to `false`.
+    * If `true`, a clear icon will appear in the input when there is a value. Clicking it clears the input.
     */
     'clearInput'?: boolean;
     /**
@@ -1839,11 +1755,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `0`.
+    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke.
     */
     'debounce'?: number;
     /**
-    * If `true`, the user cannot interact with the input. Defaults to `false`.
+    * If `true`, the user cannot interact with the input.
     */
     'disabled'?: boolean;
     /**
@@ -1867,7 +1783,7 @@ export namespace Components {
     */
     'minlength'?: number;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -1885,7 +1801,7 @@ export namespace Components {
     /**
     * Emitted when the value has changed.
     */
-    'onIonChange'?: (event: CustomEvent<TextInputChangeEvent>) => void;
+    'onIonChange'?: (event: CustomEvent<InputChangeEventDetail>) => void;
     /**
     * Emitted when the input has focus.
     */
@@ -1895,27 +1811,15 @@ export namespace Components {
     */
     'onIonInput'?: (event: CustomEvent<KeyboardEvent>) => void;
     /**
-    * Emitted when the input has been created.
-    */
-    'onIonInputDidLoad'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted when the input has been removed.
-    */
-    'onIonInputDidUnload'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted when the styles change.
-    */
-    'onIonStyle'?: (event: CustomEvent<StyleEvent>) => void;
-    /**
     * A regular expression that the value is checked against. The pattern must match the entire value, not just some subset. Use the title attribute to describe the pattern to help the user. This attribute applies when the value of the type attribute is `"text"`, `"search"`, `"tel"`, `"url"`, `"email"`, or `"password"`, otherwise it is ignored.
     */
     'pattern'?: string;
     /**
     * Instructional text that shows before the input has a value.
     */
-    'placeholder'?: string;
+    'placeholder'?: string | null;
     /**
-    * If `true`, the user cannot modify the value. Defaults to `false`.
+    * If `true`, the user cannot modify the value.
     */
     'readonly'?: boolean;
     /**
@@ -1923,15 +1827,11 @@ export namespace Components {
     */
     'required'?: boolean;
     /**
-    * This is a nonstandard attribute supported by Safari that only applies when the type is `"search"`. Its value should be a nonnegative decimal integer.
-    */
-    'results'?: number;
-    /**
     * The initial size of the control. This value is in pixels unless the value of the type attribute is `"text"` or `"password"`, in which case it is an integer number of characters. This attribute applies only when the `type` attribute is set to `"text"`, `"search"`, `"tel"`, `"url"`, `"email"`, or `"password"`, otherwise it is ignored.
     */
     'size'?: number;
     /**
-    * If `true`, the element will have its spelling and grammar checked. Defaults to `false`.
+    * If `true`, the element will have its spelling and grammar checked.
     */
     'spellcheck'?: boolean;
     /**
@@ -1939,7 +1839,7 @@ export namespace Components {
     */
     'step'?: string;
     /**
-    * The type of control to display. The default type is text. Possible values are: `"text"`, `"password"`, `"email"`, `"number"`, `"search"`, `"tel"`, or `"url"`.
+    * The type of control to display. The default type is text.
     */
     'type'?: TextFieldTypes;
     /**
@@ -1954,9 +1854,13 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
+    /**
+    * When it's set to `true`, the item-divider will stay visible when it reaches the top of the viewport until the next `ion-item-divider` replaces it.  This feature relies in `position:sticky`: https://caniuse.com/#feat=css-sticky
+    */
+    'sticky': boolean;
   }
   interface IonItemDividerAttributes extends StencilHTMLAttributes {
     /**
@@ -1964,9 +1868,13 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
+    /**
+    * When it's set to `true`, the item-divider will stay visible when it reaches the top of the viewport until the next `ion-item-divider` replaces it.  This feature relies in `position:sticky`: https://caniuse.com/#feat=css-sticky
+    */
+    'sticky'?: boolean;
   }
 
   interface IonItemGroup {}
@@ -1978,11 +1886,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the item option. Defaults to `false`.
+    * If `true`, the user cannot interact with the item option.
     */
     'disabled': boolean;
     /**
-    * If `true`, the option will expand to take up the available width and cover any other options. Defaults to `false`.
+    * If `true`, the option will expand to take up the available width and cover any other options.
     */
     'expandable': boolean;
     /**
@@ -1990,7 +1898,7 @@ export namespace Components {
     */
     'href'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
@@ -2000,11 +1908,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the item option. Defaults to `false`.
+    * If `true`, the user cannot interact with the item option.
     */
     'disabled'?: boolean;
     /**
-    * If `true`, the option will expand to take up the available width and cover any other options. Defaults to `false`.
+    * If `true`, the option will expand to take up the available width and cover any other options.
     */
     'expandable'?: boolean;
     /**
@@ -2012,7 +1920,7 @@ export namespace Components {
     */
     'href'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
@@ -2020,7 +1928,7 @@ export namespace Components {
   interface IonItemOptions {
     'fireSwipeEvent': () => void;
     /**
-    * The side the option button should be on. Possible values: `"start"` and `"end"`. Defaults to `"end"`. If you have multiple `ion-item-options`, a side must be provided for each.
+    * The side the option button should be on. Possible values: `"start"` and `"end"`. If you have multiple `ion-item-options`, a side must be provided for each.
     */
     'side': Side;
   }
@@ -2030,7 +1938,7 @@ export namespace Components {
     */
     'onIonSwipe'?: (event: CustomEvent<any>) => void;
     /**
-    * The side the option button should be on. Possible values: `"start"` and `"end"`. Defaults to `"end"`. If you have multiple `ion-item-options`, a side must be provided for each.
+    * The side the option button should be on. Possible values: `"start"` and `"end"`. If you have multiple `ion-item-options`, a side must be provided for each.
     */
     'side'?: Side;
   }
@@ -2045,7 +1953,7 @@ export namespace Components {
     */
     'closeOpened': () => Promise<boolean>;
     /**
-    * If `true`, the user cannot interact with the sliding-item. Defaults to `false`.
+    * If `true`, the user cannot interact with the sliding-item.
     */
     'disabled': boolean;
     /**
@@ -2059,7 +1967,7 @@ export namespace Components {
   }
   interface IonItemSlidingAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the user cannot interact with the sliding-item. Defaults to `false`.
+    * If `true`, the user cannot interact with the sliding-item.
     */
     'disabled'?: boolean;
     /**
@@ -2070,7 +1978,7 @@ export namespace Components {
 
   interface IonItem {
     /**
-    * If `true`, a button tag will be rendered and the item will be tappable. Defaults to `false`.
+    * If `true`, a button tag will be rendered and the item will be tappable.
     */
     'button': boolean;
     /**
@@ -2082,11 +1990,11 @@ export namespace Components {
     */
     'detail'?: boolean;
     /**
-    * The icon to use when `detail` is set to `true`. Defaults to `"ios-arrow-forward"`.
+    * The icon to use when `detail` is set to `true`.
     */
     'detailIcon': string;
     /**
-    * If `true`, the user cannot interact with the item. Defaults to `false`.
+    * If `true`, the user cannot interact with the item.
     */
     'disabled': boolean;
     /**
@@ -2094,25 +2002,25 @@ export namespace Components {
     */
     'href'?: string;
     /**
-    * How the bottom border should be displayed on the item. Available options: `"full"`, `"inset"`, `"none"`.
+    * How the bottom border should be displayed on the item.
     */
     'lines'?: 'full' | 'inset' | 'none';
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
     * When using a router, it specifies the transition direction when navigating to another page using `href`.
     */
-    'routerDirection'?: RouterDirection;
+    'routerDirection': RouterDirection;
     /**
-    * The type of the button. Only used when an `onclick` or `button` property is present. Possible values are: `"submit"`, `"reset"` and `"button"`. Default value is: `"button"`
+    * The type of the button. Only used when an `onclick` or `button` property is present.
     */
     'type': 'submit' | 'reset' | 'button';
   }
   interface IonItemAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, a button tag will be rendered and the item will be tappable. Defaults to `false`.
+    * If `true`, a button tag will be rendered and the item will be tappable.
     */
     'button'?: boolean;
     /**
@@ -2124,11 +2032,11 @@ export namespace Components {
     */
     'detail'?: boolean;
     /**
-    * The icon to use when `detail` is set to `true`. Defaults to `"ios-arrow-forward"`.
+    * The icon to use when `detail` is set to `true`.
     */
     'detailIcon'?: string;
     /**
-    * If `true`, the user cannot interact with the item. Defaults to `false`.
+    * If `true`, the user cannot interact with the item.
     */
     'disabled'?: boolean;
     /**
@@ -2136,11 +2044,11 @@ export namespace Components {
     */
     'href'?: string;
     /**
-    * How the bottom border should be displayed on the item. Available options: `"full"`, `"inset"`, `"none"`.
+    * How the bottom border should be displayed on the item.
     */
     'lines'?: 'full' | 'inset' | 'none';
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -2148,7 +2056,7 @@ export namespace Components {
     */
     'routerDirection'?: RouterDirection;
     /**
-    * The type of the button. Only used when an `onclick` or `button` property is present. Possible values are: `"submit"`, `"reset"` and `"button"`. Default value is: `"button"`
+    * The type of the button. Only used when an `onclick` or `button` property is present.
     */
     'type'?: 'submit' | 'reset' | 'button';
   }
@@ -2159,7 +2067,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -2173,13 +2081,9 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
-    /**
-    * Emitted when the styles change.
-    */
-    'onIonStyle'?: (event: CustomEvent<StyleEvent>) => void;
     /**
     * The position determines where and how the label behaves inside an item.
     */
@@ -2192,7 +2096,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
@@ -2202,7 +2106,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
@@ -2213,29 +2117,29 @@ export namespace Components {
     */
     'closeSlidingItems': () => Promise<boolean>;
     /**
-    * If `true`, the list will have margin around it and rounded corners. Defaults to `false`.
+    * If `true`, the list will have margin around it and rounded corners.
     */
     'inset': boolean;
     /**
-    * How the bottom border should be displayed on all items. Available options: `"full"`, `"inset"`, `"none"`.
+    * How the bottom border should be displayed on all items.
     */
     'lines'?: 'full' | 'inset' | 'none';
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
   interface IonListAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the list will have margin around it and rounded corners. Defaults to `false`.
+    * If `true`, the list will have margin around it and rounded corners.
     */
     'inset'?: boolean;
     /**
-    * How the bottom border should be displayed on all items. Available options: `"full"`, `"inset"`, `"none"`.
+    * How the bottom border should be displayed on all items.
     */
     'lines'?: 'full' | 'inset' | 'none';
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
@@ -2258,11 +2162,11 @@ export namespace Components {
 
   interface IonLoading {
     /**
-    * If `true`, the loading indicator will animate. Defaults to `true`.
+    * If `true`, the loading indicator will animate.
     */
     'animated': boolean;
     /**
-    * If `true`, the loading indicator will be dismissed when the backdrop is clicked. Defaults to `false`.
+    * If `true`, the loading indicator will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss': boolean;
     /**
@@ -2294,7 +2198,7 @@ export namespace Components {
     */
     'message'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -2311,25 +2215,25 @@ export namespace Components {
     */
     'present': () => Promise<void>;
     /**
-    * If `true`, a backdrop will be displayed behind the loading indicator. Defaults to `true`.
+    * If `true`, a backdrop will be displayed behind the loading indicator.
     */
     'showBackdrop': boolean;
     /**
-    * The name of the spinner to display. Possible values are: `"lines"`, `"lines-small"`, `"dots"`, `"bubbles"`, `"circles"`, `"crescent"`.
+    * The name of the spinner to display.
     */
-    'spinner'?: string;
+    'spinner'?: SpinnerTypes | null;
     /**
-    * If `true`, the loading indicator will be translucent. Defaults to `false`.
+    * If `true`, the loading indicator will be translucent.
     */
     'translucent': boolean;
   }
   interface IonLoadingAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the loading indicator will animate. Defaults to `true`.
+    * If `true`, the loading indicator will animate.
     */
     'animated'?: boolean;
     /**
-    * If `true`, the loading indicator will be dismissed when the backdrop is clicked. Defaults to `false`.
+    * If `true`, the loading indicator will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss'?: boolean;
     /**
@@ -2357,7 +2261,7 @@ export namespace Components {
     */
     'message'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -2365,17 +2269,9 @@ export namespace Components {
     */
     'onIonLoadingDidDismiss'?: (event: CustomEvent<OverlayEventDetail>) => void;
     /**
-    * Emitted after the loading has loaded.
-    */
-    'onIonLoadingDidLoad'?: (event: CustomEvent<void>) => void;
-    /**
     * Emitted after the loading has presented.
     */
     'onIonLoadingDidPresent'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted after the loading has unloaded.
-    */
-    'onIonLoadingDidUnload'?: (event: CustomEvent<void>) => void;
     /**
     * Emitted before the loading has dismissed.
     */
@@ -2384,17 +2280,16 @@ export namespace Components {
     * Emitted before the loading has presented.
     */
     'onIonLoadingWillPresent'?: (event: CustomEvent<void>) => void;
-    'overlayIndex'?: number;
     /**
-    * If `true`, a backdrop will be displayed behind the loading indicator. Defaults to `true`.
+    * If `true`, a backdrop will be displayed behind the loading indicator.
     */
     'showBackdrop'?: boolean;
     /**
-    * The name of the spinner to display. Possible values are: `"lines"`, `"lines-small"`, `"dots"`, `"bubbles"`, `"circles"`, `"crescent"`.
+    * The name of the spinner to display.
     */
-    'spinner'?: string;
+    'spinner'?: SpinnerTypes | null;
     /**
-    * If `true`, the loading indicator will be translucent. Defaults to `false`.
+    * If `true`, the loading indicator will be translucent.
     */
     'translucent'?: boolean;
   }
@@ -2413,7 +2308,7 @@ export namespace Components {
     */
     'menu'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
@@ -2431,7 +2326,7 @@ export namespace Components {
     */
     'menu'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
@@ -2520,7 +2415,7 @@ export namespace Components {
     */
     'contentId'?: string;
     /**
-    * If `true`, the menu is disabled. Defaults to `false`.
+    * If `true`, the menu is disabled.
     */
     'disabled': boolean;
     /**
@@ -2548,11 +2443,11 @@ export namespace Components {
     */
     'setOpen': (shouldOpen: boolean, animated?: boolean) => Promise<boolean>;
     /**
-    * Which side of the view the menu should be placed. Default `"start"`.
+    * Which side of the view the menu should be placed.
     */
     'side': Side;
     /**
-    * If `true`, swiping the menu is enabled. Defaults to `true`.
+    * If `true`, swiping the menu is enabled.
     */
     'swipeGesture': boolean;
     /**
@@ -2562,7 +2457,7 @@ export namespace Components {
     /**
     * The display type of the menu. Available options: `"overlay"`, `"reveal"`, `"push"`.
     */
-    'type': string;
+    'type'?: string;
   }
   interface IonMenuAttributes extends StencilHTMLAttributes {
     /**
@@ -2570,7 +2465,7 @@ export namespace Components {
     */
     'contentId'?: string;
     /**
-    * If `true`, the menu is disabled. Defaults to `false`.
+    * If `true`, the menu is disabled.
     */
     'disabled'?: boolean;
     /**
@@ -2590,10 +2485,6 @@ export namespace Components {
     */
     'onIonDidOpen'?: (event: CustomEvent<void>) => void;
     /**
-    * Emitted when the menu state is changed.
-    */
-    'onIonMenuChange'?: (event: CustomEvent<MenuChangeEventDetail>) => void;
-    /**
     * Emitted when the menu is about to be closed.
     */
     'onIonWillClose'?: (event: CustomEvent<void>) => void;
@@ -2602,11 +2493,11 @@ export namespace Components {
     */
     'onIonWillOpen'?: (event: CustomEvent<void>) => void;
     /**
-    * Which side of the view the menu should be placed. Default `"start"`.
+    * Which side of the view the menu should be placed.
     */
     'side'?: Side;
     /**
-    * If `true`, swiping the menu is enabled. Defaults to `true`.
+    * If `true`, swiping the menu is enabled.
     */
     'swipeGesture'?: boolean;
     /**
@@ -2633,11 +2524,11 @@ export namespace Components {
 
   interface IonModal {
     /**
-    * If `true`, the modal will animate. Defaults to `true`.
+    * If `true`, the modal will animate.
     */
     'animated': boolean;
     /**
-    * If `true`, the modal will be dismissed when the backdrop is clicked. Defaults to `true`.
+    * If `true`, the modal will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss': boolean;
     /**
@@ -2670,7 +2561,7 @@ export namespace Components {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -2687,23 +2578,23 @@ export namespace Components {
     */
     'present': () => Promise<void>;
     /**
-    * If `true`, a backdrop will be displayed behind the modal. Defaults to `true`.
+    * If `true`, a backdrop will be displayed behind the modal.
     */
     'showBackdrop': boolean;
   }
   interface IonModalAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the modal will animate. Defaults to `true`.
+    * If `true`, the modal will animate.
     */
     'animated'?: boolean;
     /**
-    * If `true`, the modal will be dismissed when the backdrop is clicked. Defaults to `true`.
+    * If `true`, the modal will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss'?: boolean;
     /**
     * The component to display inside of the modal.
     */
-    'component'?: ComponentRef;
+    'component': ComponentRef;
     /**
     * The data to pass to the modal component.
     */
@@ -2712,7 +2603,6 @@ export namespace Components {
     * Additional classes to apply for custom CSS. If multiple classes are provided they should be separated by spaces.
     */
     'cssClass'?: string | string[];
-    'delegate'?: FrameworkDelegate;
     /**
     * Animation to use when the modal is presented.
     */
@@ -2726,7 +2616,7 @@ export namespace Components {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -2734,17 +2624,9 @@ export namespace Components {
     */
     'onIonModalDidDismiss'?: (event: CustomEvent<OverlayEventDetail>) => void;
     /**
-    * Emitted after the modal has loaded.
-    */
-    'onIonModalDidLoad'?: (event: CustomEvent<void>) => void;
-    /**
     * Emitted after the modal has presented.
     */
     'onIonModalDidPresent'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted after the modal has unloaded.
-    */
-    'onIonModalDidUnload'?: (event: CustomEvent<void>) => void;
     /**
     * Emitted before the modal has dismissed.
     */
@@ -2753,9 +2635,8 @@ export namespace Components {
     * Emitted before the modal has presented.
     */
     'onIonModalWillPresent'?: (event: CustomEvent<void>) => void;
-    'overlayIndex'?: number;
     /**
-    * If `true`, a backdrop will be displayed behind the modal. Defaults to `true`.
+    * If `true`, a backdrop will be displayed behind the modal.
     */
     'showBackdrop'?: boolean;
   }
@@ -2807,7 +2688,7 @@ export namespace Components {
 
   interface IonNav {
     /**
-    * If `true`, the nav should animate the transition of components. Default to `true`.
+    * If `true`, the nav should animate the transition of components.
     */
     'animated': boolean;
     /**
@@ -2876,7 +2757,7 @@ export namespace Components {
     * Set the root for the current navigation stack.
     */
     'setRoot': <T extends NavComponent>(component: T, componentProps?: ComponentProps<T> | null | undefined, opts?: NavOptions | null | undefined, done?: TransitionDoneFn | undefined) => Promise<boolean>;
-    'setRouteId': (id: string, params: { [key: string]: any; } | undefined, direction: number) => Promise<RouteWrite>;
+    'setRouteId': (id: string, params: { [key: string]: any; } | undefined, direction: RouterDirection) => Promise<RouteWrite>;
     /**
     * If the nav component should allow for swipe-to-go-back.
     */
@@ -2884,14 +2765,13 @@ export namespace Components {
   }
   interface IonNavAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the nav should animate the transition of components. Default to `true`.
+    * If `true`, the nav should animate the transition of components.
     */
     'animated'?: boolean;
     /**
     * By default `ion-nav` animates transition between pages based in the mode (ios or material design). However, this property allows to create custom transition using `AnimateBuilder` functions.
     */
     'animation'?: AnimationBuilder;
-    'delegate'?: FrameworkDelegate;
     /**
     * Event fired when the nav has changed components
     */
@@ -2900,10 +2780,6 @@ export namespace Components {
     * Event fired when the nav will components
     */
     'onIonNavWillChange'?: (event: CustomEvent<void>) => void;
-    /**
-    * Event fired when Nav will load a component
-    */
-    'onIonNavWillLoad'?: (event: CustomEvent<void>) => void;
     /**
     * Root NavComponent to load
     */
@@ -2924,7 +2800,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
@@ -2934,16 +2810,22 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
 
   interface IonPickerColumn {
+    /**
+    * Picker column data
+    */
     'col': PickerColumn;
   }
   interface IonPickerColumnAttributes extends StencilHTMLAttributes {
-    'col'?: PickerColumn;
+    /**
+    * Picker column data
+    */
+    'col': PickerColumn;
   }
 
   interface IonPickerController {
@@ -2964,11 +2846,11 @@ export namespace Components {
 
   interface IonPicker {
     /**
-    * If `true`, the picker will animate. Defaults to `true`.
+    * If `true`, the picker will animate.
     */
     'animated': boolean;
     /**
-    * If `true`, the picker will be dismissed when the backdrop is clicked. Defaults to `true`.
+    * If `true`, the picker will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss': boolean;
     /**
@@ -3008,7 +2890,7 @@ export namespace Components {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -3025,17 +2907,17 @@ export namespace Components {
     */
     'present': () => Promise<void>;
     /**
-    * If `true`, a backdrop will be displayed behind the picker. Defaults to `true`.
+    * If `true`, a backdrop will be displayed behind the picker.
     */
     'showBackdrop': boolean;
   }
   interface IonPickerAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the picker will animate. Defaults to `true`.
+    * If `true`, the picker will animate.
     */
     'animated'?: boolean;
     /**
-    * If `true`, the picker will be dismissed when the backdrop is clicked. Defaults to `true`.
+    * If `true`, the picker will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss'?: boolean;
     /**
@@ -3067,7 +2949,7 @@ export namespace Components {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -3075,17 +2957,9 @@ export namespace Components {
     */
     'onIonPickerDidDismiss'?: (event: CustomEvent<OverlayEventDetail>) => void;
     /**
-    * Emitted after the picker has loaded.
-    */
-    'onIonPickerDidLoad'?: (event: CustomEvent<void>) => void;
-    /**
     * Emitted after the picker has presented.
     */
     'onIonPickerDidPresent'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted after the picker has unloaded.
-    */
-    'onIonPickerDidUnload'?: (event: CustomEvent<void>) => void;
     /**
     * Emitted before the picker has dismissed.
     */
@@ -3094,9 +2968,8 @@ export namespace Components {
     * Emitted before the picker has presented.
     */
     'onIonPickerWillPresent'?: (event: CustomEvent<void>) => void;
-    'overlayIndex'?: number;
     /**
-    * If `true`, a backdrop will be displayed behind the picker. Defaults to `true`.
+    * If `true`, a backdrop will be displayed behind the picker.
     */
     'showBackdrop'?: boolean;
   }
@@ -3119,11 +2992,11 @@ export namespace Components {
 
   interface IonPopover {
     /**
-    * If `true`, the popover will animate. Defaults to `true`.
+    * If `true`, the popover will animate.
     */
     'animated': boolean;
     /**
-    * If `true`, the popover will be dismissed when the backdrop is clicked. Defaults to `true`.
+    * If `true`, the popover will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss': boolean;
     /**
@@ -3160,7 +3033,7 @@ export namespace Components {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -3177,27 +3050,27 @@ export namespace Components {
     */
     'present': () => Promise<void>;
     /**
-    * If `true`, a backdrop will be displayed behind the popover. Defaults to `true`.
+    * If `true`, a backdrop will be displayed behind the popover.
     */
     'showBackdrop': boolean;
     /**
-    * If `true`, the popover will be translucent. Defaults to `false`.
+    * If `true`, the popover will be translucent.
     */
     'translucent': boolean;
   }
   interface IonPopoverAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the popover will animate. Defaults to `true`.
+    * If `true`, the popover will animate.
     */
     'animated'?: boolean;
     /**
-    * If `true`, the popover will be dismissed when the backdrop is clicked. Defaults to `true`.
+    * If `true`, the popover will be dismissed when the backdrop is clicked.
     */
     'backdropDismiss'?: boolean;
     /**
     * The component to display inside of the popover.
     */
-    'component'?: ComponentRef;
+    'component': ComponentRef;
     /**
     * The data to pass to the popover component.
     */
@@ -3206,7 +3079,6 @@ export namespace Components {
     * Additional classes to apply for custom CSS. If multiple classes are provided they should be separated by spaces.
     */
     'cssClass'?: string | string[];
-    'delegate'?: FrameworkDelegate;
     /**
     * Animation to use when the popover is presented.
     */
@@ -3224,7 +3096,7 @@ export namespace Components {
     */
     'leaveAnimation'?: AnimationBuilder;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -3232,17 +3104,9 @@ export namespace Components {
     */
     'onIonPopoverDidDismiss'?: (event: CustomEvent<OverlayEventDetail>) => void;
     /**
-    * Emitted after the popover has loaded.
-    */
-    'onIonPopoverDidLoad'?: (event: CustomEvent<void>) => void;
-    /**
     * Emitted after the popover has presented.
     */
     'onIonPopoverDidPresent'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted after the popover has unloaded.
-    */
-    'onIonPopoverDidUnload'?: (event: CustomEvent<void>) => void;
     /**
     * Emitted before the popover has dismissed.
     */
@@ -3251,20 +3115,72 @@ export namespace Components {
     * Emitted before the popover has presented.
     */
     'onIonPopoverWillPresent'?: (event: CustomEvent<void>) => void;
-    'overlayIndex'?: number;
     /**
-    * If `true`, a backdrop will be displayed behind the popover. Defaults to `true`.
+    * If `true`, a backdrop will be displayed behind the popover.
     */
     'showBackdrop'?: boolean;
     /**
-    * If `true`, the popover will be translucent. Defaults to `false`.
+    * If `true`, the popover will be translucent.
     */
     'translucent'?: boolean;
   }
 
+  interface IonProgressBar {
+    /**
+    * If the buffer and value are smaller than 1, the buffer circles will show. The buffer should be between [0, 1].
+    */
+    'buffer': number;
+    /**
+    * The color to use from your application's color palette. Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`. For more information on colors, see [theming](/docs/theming/basics).
+    */
+    'color'?: Color;
+    /**
+    * The mode determines which platform styles to use.
+    */
+    'mode': Mode;
+    /**
+    * If true, reverse the progress bar direction.
+    */
+    'reversed': boolean;
+    /**
+    * The state of the progress bar, based on if the time the process takes is known or not. Default options are: `"determinate"` (no animation), `"indeterminate"` (animate from left to right).
+    */
+    'type': 'determinate' | 'indeterminate';
+    /**
+    * The value determines how much of the active bar should display when the `type` is `"determinate"`. The value should be between [0, 1].
+    */
+    'value': number;
+  }
+  interface IonProgressBarAttributes extends StencilHTMLAttributes {
+    /**
+    * If the buffer and value are smaller than 1, the buffer circles will show. The buffer should be between [0, 1].
+    */
+    'buffer'?: number;
+    /**
+    * The color to use from your application's color palette. Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`. For more information on colors, see [theming](/docs/theming/basics).
+    */
+    'color'?: Color;
+    /**
+    * The mode determines which platform styles to use.
+    */
+    'mode'?: Mode;
+    /**
+    * If true, reverse the progress bar direction.
+    */
+    'reversed'?: boolean;
+    /**
+    * The state of the progress bar, based on if the time the process takes is known or not. Default options are: `"determinate"` (no animation), `"indeterminate"` (animate from left to right).
+    */
+    'type'?: 'determinate' | 'indeterminate';
+    /**
+    * The value determines how much of the active bar should display when the `type` is `"determinate"`. The value should be between [0, 1].
+    */
+    'value'?: number;
+  }
+
   interface IonRadioGroup {
     /**
-    * If `true`, the radios can be deselected. Defaults to `false`.
+    * If `true`, the radios can be deselected.
     */
     'allowEmptySelection': boolean;
     /**
@@ -3278,7 +3194,7 @@ export namespace Components {
   }
   interface IonRadioGroupAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the radios can be deselected. Defaults to `false`.
+    * If `true`, the radios can be deselected.
     */
     'allowEmptySelection'?: boolean;
     /**
@@ -3288,7 +3204,7 @@ export namespace Components {
     /**
     * Emitted when the value has changed.
     */
-    'onIonChange'?: (event: CustomEvent<InputChangeEvent>) => void;
+    'onIonChange'?: (event: CustomEvent<RadioGroupChangeEventDetail>) => void;
     /**
     * the value of the radio group.
     */
@@ -3297,7 +3213,7 @@ export namespace Components {
 
   interface IonRadio {
     /**
-    * If `true`, the radio is selected. Defaults to `false`.
+    * If `true`, the radio is selected.
     */
     'checked': boolean;
     /**
@@ -3305,11 +3221,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the radio. Defaults to `false`.
+    * If `true`, the user cannot interact with the radio.
     */
     'disabled': boolean;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -3323,7 +3239,7 @@ export namespace Components {
   }
   interface IonRadioAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the radio is selected. Defaults to `false`.
+    * If `true`, the radio is selected.
     */
     'checked'?: boolean;
     /**
@@ -3331,11 +3247,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the radio. Defaults to `false`.
+    * If `true`, the user cannot interact with the radio.
     */
     'disabled'?: boolean;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -3351,21 +3267,9 @@ export namespace Components {
     */
     'onIonFocus'?: (event: CustomEvent<void>) => void;
     /**
-    * Emitted when the radio loads.
-    */
-    'onIonRadioDidLoad'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted when the radio unloads.
-    */
-    'onIonRadioDidUnload'?: (event: CustomEvent<void>) => void;
-    /**
     * Emitted when the radio button is selected.
     */
-    'onIonSelect'?: (event: CustomEvent<CheckedInputChangeEvent>) => void;
-    /**
-    * Emitted when the styles change.
-    */
-    'onIonStyle'?: (event: CustomEvent<StyleEvent>) => void;
+    'onIonSelect'?: (event: CustomEvent<RadioChangeEventDetail>) => void;
     /**
     * the value of the radio.
     */
@@ -3378,27 +3282,27 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * How long, in milliseconds, to wait to trigger the `ionChange` event after each change in the range value. Default `0`.
+    * How long, in milliseconds, to wait to trigger the `ionChange` event after each change in the range value.
     */
     'debounce': number;
     /**
-    * If `true`, the user cannot interact with the range. Defaults to `false`.
+    * If `true`, the user cannot interact with the range.
     */
     'disabled': boolean;
     /**
-    * Show two knobs. Defaults to `false`.
+    * Show two knobs.
     */
     'dualKnobs': boolean;
     /**
-    * Maximum integer value of the range. Defaults to `100`.
+    * Maximum integer value of the range.
     */
     'max': number;
     /**
-    * Minimum integer value of the range. Defaults to `0`.
+    * Minimum integer value of the range.
     */
     'min': number;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -3406,15 +3310,15 @@ export namespace Components {
     */
     'name': string;
     /**
-    * If `true`, a pin with integer value is shown when the knob is pressed. Defaults to `false`.
+    * If `true`, a pin with integer value is shown when the knob is pressed.
     */
     'pin': boolean;
     /**
-    * If `true`, the knob snaps to tick marks evenly spaced based on the step property value. Defaults to `false`.
+    * If `true`, the knob snaps to tick marks evenly spaced based on the step property value.
     */
     'snaps': boolean;
     /**
-    * Specifies the value granularity. Defaults to `1`.
+    * Specifies the value granularity.
     */
     'step': number;
     /**
@@ -3428,27 +3332,27 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * How long, in milliseconds, to wait to trigger the `ionChange` event after each change in the range value. Default `0`.
+    * How long, in milliseconds, to wait to trigger the `ionChange` event after each change in the range value.
     */
     'debounce'?: number;
     /**
-    * If `true`, the user cannot interact with the range. Defaults to `false`.
+    * If `true`, the user cannot interact with the range.
     */
     'disabled'?: boolean;
     /**
-    * Show two knobs. Defaults to `false`.
+    * Show two knobs.
     */
     'dualKnobs'?: boolean;
     /**
-    * Maximum integer value of the range. Defaults to `100`.
+    * Maximum integer value of the range.
     */
     'max'?: number;
     /**
-    * Minimum integer value of the range. Defaults to `0`.
+    * Minimum integer value of the range.
     */
     'min'?: number;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -3462,25 +3366,21 @@ export namespace Components {
     /**
     * Emitted when the value property has changed.
     */
-    'onIonChange'?: (event: CustomEvent<InputChangeEvent>) => void;
+    'onIonChange'?: (event: CustomEvent<RangeChangeEventDetail>) => void;
     /**
     * Emitted when the range has focus.
     */
     'onIonFocus'?: (event: CustomEvent<void>) => void;
     /**
-    * Emitted when the styles change.
-    */
-    'onIonStyle'?: (event: CustomEvent<StyleEvent>) => void;
-    /**
-    * If `true`, a pin with integer value is shown when the knob is pressed. Defaults to `false`.
+    * If `true`, a pin with integer value is shown when the knob is pressed.
     */
     'pin'?: boolean;
     /**
-    * If `true`, the knob snaps to tick marks evenly spaced based on the step property value. Defaults to `false`.
+    * If `true`, the knob snaps to tick marks evenly spaced based on the step property value.
     */
     'snaps'?: boolean;
     /**
-    * Specifies the value granularity. Defaults to `1`.
+    * Specifies the value granularity.
     */
     'step'?: number;
     /**
@@ -3493,7 +3393,7 @@ export namespace Components {
     /**
     * A static icon to display when you begin to pull down
     */
-    'pullingIcon'?: string;
+    'pullingIcon'?: string | null;
     /**
     * The text you want to display when you begin to pull down
     */
@@ -3501,7 +3401,7 @@ export namespace Components {
     /**
     * An animated SVG spinner that shows when refreshing begins
     */
-    'refreshingSpinner'?: string;
+    'refreshingSpinner'?: SpinnerTypes | null;
     /**
     * The text you want to display when performing a refresh
     */
@@ -3511,7 +3411,7 @@ export namespace Components {
     /**
     * A static icon to display when you begin to pull down
     */
-    'pullingIcon'?: string;
+    'pullingIcon'?: string | null;
     /**
     * The text you want to display when you begin to pull down
     */
@@ -3519,7 +3419,7 @@ export namespace Components {
     /**
     * An animated SVG spinner that shows when refreshing begins
     */
-    'refreshingSpinner'?: string;
+    'refreshingSpinner'?: SpinnerTypes | null;
     /**
     * The text you want to display when performing a refresh
     */
@@ -3532,7 +3432,7 @@ export namespace Components {
     */
     'cancel': () => void;
     /**
-    * Time it takes to close the refresher. Defaults to `280ms`.
+    * Time it takes to close the refresher.
     */
     'closeDuration': string;
     /**
@@ -3540,7 +3440,7 @@ export namespace Components {
     */
     'complete': () => void;
     /**
-    * If `true`, the refresher will be hidden. Defaults to `false`.
+    * If `true`, the refresher will be hidden.
     */
     'disabled': boolean;
     /**
@@ -3552,21 +3452,21 @@ export namespace Components {
     */
     'pullMax': number;
     /**
-    * The minimum distance the user must pull down until the refresher will go into the `refreshing` state. Defaults to `60`.
+    * The minimum distance the user must pull down until the refresher will go into the `refreshing` state.
     */
     'pullMin': number;
     /**
-    * Time it takes the refresher to to snap back to the `refreshing` state. Defaults to `280ms`.
+    * Time it takes the refresher to to snap back to the `refreshing` state.
     */
     'snapbackDuration': string;
   }
   interface IonRefresherAttributes extends StencilHTMLAttributes {
     /**
-    * Time it takes to close the refresher. Defaults to `280ms`.
+    * Time it takes to close the refresher.
     */
     'closeDuration'?: string;
     /**
-    * If `true`, the refresher will be hidden. Defaults to `false`.
+    * If `true`, the refresher will be hidden.
     */
     'disabled'?: boolean;
     /**
@@ -3586,11 +3486,11 @@ export namespace Components {
     */
     'pullMax'?: number;
     /**
-    * The minimum distance the user must pull down until the refresher will go into the `refreshing` state. Defaults to `60`.
+    * The minimum distance the user must pull down until the refresher will go into the `refreshing` state.
     */
     'pullMin'?: number;
     /**
-    * Time it takes the refresher to to snap back to the `refreshing` state. Defaults to `280ms`.
+    * Time it takes the refresher to to snap back to the `refreshing` state.
     */
     'snapbackDuration'?: string;
   }
@@ -3601,19 +3501,19 @@ export namespace Components {
     */
     'complete': (listOrReorder?: boolean | any[] | undefined) => Promise<any>;
     /**
-    * If `true`, the reorder will be hidden. Defaults to `true`.
+    * If `true`, the reorder will be hidden.
     */
     'disabled': boolean;
   }
   interface IonReorderGroupAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the reorder will be hidden. Defaults to `true`.
+    * If `true`, the reorder will be hidden.
     */
     'disabled'?: boolean;
     /**
     * Event that needs to be listen to in order to respond to reorder action. `ion-reorder-group` uses this event to delegate to the user the reordering of data array.   The complete() method exposed as
     */
-    'onIonItemReorder'?: (event: CustomEvent<ItemReorderDetail>) => void;
+    'onIonItemReorder'?: (event: CustomEvent<ItemReorderEventDetail>) => void;
   }
 
   interface IonReorder {}
@@ -3623,9 +3523,18 @@ export namespace Components {
     /**
     * Adds the ripple effect to the parent element
     */
-    'addRipple': (pageX: number, pageY: number) => void;
+    'addRipple': (pageX: number, pageY: number) => Promise<() => void>;
+    /**
+    * Sets the type of ripple-effect:  - `bounded`: the ripple effect expands from the user's click position - `unbounded`: the ripple effect expands from the center of the button and overflows the container.  NOTE: Surfaces for bounded ripples should have the overflow property set to hidden, while surfaces for unbounded ripples should have it set to visible.
+    */
+    'type': 'bounded' | 'unbounded';
   }
-  interface IonRippleEffectAttributes extends StencilHTMLAttributes {}
+  interface IonRippleEffectAttributes extends StencilHTMLAttributes {
+    /**
+    * Sets the type of ripple-effect:  - `bounded`: the ripple effect expands from the user's click position - `unbounded`: the ripple effect expands from the center of the button and overflows the container.  NOTE: Surfaces for bounded ripples should have the overflow property set to hidden, while surfaces for unbounded ripples should have it set to visible.
+    */
+    'type'?: 'bounded' | 'unbounded';
+  }
 
   interface IonRouteRedirect {
     /**
@@ -3633,23 +3542,23 @@ export namespace Components {
     */
     'from': string;
     /**
-    * A redirect route, redirects "from" a URL "to" another URL. This property is that "to" URL. When the defined `ion-route-redirect` rule matches, the router will redirect to the path specified in this property.  The value of this property is always an absolute path inside the scope of routes defined in `ion-router` it can't be used with another router or to perfom a redirection to a different domain.  Note that this is a virtual redirect, it will not cause a real browser refresh, again, it's a redirect inside the context of ion-router.  When this property is not specified or his value is `undefined` the whole redirect route is noop, even if the "from" value matches.
+    * A redirect route, redirects "from" a URL "to" another URL. This property is that "to" URL. When the defined `ion-route-redirect` rule matches, the router will redirect to the path specified in this property.  The value of this property is always an absolute path inside the scope of routes defined in `ion-router` it can't be used with another router or to perform a redirection to a different domain.  Note that this is a virtual redirect, it will not cause a real browser refresh, again, it's a redirect inside the context of ion-router.  When this property is not specified or his value is `undefined` the whole redirect route is noop, even if the "from" value matches.
     */
-    'to'?: string;
+    'to': string | undefined | null;
   }
   interface IonRouteRedirectAttributes extends StencilHTMLAttributes {
     /**
     * A redirect route, redirects "from" a URL "to" another URL. This property is that "from" URL. It needs to be an exact match of the navigated URL in order to apply.  The path specified in this value is always an absolute path, even if the initial `/` slash is not specified.
     */
-    'from'?: string;
+    'from': string;
     /**
     * Internal event that fires when any value of this rule is added/removed from the DOM, or any of his public properties changes.  `ion-router` captures this event in order to update his internal registry of router rules.
     */
     'onIonRouteRedirectChanged'?: (event: CustomEvent) => void;
     /**
-    * A redirect route, redirects "from" a URL "to" another URL. This property is that "to" URL. When the defined `ion-route-redirect` rule matches, the router will redirect to the path specified in this property.  The value of this property is always an absolute path inside the scope of routes defined in `ion-router` it can't be used with another router or to perfom a redirection to a different domain.  Note that this is a virtual redirect, it will not cause a real browser refresh, again, it's a redirect inside the context of ion-router.  When this property is not specified or his value is `undefined` the whole redirect route is noop, even if the "from" value matches.
+    * A redirect route, redirects "from" a URL "to" another URL. This property is that "to" URL. When the defined `ion-route-redirect` rule matches, the router will redirect to the path specified in this property.  The value of this property is always an absolute path inside the scope of routes defined in `ion-router` it can't be used with another router or to perform a redirection to a different domain.  Note that this is a virtual redirect, it will not cause a real browser refresh, again, it's a redirect inside the context of ion-router.  When this property is not specified or his value is `undefined` the whole redirect route is noop, even if the "from" value matches.
     */
-    'to'?: string;
+    'to': string | undefined | null;
   }
 
   interface IonRoute {
@@ -3670,7 +3579,7 @@ export namespace Components {
     /**
     * Name of the component to load/select in the navigation outlet (`ion-tabs`, `ion-nav`) when the route matches.  The value of this property is not always the tagname of the component to load, in `ion-tabs` it actually refers to the name of the `ion-tab` to select.
     */
-    'component'?: string;
+    'component': string;
     /**
     * A key value `{ 'red': true, 'blue': 'white'}` containing props that should be passed to the defined component when rendered.
     */
@@ -3687,7 +3596,7 @@ export namespace Components {
 
   interface IonRouterOutlet {
     /**
-    * If `true`, the router-outlet should animate the transition of components. Default to `true`.
+    * If `true`, the router-outlet should animate the transition of components.
     */
     'animated': boolean;
     /**
@@ -3697,33 +3606,27 @@ export namespace Components {
     'commit': (enteringEl: HTMLElement, leavingEl: HTMLElement | undefined, opts?: RouterOutletOptions | undefined) => Promise<boolean>;
     'delegate'?: FrameworkDelegate;
     'getRouteId': () => Promise<RouteID | undefined>;
-    /**
-    * Set the root component for the given navigation stack
-    */
-    'setRoot': (component: ComponentRef, params?: { [key: string]: any; } | undefined, opts?: RouterOutletOptions | undefined) => Promise<boolean>;
-    'setRouteId': (id: string, params: { [key: string]: any; } | undefined, direction: number) => Promise<RouteWrite>;
+    'mode': Mode;
+    'setRouteId': (id: string, params: { [key: string]: any; } | undefined, direction: RouterDirection) => Promise<RouteWrite>;
+    'swipeHandler'?: SwipeGestureHandler;
   }
   interface IonRouterOutletAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the router-outlet should animate the transition of components. Default to `true`.
+    * If `true`, the router-outlet should animate the transition of components.
     */
     'animated'?: boolean;
     /**
     * By default `ion-nav` animates transition between pages based in the mode (ios or material design). However, this property allows to create custom transition using `AnimateBuilder` functions.
     */
     'animation'?: AnimationBuilder;
-    'delegate'?: FrameworkDelegate;
-    'onIonNavDidChange'?: (event: CustomEvent<void>) => void;
-    'onIonNavWillChange'?: (event: CustomEvent<void>) => void;
-    'onIonNavWillLoad'?: (event: CustomEvent<void>) => void;
   }
 
   interface IonRouter {
     /**
     * Go back to previous page in the window.history.
     */
-    'goBack': () => Promise<void>;
-    'navChanged': (intent: number) => Promise<boolean>;
+    'back': () => Promise<void>;
+    'navChanged': (direction: RouterDirection) => Promise<boolean>;
     'printDebug': () => void;
     /**
     * Navigate to the specified URL.
@@ -3762,23 +3665,23 @@ export namespace Components {
 
   interface IonSearchbar {
     /**
-    * If `true`, enable searchbar animation. Defaults to `false`.
+    * If `true`, enable searchbar animation.
     */
     'animated': boolean;
     /**
-    * Set the input's autocomplete property. Default `"off"`.
+    * Set the input's autocomplete property.
     */
     'autocomplete': 'on' | 'off';
     /**
-    * Set the input's autocorrect property. Default `"off"`.
+    * Set the input's autocorrect property.
     */
     'autocorrect': 'on' | 'off';
     /**
-    * Set the cancel button icon. Only applies to `md` mode. Defaults to `"md-arrow-back"`.
+    * Set the cancel button icon. Only applies to `md` mode.
     */
     'cancelButtonIcon': string;
     /**
-    * Set the the cancel button text. Only applies to `ios` mode. Default: `"Cancel"`.
+    * Set the the cancel button text. Only applies to `ios` mode.
     */
     'cancelButtonText': string;
     /**
@@ -3790,37 +3693,41 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `250`.
+    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke.
     */
     'debounce': number;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * Returns the native `<input>` element used under the hood.
+    */
+    'getInputElement': () => Promise<HTMLInputElement>;
+    /**
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
-    * Set the input's placeholder. Default `"Search"`.
+    * Set the input's placeholder.
     */
     'placeholder': string;
     /**
-    * The icon to use as the search icon. Defaults to `"search"`.
+    * The icon to use as the search icon.
     */
-    'searchIcon'?: string;
+    'searchIcon': string;
     /**
     * Sets focus on the specified `ion-searchbar`. Use this method instead of the global `input.focus()`.
     */
     'setFocus': () => void;
     /**
-    * If `true`, show the cancel button. Defaults to `false`.
+    * If `true`, show the cancel button.
     */
     'showCancelButton': boolean;
     /**
-    * If `true`, enable spellcheck on the input. Defaults to `false`.
+    * If `true`, enable spellcheck on the input.
     */
     'spellcheck': boolean;
     /**
-    * Set the type of the input. Values: `"text"`, `"password"`, `"email"`, `"number"`, `"search"`, `"tel"`, `"url"`. Default `"search"`.
+    * Set the type of the input.
     */
-    'type': string;
+    'type': 'text' | 'password' | 'email' | 'number' | 'search' | 'tel' | 'url';
     /**
     * the value of the searchbar.
     */
@@ -3828,23 +3735,23 @@ export namespace Components {
   }
   interface IonSearchbarAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, enable searchbar animation. Defaults to `false`.
+    * If `true`, enable searchbar animation.
     */
     'animated'?: boolean;
     /**
-    * Set the input's autocomplete property. Default `"off"`.
+    * Set the input's autocomplete property.
     */
     'autocomplete'?: 'on' | 'off';
     /**
-    * Set the input's autocorrect property. Default `"off"`.
+    * Set the input's autocorrect property.
     */
     'autocorrect'?: 'on' | 'off';
     /**
-    * Set the cancel button icon. Only applies to `md` mode. Defaults to `"md-arrow-back"`.
+    * Set the cancel button icon. Only applies to `md` mode.
     */
     'cancelButtonIcon'?: string;
     /**
-    * Set the the cancel button text. Only applies to `ios` mode. Default: `"Cancel"`.
+    * Set the the cancel button text. Only applies to `ios` mode.
     */
     'cancelButtonText'?: string;
     /**
@@ -3856,11 +3763,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `250`.
+    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke.
     */
     'debounce'?: number;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -3874,7 +3781,7 @@ export namespace Components {
     /**
     * Emitted when the value has changed.
     */
-    'onIonChange'?: (event: CustomEvent<TextInputChangeEvent>) => void;
+    'onIonChange'?: (event: CustomEvent<SearchbarChangeEventDetail>) => void;
     /**
     * Emitted when the clear input button is clicked.
     */
@@ -3888,25 +3795,25 @@ export namespace Components {
     */
     'onIonInput'?: (event: CustomEvent<KeyboardEvent>) => void;
     /**
-    * Set the input's placeholder. Default `"Search"`.
+    * Set the input's placeholder.
     */
     'placeholder'?: string;
     /**
-    * The icon to use as the search icon. Defaults to `"search"`.
+    * The icon to use as the search icon.
     */
     'searchIcon'?: string;
     /**
-    * If `true`, show the cancel button. Defaults to `false`.
+    * If `true`, show the cancel button.
     */
     'showCancelButton'?: boolean;
     /**
-    * If `true`, enable spellcheck on the input. Defaults to `false`.
+    * If `true`, enable spellcheck on the input.
     */
     'spellcheck'?: boolean;
     /**
-    * Set the type of the input. Values: `"text"`, `"password"`, `"email"`, `"number"`, `"search"`, `"tel"`, `"url"`. Default `"search"`.
+    * Set the type of the input.
     */
-    'type'?: string;
+    'type'?: 'text' | 'password' | 'email' | 'number' | 'search' | 'tel' | 'url';
     /**
     * the value of the searchbar.
     */
@@ -3915,19 +3822,19 @@ export namespace Components {
 
   interface IonSegmentButton {
     /**
-    * If `true`, the segment button is selected. Defaults to `false`.
+    * If `true`, the segment button is selected.
     */
     'checked': boolean;
     /**
-    * The color to use from your application's color palette. Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`. For more information on colors, see [theming](/docs/theming/basics).
-    */
-    'color'?: Color;
-    /**
-    * If `true`, the user cannot interact with the segment button. Defaults to `false`.
+    * If `true`, the user cannot interact with the segment button.
     */
     'disabled': boolean;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * Set the layout of the text and icon in the segment.
+    */
+    'layout'?: SegmentButtonLayout;
+    /**
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -3937,19 +3844,19 @@ export namespace Components {
   }
   interface IonSegmentButtonAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the segment button is selected. Defaults to `false`.
+    * If `true`, the segment button is selected.
     */
     'checked'?: boolean;
     /**
-    * The color to use from your application's color palette. Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`. For more information on colors, see [theming](/docs/theming/basics).
-    */
-    'color'?: Color;
-    /**
-    * If `true`, the user cannot interact with the segment button. Defaults to `false`.
+    * If `true`, the user cannot interact with the segment button.
     */
     'disabled'?: boolean;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * Set the layout of the text and icon in the segment.
+    */
+    'layout'?: SegmentButtonLayout;
+    /**
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -3968,13 +3875,17 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the segment. Defaults to `false`.
+    * If `true`, the user cannot interact with the segment.
     */
     'disabled': boolean;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
+    /**
+    * If `true`, the segment buttons will overflow and the user can swipe to see them.
+    */
+    'scrollable': boolean;
     /**
     * the value of the segment.
     */
@@ -3986,17 +3897,25 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the segment. Defaults to `false`.
+    * If `true`, the user cannot interact with the segment.
     */
     'disabled'?: boolean;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
     * Emitted when the value property has changed.
     */
-    'onIonChange'?: (event: CustomEvent<TextInputChangeEvent>) => void;
+    'onIonChange'?: (event: CustomEvent<SegmentChangeEventDetail>) => void;
+    /**
+    * Emitted when the styles change.
+    */
+    'onIonStyle'?: (event: CustomEvent<StyleEventDetail>) => void;
+    /**
+    * If `true`, the segment buttons will overflow and the user can swipe to see them.
+    */
+    'scrollable'?: boolean;
     /**
     * the value of the segment.
     */
@@ -4005,7 +3924,7 @@ export namespace Components {
 
   interface IonSelectOption {
     /**
-    * If `true`, the user cannot interact with the select option. Defaults to `false`.
+    * If `true`, the user cannot interact with the select option.
     */
     'disabled': boolean;
     /**
@@ -4019,17 +3938,9 @@ export namespace Components {
   }
   interface IonSelectOptionAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the user cannot interact with the select option. Defaults to `false`.
+    * If `true`, the user cannot interact with the select option.
     */
     'disabled'?: boolean;
-    /**
-    * Emitted when the select option loads.
-    */
-    'onIonSelectOptionDidLoad'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted when the select option unloads.
-    */
-    'onIonSelectOptionDidUnload'?: (event: CustomEvent<void>) => void;
     /**
     * If `true`, the element is selected.
     */
@@ -4079,15 +3990,15 @@ export namespace Components {
 
   interface IonSelect {
     /**
-    * The text to display on the cancel button. Default: `Cancel`.
+    * The text to display on the cancel button.
     */
     'cancelText': string;
     /**
-    * If `true`, the user cannot interact with the select. Defaults to `false`.
+    * If `true`, the user cannot interact with the select.
     */
     'disabled': boolean;
     /**
-    * The interface the select should use: `action-sheet`, `popover` or `alert`. Default: `alert`.
+    * The interface the select should use: `action-sheet`, `popover` or `alert`.
     */
     'interface': SelectInterface;
     /**
@@ -4095,7 +4006,7 @@ export namespace Components {
     */
     'interfaceOptions': any;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -4107,13 +4018,13 @@ export namespace Components {
     */
     'name': string;
     /**
-    * The text to display on the ok button. Default: `OK`.
+    * The text to display on the ok button.
     */
     'okText': string;
     /**
     * Opens the select overlay, it could be an alert, action-sheet or popover, based in `ion-select` settings.
     */
-    'open': (ev?: UIEvent | undefined) => Promise<OverlaySelect>;
+    'open': (ev?: UIEvent | undefined) => Promise<HTMLIonActionSheetElement | HTMLIonAlertElement | HTMLIonPopoverElement | undefined>;
     /**
     * The text to display when the select is empty.
     */
@@ -4129,15 +4040,15 @@ export namespace Components {
   }
   interface IonSelectAttributes extends StencilHTMLAttributes {
     /**
-    * The text to display on the cancel button. Default: `Cancel`.
+    * The text to display on the cancel button.
     */
     'cancelText'?: string;
     /**
-    * If `true`, the user cannot interact with the select. Defaults to `false`.
+    * If `true`, the user cannot interact with the select.
     */
     'disabled'?: boolean;
     /**
-    * The interface the select should use: `action-sheet`, `popover` or `alert`. Default: `alert`.
+    * The interface the select should use: `action-sheet`, `popover` or `alert`.
     */
     'interface'?: SelectInterface;
     /**
@@ -4145,7 +4056,7 @@ export namespace Components {
     */
     'interfaceOptions'?: any;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -4157,7 +4068,7 @@ export namespace Components {
     */
     'name'?: string;
     /**
-    * The text to display on the ok button. Default: `OK`.
+    * The text to display on the ok button.
     */
     'okText'?: string;
     /**
@@ -4171,15 +4082,11 @@ export namespace Components {
     /**
     * Emitted when the value has changed.
     */
-    'onIonChange'?: (event: CustomEvent<SelectInputChangeEvent>) => void;
+    'onIonChange'?: (event: CustomEvent<SelectChangeEventDetail>) => void;
     /**
     * Emitted when the select has focus.
     */
     'onIonFocus'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted when the styles change.
-    */
-    'onIonStyle'?: (event: CustomEvent<StyleEvent>) => void;
     /**
     * The text to display when the select is empty.
     */
@@ -4196,21 +4103,19 @@ export namespace Components {
 
   interface IonSkeletonText {
     /**
-    * Width for the element to render at. Default is 100%
+    * Width for the element to render at.
     */
     'width': string;
   }
   interface IonSkeletonTextAttributes extends StencilHTMLAttributes {
     /**
-    * Width for the element to render at. Default is 100%
+    * Width for the element to render at.
     */
     'width'?: string;
   }
 
   interface IonSlide {}
-  interface IonSlideAttributes extends StencilHTMLAttributes {
-    'onIonSlideChanged'?: (event: CustomEvent<void>) => void;
-  }
+  interface IonSlideAttributes extends StencilHTMLAttributes {}
 
   interface IonSlides {
     /**
@@ -4246,7 +4151,7 @@ export namespace Components {
     */
     'lockSwipes': (shouldLockSwipes: boolean) => Promise<void>;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -4254,11 +4159,11 @@ export namespace Components {
     */
     'options': any;
     /**
-    * If `true`, show the pagination. Defaults to `false`.
+    * If `true`, show the pagination.
     */
     'pager': boolean;
     /**
-    * If `true`, show the scrollbar. Defaults to `false`.
+    * If `true`, show the scrollbar.
     */
     'scrollbar': boolean;
     /**
@@ -4285,10 +4190,14 @@ export namespace Components {
     * Update the underlying slider implementation. Call this if you've added or removed child slides.
     */
     'update': () => Promise<void>;
+    /**
+    * Force swiper to update its height (when autoHeight enabled) for the duration equal to 'speed' parameter
+    */
+    'updateAutoHeight': (speed?: number | undefined) => Promise<void>;
   }
   interface IonSlidesAttributes extends StencilHTMLAttributes {
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -4360,11 +4269,11 @@ export namespace Components {
     */
     'options'?: any;
     /**
-    * If `true`, show the pagination. Defaults to `false`.
+    * If `true`, show the pagination.
     */
     'pager'?: boolean;
     /**
-    * If `true`, show the scrollbar. Defaults to `false`.
+    * If `true`, show the scrollbar.
     */
     'scrollbar'?: boolean;
   }
@@ -4379,11 +4288,11 @@ export namespace Components {
     */
     'duration'?: number;
     /**
-    * The name of the SVG spinner to use. If a name is not provided, the platform's default spinner will be used. Possible values are: `"lines"`, `"lines-small"`, `"dots"`, `"bubbles"`, `"circles"`, `"crescent"`.
+    * The name of the SVG spinner to use. If a name is not provided, the platform's default spinner will be used.
     */
     'name'?: SpinnerTypes;
     /**
-    * If `true`, the spinner's animation will be paused. Defaults to `false`.
+    * If `true`, the spinner's animation will be paused.
     */
     'paused': boolean;
   }
@@ -4397,18 +4306,22 @@ export namespace Components {
     */
     'duration'?: number;
     /**
-    * The name of the SVG spinner to use. If a name is not provided, the platform's default spinner will be used. Possible values are: `"lines"`, `"lines-small"`, `"dots"`, `"bubbles"`, `"circles"`, `"crescent"`.
+    * The name of the SVG spinner to use. If a name is not provided, the platform's default spinner will be used.
     */
     'name'?: SpinnerTypes;
     /**
-    * If `true`, the spinner's animation will be paused. Defaults to `false`.
+    * If `true`, the spinner's animation will be paused.
     */
     'paused'?: boolean;
   }
 
   interface IonSplitPane {
     /**
-    * If `true`, the split pane will be hidden. Defaults to `false`.
+    * The content `id` of the split-pane's main content. This property can be used instead of the `[main]` attribute to select the `main` content of the split-pane.  ```html    * <ion-split-pane content-id="my-content">    *   <ion-menu></ion-menu>    *   <div id="my-content">    * </ion-split-pane>    * ```
+    */
+    'contentId'?: string;
+    /**
+    * If `true`, the split pane will be hidden.
     */
     'disabled': boolean;
     /**
@@ -4418,17 +4331,17 @@ export namespace Components {
   }
   interface IonSplitPaneAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the split pane will be hidden. Defaults to `false`.
+    * The content `id` of the split-pane's main content. This property can be used instead of the `[main]` attribute to select the `main` content of the split-pane.  ```html    * <ion-split-pane content-id="my-content">    *   <ion-menu></ion-menu>    *   <div id="my-content">    * </ion-split-pane>    * ```
+    */
+    'contentId'?: string;
+    /**
+    * If `true`, the split pane will be hidden.
     */
     'disabled'?: boolean;
     /**
-    * Emitted when the split pane is visible.
-    */
-    'onIonChange'?: (event: CustomEvent<{visible: boolean}>) => void;
-    /**
     * Expression to be called when the split-pane visibility has changed
     */
-    'onIonSplitPaneVisible'?: (event: CustomEvent) => void;
+    'onIonSplitPaneVisible'?: (event: CustomEvent<{visible: boolean}>) => void;
     /**
     * When the split-pane should be shown. Can be a CSS media query expression, or a shortcut expression. Can also be a boolean expression.
     */
@@ -4441,11 +4354,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * Set the layout of the text and icon in the tab bar.
-    */
-    'layout': TabbarLayout;
-    /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -4453,7 +4362,7 @@ export namespace Components {
     */
     'selectedTab'?: string;
     /**
-    * If `true`, the tab bar will be translucent. Defaults to `false`.
+    * If `true`, the tab bar will be translucent.
     */
     'translucent': boolean;
   }
@@ -4463,29 +4372,20 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * Set the layout of the text and icon in the tab bar.
-    */
-    'layout'?: TabbarLayout;
-    /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
-    'onIonTabBarChanged'?: (event: CustomEvent<TabbarChangedDetail>) => void;
     /**
     * The selected tab component
     */
     'selectedTab'?: string;
     /**
-    * If `true`, the tab bar will be translucent. Defaults to `false`.
+    * If `true`, the tab bar will be translucent.
     */
     'translucent'?: boolean;
   }
 
   interface IonTabButton {
-    /**
-    * The color to use from your application's color palette. Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`. For more information on colors, see [theming](/docs/theming/basics).
-    */
-    'color'?: Color;
     /**
     * The selected tab component
     */
@@ -4495,23 +4395,23 @@ export namespace Components {
     */
     'href'?: string;
     /**
-    * Set the layout of the text and icon in the tabbar.
+    * Set the layout of the text and icon in the tab bar. It defaults to `'icon-top'`.
     */
-    'layout': TabbarLayout;
+    'layout'?: TabButtonLayout;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
+    /**
+    * The selected tab component
+    */
+    'selected': boolean;
     /**
     * A tab id must be provided for each `ion-tab`. It's used internally to reference the selected tab or by the router to switch between them.
     */
     'tab'?: string;
   }
   interface IonTabButtonAttributes extends StencilHTMLAttributes {
-    /**
-    * The color to use from your application's color palette. Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`. For more information on colors, see [theming](/docs/theming/basics).
-    */
-    'color'?: Color;
     /**
     * The selected tab component
     */
@@ -4521,17 +4421,17 @@ export namespace Components {
     */
     'href'?: string;
     /**
-    * Set the layout of the text and icon in the tabbar.
+    * Set the layout of the text and icon in the tab bar. It defaults to `'icon-top'`.
     */
-    'layout'?: TabbarLayout;
+    'layout'?: TabButtonLayout;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
-    * Emitted when the tab bar is clicked
+    * The selected tab component
     */
-    'onIonTabButtonClick'?: (event: CustomEvent<TabbarClickDetail>) => void;
+    'selected'?: boolean;
     /**
     * A tab id must be provided for each `ion-tab`. It's used internally to reference the selected tab or by the router to switch between them.
     */
@@ -4552,19 +4452,17 @@ export namespace Components {
     /**
     * A tab id must be provided for each `ion-tab`. It's used internally to reference the selected tab or by the router to switch between them.
     */
-    'tab'?: string;
+    'tab': string;
   }
   interface IonTabAttributes extends StencilHTMLAttributes {
-    'active'?: boolean;
     /**
     * The component to display inside of the tab.
     */
     'component'?: ComponentRef;
-    'delegate'?: FrameworkDelegate;
     /**
     * A tab id must be provided for each `ion-tab`. It's used internally to reference the selected tab or by the router to switch between them.
     */
-    'tab'?: string;
+    'tab': string;
   }
 
   interface IonTabs {
@@ -4572,9 +4470,9 @@ export namespace Components {
     /**
     * Get the currently selected tab
     */
-    'getSelected': () => Promise<HTMLIonTabElement | undefined>;
+    'getSelected': () => Promise<string | undefined>;
     /**
-    * Get the tab at the given index
+    * Get the tab element given the tab name
     */
     'getTab': (tab: string | HTMLIonTabElement) => Promise<HTMLIonTabElement | undefined>;
     /**
@@ -4582,24 +4480,17 @@ export namespace Components {
     */
     'select': (tab: string | HTMLIonTabElement) => Promise<boolean>;
     'setRouteId': (id: string) => Promise<RouteWrite>;
+    'useRouter': boolean;
   }
   interface IonTabsAttributes extends StencilHTMLAttributes {
     /**
-    * Emitted when the tab changes.
-    */
-    'onIonChange'?: (event: CustomEvent<{tab: HTMLIonTabElement}>) => void;
-    /**
     * Emitted when the navigation has finished transitioning to a new component.
     */
-    'onIonNavDidChange'?: (event: CustomEvent<void>) => void;
+    'onIonTabsDidChange'?: (event: CustomEvent<{tab: string}>) => void;
     /**
     * Emitted when the navigation is about to transition to a new component.
     */
-    'onIonNavWillChange'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted when the navigation will load a component.
-    */
-    'onIonNavWillLoad'?: (event: CustomEvent<void>) => void;
+    'onIonTabsWillChange'?: (event: CustomEvent<{tab: string}>) => void;
   }
 
   interface IonText {
@@ -4608,7 +4499,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
@@ -4618,18 +4509,18 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
 
   interface IonTextarea {
     /**
-    * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user. Defaults to `"none"`.
+    * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user.
     */
     'autocapitalize': string;
     /**
-    * This Boolean attribute lets you specify that a form control should have input focus when the page loads. Defaults to `false`.
+    * This Boolean attribute lets you specify that a form control should have input focus when the page loads.
     */
     'autofocus': boolean;
     /**
@@ -4645,13 +4536,17 @@ export namespace Components {
     */
     'cols'?: number;
     /**
-    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `0`.
+    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke.
     */
     'debounce': number;
     /**
-    * If `true`, the user cannot interact with the textarea. Defaults to `false`.
+    * If `true`, the user cannot interact with the textarea.
     */
     'disabled': boolean;
+    /**
+    * Returns the native `<textarea>` element used under the hood.
+    */
+    'getInputElement': () => Promise<HTMLTextAreaElement>;
     /**
     * If the value of the type attribute is `text`, `email`, `search`, `password`, `tel`, or `url`, this attribute specifies the maximum number of characters that the user can enter.
     */
@@ -4661,7 +4556,7 @@ export namespace Components {
     */
     'minlength'?: number;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -4671,9 +4566,9 @@ export namespace Components {
     /**
     * Instructional text that shows before the input has a value.
     */
-    'placeholder'?: string;
+    'placeholder'?: string | null;
     /**
-    * If `true`, the user cannot modify the value. Defaults to `false`.
+    * If `true`, the user cannot modify the value.
     */
     'readonly': boolean;
     /**
@@ -4689,7 +4584,7 @@ export namespace Components {
     */
     'setFocus': () => void;
     /**
-    * If `true`, the element will have its spelling and grammar checked. Defaults to `false`.
+    * If `true`, the element will have its spelling and grammar checked.
     */
     'spellcheck': boolean;
     /**
@@ -4697,17 +4592,17 @@ export namespace Components {
     */
     'value'?: string | null;
     /**
-    * Indicates how the control wraps text. Possible values are: `"hard"`, `"soft"`, `"off"`.
+    * Indicates how the control wraps text.
     */
-    'wrap'?: string;
+    'wrap'?: 'hard' | 'soft' | 'off';
   }
   interface IonTextareaAttributes extends StencilHTMLAttributes {
     /**
-    * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user. Defaults to `"none"`.
+    * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user.
     */
     'autocapitalize'?: string;
     /**
-    * This Boolean attribute lets you specify that a form control should have input focus when the page loads. Defaults to `false`.
+    * This Boolean attribute lets you specify that a form control should have input focus when the page loads.
     */
     'autofocus'?: boolean;
     /**
@@ -4723,11 +4618,11 @@ export namespace Components {
     */
     'cols'?: number;
     /**
-    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `0`.
+    * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke.
     */
     'debounce'?: number;
     /**
-    * If `true`, the user cannot interact with the textarea. Defaults to `false`.
+    * If `true`, the user cannot interact with the textarea.
     */
     'disabled'?: boolean;
     /**
@@ -4739,7 +4634,7 @@ export namespace Components {
     */
     'minlength'?: number;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -4753,7 +4648,7 @@ export namespace Components {
     /**
     * Emitted when the input value has changed.
     */
-    'onIonChange'?: (event: CustomEvent<TextInputChangeEvent>) => void;
+    'onIonChange'?: (event: CustomEvent<TextareaChangeEventDetail>) => void;
     /**
     * Emitted when the input has focus.
     */
@@ -4763,15 +4658,11 @@ export namespace Components {
     */
     'onIonInput'?: (event: CustomEvent<KeyboardEvent>) => void;
     /**
-    * Emitted when the styles change.
-    */
-    'onIonStyle'?: (event: CustomEvent<StyleEvent>) => void;
-    /**
     * Instructional text that shows before the input has a value.
     */
-    'placeholder'?: string;
+    'placeholder'?: string | null;
     /**
-    * If `true`, the user cannot modify the value. Defaults to `false`.
+    * If `true`, the user cannot modify the value.
     */
     'readonly'?: boolean;
     /**
@@ -4783,7 +4674,7 @@ export namespace Components {
     */
     'rows'?: number;
     /**
-    * If `true`, the element will have its spelling and grammar checked. Defaults to `false`.
+    * If `true`, the element will have its spelling and grammar checked.
     */
     'spellcheck'?: boolean;
     /**
@@ -4791,9 +4682,9 @@ export namespace Components {
     */
     'value'?: string | null;
     /**
-    * Indicates how the control wraps text. Possible values are: `"hard"`, `"soft"`, `"off"`.
+    * Indicates how the control wraps text.
     */
-    'wrap'?: string;
+    'wrap'?: 'hard' | 'soft' | 'off';
   }
 
   interface IonThumbnail {}
@@ -4830,7 +4721,7 @@ export namespace Components {
 
   interface IonToast {
     /**
-    * If `true`, the toast will animate. Defaults to `true`.
+    * If `true`, the toast will animate.
     */
     'animated': boolean;
     /**
@@ -4870,7 +4761,7 @@ export namespace Components {
     */
     'message'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -4883,7 +4774,7 @@ export namespace Components {
     'onWillDismiss': () => Promise<OverlayEventDetail<any>>;
     'overlayIndex': number;
     /**
-    * The position of the toast on the screen. Possible values: "top", "middle", "bottom".
+    * The position of the toast on the screen.
     */
     'position': 'top' | 'bottom' | 'middle';
     /**
@@ -4891,17 +4782,17 @@ export namespace Components {
     */
     'present': () => Promise<void>;
     /**
-    * If `true`, the close button will be displayed. Defaults to `false`.
+    * If `true`, the close button will be displayed.
     */
     'showCloseButton': boolean;
     /**
-    * If `true`, the toast will be translucent. Defaults to `false`.
+    * If `true`, the toast will be translucent.
     */
     'translucent': boolean;
   }
   interface IonToastAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the toast will animate. Defaults to `true`.
+    * If `true`, the toast will animate.
     */
     'animated'?: boolean;
     /**
@@ -4937,7 +4828,7 @@ export namespace Components {
     */
     'message'?: string;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -4945,17 +4836,9 @@ export namespace Components {
     */
     'onIonToastDidDismiss'?: (event: CustomEvent<OverlayEventDetail>) => void;
     /**
-    * Emitted after the toast has loaded.
-    */
-    'onIonToastDidLoad'?: (event: CustomEvent<void>) => void;
-    /**
     * Emitted after the toast has presented.
     */
     'onIonToastDidPresent'?: (event: CustomEvent<void>) => void;
-    /**
-    * Emitted after the toast has unloaded.
-    */
-    'onIonToastDidUnload'?: (event: CustomEvent<void>) => void;
     /**
     * Emitted before the toast has dismissed.
     */
@@ -4964,24 +4847,23 @@ export namespace Components {
     * Emitted before the toast has presented.
     */
     'onIonToastWillPresent'?: (event: CustomEvent<void>) => void;
-    'overlayIndex'?: number;
     /**
-    * The position of the toast on the screen. Possible values: "top", "middle", "bottom".
+    * The position of the toast on the screen.
     */
     'position'?: 'top' | 'bottom' | 'middle';
     /**
-    * If `true`, the close button will be displayed. Defaults to `false`.
+    * If `true`, the close button will be displayed.
     */
     'showCloseButton'?: boolean;
     /**
-    * If `true`, the toast will be translucent. Defaults to `false`.
+    * If `true`, the toast will be translucent.
     */
     'translucent'?: boolean;
   }
 
   interface IonToggle {
     /**
-    * If `true`, the toggle is selected. Defaults to `false`.
+    * If `true`, the toggle is selected.
     */
     'checked': boolean;
     /**
@@ -4989,11 +4871,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the toggle. Defaults to `false`.
+    * If `true`, the user cannot interact with the toggle.
     */
     'disabled': boolean;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
     /**
@@ -5001,13 +4883,13 @@ export namespace Components {
     */
     'name': string;
     /**
-    * The value of the toggle does not mean if it's checked or not, use the `checked` property for that.  The value of a toggle is analogous to the value of a `<input type="checkbox">`, it's only used when the toggle participates in a native `<form>`. Defaults to `on`.
+    * The value of the toggle does not mean if it's checked or not, use the `checked` property for that.  The value of a toggle is analogous to the value of a `<input type="checkbox">`, it's only used when the toggle participates in a native `<form>`.
     */
     'value'?: string | null;
   }
   interface IonToggleAttributes extends StencilHTMLAttributes {
     /**
-    * If `true`, the toggle is selected. Defaults to `false`.
+    * If `true`, the toggle is selected.
     */
     'checked'?: boolean;
     /**
@@ -5015,11 +4897,11 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * If `true`, the user cannot interact with the toggle. Defaults to `false`.
+    * If `true`, the user cannot interact with the toggle.
     */
     'disabled'?: boolean;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
     /**
@@ -5033,17 +4915,13 @@ export namespace Components {
     /**
     * Emitted when the value property has changed.
     */
-    'onIonChange'?: (event: CustomEvent<CheckedInputChangeEvent>) => void;
+    'onIonChange'?: (event: CustomEvent<ToggleChangeEventDetail>) => void;
     /**
     * Emitted when the toggle has focus.
     */
     'onIonFocus'?: (event: CustomEvent<void>) => void;
     /**
-    * Emitted when the styles change.
-    */
-    'onIonStyle'?: (event: CustomEvent<StyleEvent>) => void;
-    /**
-    * The value of the toggle does not mean if it's checked or not, use the `checked` property for that.  The value of a toggle is analogous to the value of a `<input type="checkbox">`, it's only used when the toggle participates in a native `<form>`. Defaults to `on`.
+    * The value of the toggle does not mean if it's checked or not, use the `checked` property for that.  The value of a toggle is analogous to the value of a `<input type="checkbox">`, it's only used when the toggle participates in a native `<form>`.
     */
     'value'?: string | null;
   }
@@ -5054,7 +4932,7 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode': Mode;
   }
@@ -5064,24 +4942,32 @@ export namespace Components {
     */
     'color'?: Color;
     /**
-    * The mode determines which platform styles to use. Possible values are: `"ios"` or `"md"`.
+    * The mode determines which platform styles to use.
     */
     'mode'?: Mode;
   }
 
   interface IonVirtualScroll {
     /**
-    * The approximate width of each footer template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This value can use either `px` or `%` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered. Default is `100%`.
+    * The approximate width of each footer template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This height value can only use `px` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered.
     */
     'approxFooterHeight': number;
     /**
-    * The approximate height of each header template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This height value can only use `px` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered. Default is `40px`.
+    * The approximate height of each header template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This height value can only use `px` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered.
     */
     'approxHeaderHeight': number;
     /**
-    * It is important to provide this if virtual item height will be significantly larger than the default The approximate height of each virtual item template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This height value can only use `px` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered. Default is `45`.
+    * It is important to provide this if virtual item height will be significantly larger than the default The approximate height of each virtual item template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This height value can only use `px` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered.
     */
     'approxItemHeight': number;
+    /**
+    * This method marks the tail the items array as dirty, so they can be re-rendered.  It's equivalent to calling:  ```js    * virtualScroll.checkRange(lastItemLen);    * ```
+    */
+    'checkEnd': () => void;
+    /**
+    * This method marks a subset of items as dirty, so they can be re-rendered. Items should be marked as dirty any time the content or their style changes.  The subset of items to be updated can are specifing by an offset and a length.
+    */
+    'checkRange': (offset: number, len?: number) => void;
     'domRender'?: DomRenderFn;
     /**
     * Section footers and the data used within its given template can be dynamically created by passing a function to `footerFn`. The logic within the footer function can decide if the footer template should be used, and what data to give to the footer template. The function must return `null` if a footer cell shouldn't be created.
@@ -5099,14 +4985,6 @@ export namespace Components {
     * The data that builds the templates within the virtual scroll. It's important to note that when this data has changed, then the entire virtual scroll is reset, which is an expensive operation and should be avoided if possible.
     */
     'items'?: any[];
-    /**
-    * This method marks a subset of items as dirty, so they can be re-rendered. Items should be marked as dirty any time the content or their style changes.  The subset of items to be updated can are specifing by an offset and a length.
-    */
-    'markDirty': (offset: number, len?: number) => void;
-    /**
-    * This method marks the tail the items array as dirty, so they can be re-rendered.  It's equivalent to calling:  ```    * virtualScroll.markDirty(lastItemLen, items.length - lastItemLen);    * ```
-    */
-    'markDirtyTail': () => void;
     /**
     * NOTE: only Vanilla JS API.
     */
@@ -5130,18 +5008,17 @@ export namespace Components {
   }
   interface IonVirtualScrollAttributes extends StencilHTMLAttributes {
     /**
-    * The approximate width of each footer template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This value can use either `px` or `%` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered. Default is `100%`.
+    * The approximate width of each footer template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This height value can only use `px` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered.
     */
     'approxFooterHeight'?: number;
     /**
-    * The approximate height of each header template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This height value can only use `px` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered. Default is `40px`.
+    * The approximate height of each header template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This height value can only use `px` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered.
     */
     'approxHeaderHeight'?: number;
     /**
-    * It is important to provide this if virtual item height will be significantly larger than the default The approximate height of each virtual item template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This height value can only use `px` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered. Default is `45`.
+    * It is important to provide this if virtual item height will be significantly larger than the default The approximate height of each virtual item template's cell. This dimension is used to help determine how many cells should be created when initialized, and to help calculate the height of the scrollable area. This height value can only use `px` units. Note that the actual rendered size of each cell comes from the app's CSS, whereas this approximation is used to help calculate initial dimensions before the item has been rendered.
     */
     'approxItemHeight'?: number;
-    'domRender'?: DomRenderFn;
     /**
     * Section footers and the data used within its given template can be dynamically created by passing a function to `footerFn`. The logic within the footer function can decide if the footer template should be used, and what data to give to the footer template. The function must return `null` if a footer cell shouldn't be created.
     */
@@ -5184,7 +5061,6 @@ declare global {
     'IonAlertController': Components.IonAlertController;
     'IonAlert': Components.IonAlert;
     'IonAnchor': Components.IonAnchor;
-    'IonAnimationController': Components.IonAnimationController;
     'IonApp': Components.IonApp;
     'IonAvatar': Components.IonAvatar;
     'IonBackButton': Components.IonBackButton;
@@ -5198,8 +5074,6 @@ declare global {
     'IonCardTitle': Components.IonCardTitle;
     'IonCard': Components.IonCard;
     'IonCheckbox': Components.IonCheckbox;
-    'IonChipButton': Components.IonChipButton;
-    'IonChipIcon': Components.IonChipIcon;
     'IonChip': Components.IonChip;
     'IonCol': Components.IonCol;
     'IonContent': Components.IonContent;
@@ -5241,6 +5115,7 @@ declare global {
     'IonPicker': Components.IonPicker;
     'IonPopoverController': Components.IonPopoverController;
     'IonPopover': Components.IonPopover;
+    'IonProgressBar': Components.IonProgressBar;
     'IonRadioGroup': Components.IonRadioGroup;
     'IonRadio': Components.IonRadio;
     'IonRange': Components.IonRange;
@@ -5286,7 +5161,6 @@ declare global {
     'ion-alert-controller': Components.IonAlertControllerAttributes;
     'ion-alert': Components.IonAlertAttributes;
     'ion-anchor': Components.IonAnchorAttributes;
-    'ion-animation-controller': Components.IonAnimationControllerAttributes;
     'ion-app': Components.IonAppAttributes;
     'ion-avatar': Components.IonAvatarAttributes;
     'ion-back-button': Components.IonBackButtonAttributes;
@@ -5300,8 +5174,6 @@ declare global {
     'ion-card-title': Components.IonCardTitleAttributes;
     'ion-card': Components.IonCardAttributes;
     'ion-checkbox': Components.IonCheckboxAttributes;
-    'ion-chip-button': Components.IonChipButtonAttributes;
-    'ion-chip-icon': Components.IonChipIconAttributes;
     'ion-chip': Components.IonChipAttributes;
     'ion-col': Components.IonColAttributes;
     'ion-content': Components.IonContentAttributes;
@@ -5343,6 +5215,7 @@ declare global {
     'ion-picker': Components.IonPickerAttributes;
     'ion-popover-controller': Components.IonPopoverControllerAttributes;
     'ion-popover': Components.IonPopoverAttributes;
+    'ion-progress-bar': Components.IonProgressBarAttributes;
     'ion-radio-group': Components.IonRadioGroupAttributes;
     'ion-radio': Components.IonRadioAttributes;
     'ion-range': Components.IonRangeAttributes;
@@ -5411,12 +5284,6 @@ declare global {
   var HTMLIonAnchorElement: {
     prototype: HTMLIonAnchorElement;
     new (): HTMLIonAnchorElement;
-  };
-
-  interface HTMLIonAnimationControllerElement extends Components.IonAnimationController, HTMLStencilElement {}
-  var HTMLIonAnimationControllerElement: {
-    prototype: HTMLIonAnimationControllerElement;
-    new (): HTMLIonAnimationControllerElement;
   };
 
   interface HTMLIonAppElement extends Components.IonApp, HTMLStencilElement {}
@@ -5495,18 +5362,6 @@ declare global {
   var HTMLIonCheckboxElement: {
     prototype: HTMLIonCheckboxElement;
     new (): HTMLIonCheckboxElement;
-  };
-
-  interface HTMLIonChipButtonElement extends Components.IonChipButton, HTMLStencilElement {}
-  var HTMLIonChipButtonElement: {
-    prototype: HTMLIonChipButtonElement;
-    new (): HTMLIonChipButtonElement;
-  };
-
-  interface HTMLIonChipIconElement extends Components.IonChipIcon, HTMLStencilElement {}
-  var HTMLIonChipIconElement: {
-    prototype: HTMLIonChipIconElement;
-    new (): HTMLIonChipIconElement;
   };
 
   interface HTMLIonChipElement extends Components.IonChip, HTMLStencilElement {}
@@ -5755,6 +5610,12 @@ declare global {
     new (): HTMLIonPopoverElement;
   };
 
+  interface HTMLIonProgressBarElement extends Components.IonProgressBar, HTMLStencilElement {}
+  var HTMLIonProgressBarElement: {
+    prototype: HTMLIonProgressBarElement;
+    new (): HTMLIonProgressBarElement;
+  };
+
   interface HTMLIonRadioGroupElement extends Components.IonRadioGroup, HTMLStencilElement {}
   var HTMLIonRadioGroupElement: {
     prototype: HTMLIonRadioGroupElement;
@@ -5983,7 +5844,6 @@ declare global {
     'ion-alert-controller': HTMLIonAlertControllerElement
     'ion-alert': HTMLIonAlertElement
     'ion-anchor': HTMLIonAnchorElement
-    'ion-animation-controller': HTMLIonAnimationControllerElement
     'ion-app': HTMLIonAppElement
     'ion-avatar': HTMLIonAvatarElement
     'ion-back-button': HTMLIonBackButtonElement
@@ -5997,8 +5857,6 @@ declare global {
     'ion-card-title': HTMLIonCardTitleElement
     'ion-card': HTMLIonCardElement
     'ion-checkbox': HTMLIonCheckboxElement
-    'ion-chip-button': HTMLIonChipButtonElement
-    'ion-chip-icon': HTMLIonChipIconElement
     'ion-chip': HTMLIonChipElement
     'ion-col': HTMLIonColElement
     'ion-content': HTMLIonContentElement
@@ -6040,6 +5898,7 @@ declare global {
     'ion-picker': HTMLIonPickerElement
     'ion-popover-controller': HTMLIonPopoverControllerElement
     'ion-popover': HTMLIonPopoverElement
+    'ion-progress-bar': HTMLIonProgressBarElement
     'ion-radio-group': HTMLIonRadioGroupElement
     'ion-radio': HTMLIonRadioElement
     'ion-range': HTMLIonRangeElement
@@ -6085,7 +5944,6 @@ declare global {
     'ion-alert-controller': HTMLIonAlertControllerElement;
     'ion-alert': HTMLIonAlertElement;
     'ion-anchor': HTMLIonAnchorElement;
-    'ion-animation-controller': HTMLIonAnimationControllerElement;
     'ion-app': HTMLIonAppElement;
     'ion-avatar': HTMLIonAvatarElement;
     'ion-back-button': HTMLIonBackButtonElement;
@@ -6099,8 +5957,6 @@ declare global {
     'ion-card-title': HTMLIonCardTitleElement;
     'ion-card': HTMLIonCardElement;
     'ion-checkbox': HTMLIonCheckboxElement;
-    'ion-chip-button': HTMLIonChipButtonElement;
-    'ion-chip-icon': HTMLIonChipIconElement;
     'ion-chip': HTMLIonChipElement;
     'ion-col': HTMLIonColElement;
     'ion-content': HTMLIonContentElement;
@@ -6142,6 +5998,7 @@ declare global {
     'ion-picker': HTMLIonPickerElement;
     'ion-popover-controller': HTMLIonPopoverControllerElement;
     'ion-popover': HTMLIonPopoverElement;
+    'ion-progress-bar': HTMLIonProgressBarElement;
     'ion-radio-group': HTMLIonRadioGroupElement;
     'ion-radio': HTMLIonRadioElement;
     'ion-range': HTMLIonRangeElement;

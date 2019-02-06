@@ -12,14 +12,14 @@ export function menuOverlayAnimation(AnimationC, _, menu) {
         closedX = -width + 'px';
         openedX = '0px';
     }
-    const menuAni = new AnimationC()
+    const menuAnimation = new AnimationC()
         .addElement(menu.menuInnerEl)
         .fromTo('translateX', closedX, openedX);
-    const backdropAni = new AnimationC()
+    const backdropAnimation = new AnimationC()
         .addElement(menu.backdropEl)
-        .fromTo('opacity', 0.01, 0.3);
+        .fromTo('opacity', 0.01, 0.32);
     return baseAnimation(AnimationC).then(animation => {
-        return animation.add(menuAni)
-            .add(backdropAni);
+        return animation.add(menuAnimation)
+            .add(backdropAnimation);
     });
 }

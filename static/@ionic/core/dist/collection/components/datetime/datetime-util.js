@@ -135,7 +135,7 @@ const ISO_8601_REGEXP = /^(\d{4}|[+\-]\d{6})(?:-(\d{2})(?:-(\d{2}))?)?(?:T(\d{2}
 const TIME_REGEXP = /^((\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?(?:(Z)|([+\-])(\d{2})(?::(\d{2}))?)?)?$/;
 export function parseDate(val) {
     let parse = null;
-    if (val != null) {
+    if (val != null && val !== '') {
         parse = TIME_REGEXP.exec(val);
         if (parse) {
             parse.unshift(undefined, undefined);

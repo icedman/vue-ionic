@@ -10,11 +10,10 @@ export declare class CardSubtitle implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     hostData(): {
-        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap | undefined;
+        class: import("../../interface").CssClassMap | undefined;
         'role': string;
         'aria-level': string;
     };

@@ -17,7 +17,6 @@ export class SplitPane {
     }
     visibleChanged(visible) {
         const detail = { visible, isPane: this.isPane.bind(this) };
-        this.ionChange.emit(detail);
         this.ionSplitPaneVisible.emit(detail);
     }
     componentDidLoad() {
@@ -52,7 +51,9 @@ export class SplitPane {
             this.visible = false;
             return;
         }
-        const callback = (q) => this.visible = q.matches;
+        const callback = (q) => {
+            this.visible = q.matches;
+        };
         const mediaList = this.win.matchMedia(mediaQuery);
         mediaList.addListener(callback);
         this.rmL = () => mediaList.removeListener(callback);
@@ -69,12 +70,13 @@ export class SplitPane {
         if (this.isServer) {
             return;
         }
+        const contentId = this.contentId;
         const children = this.el.children;
         const nu = this.el.childElementCount;
         let foundMain = false;
         for (let i = 0; i < nu; i++) {
             const child = children[i];
-            const isMain = child.hasAttribute('main');
+            const isMain = contentId !== undefined ? child.id === contentId : child.hasAttribute('main');
             if (isMain) {
                 if (foundMain) {
                     console.warn('split pane can not have more than one main node');
@@ -95,6 +97,10 @@ export class SplitPane {
     }
     static get is() { return "ion-split-pane"; }
     static get properties() { return {
+        "contentId": {
+            "type": String,
+            "attr": "content-id"
+        },
         "disabled": {
             "type": Boolean,
             "attr": "disabled",
@@ -120,12 +126,6 @@ export class SplitPane {
         }
     }; }
     static get events() { return [{
-            "name": "ionChange",
-            "method": "ionChange",
-            "bubbles": false,
-            "cancelable": true,
-            "composed": true
-        }, {
             "name": "ionSplitPaneVisible",
             "method": "ionSplitPaneVisible",
             "bubbles": true,

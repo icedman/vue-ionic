@@ -27,6 +27,14 @@
   contain: content;
   z-index: 10;
   box-sizing: border-box; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: var(--ion-safe-area-left);
+      padding-inline-start: var(--ion-safe-area-left);
+      -webkit-padding-end: var(--ion-safe-area-right);
+      padding-inline-end: var(--ion-safe-area-right); } }
 
 :host(.ion-color) {
   color: var(--ion-color-contrast); }
@@ -35,7 +43,10 @@
   background: var(--ion-color-base); }
 
 .toolbar-container {
-  padding: var(--padding-top) var(--padding-end) var(--padding-bottom) var(--padding-start);
+  padding-left: var(--padding-start);
+  padding-right: var(--padding-end);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
   display: flex;
   position: relative;
   flex-direction: row;
@@ -47,6 +58,14 @@
   overflow: hidden;
   z-index: 10;
   box-sizing: border-box; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    .toolbar-container {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: var(--padding-start);
+      padding-inline-start: var(--padding-start);
+      -webkit-padding-end: var(--padding-end);
+      padding-inline-end: var(--padding-end); } }
 
 .toolbar-background {
   left: 0;
@@ -64,10 +83,19 @@
   z-index: -1;
   pointer-events: none; }
 
+:host(.toolbar-segment) {
+  --min-height: auto; }
+
+::slotted(ion-progress-bar) {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute; }
+
 :host {
-  --background: var(--ion-toolbar-background, #f8f8f8);
+  --background: var(--ion-toolbar-background, var(--ion-background-color, #fff));
   --color: var(--ion-toolbar-color, var(--ion-text-color, #424242));
-  --border-color: var(--ion-toolbar-border-color, var(--ion-border-color, #c1c4cd));
+  --border-color: var(--ion-toolbar-border-color, var(--ion-border-color, var(--ion-color-step-150, #c1c4cd)));
   --padding-top: 4px;
   --padding-bottom: 4px;
   --padding-start: 4px;
@@ -79,3 +107,23 @@
   order: 3;
   min-width: 0;
   max-width: 100%; }
+
+:host(.toolbar-segment) {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0; }
+
+::slotted([slot="start"]) {
+  order: 2; }
+
+::slotted([slot="secondary"]) {
+  order: 4; }
+
+::slotted([slot="primary"]) {
+  order: 5;
+  text-align: end; }
+
+::slotted([slot="end"]) {
+  order: 6;
+  text-align: end; }

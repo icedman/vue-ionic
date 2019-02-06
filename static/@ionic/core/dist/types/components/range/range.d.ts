@@ -1,7 +1,6 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter, QueueApi } from '../../stencil.core';
-import { Color, InputChangeEvent, Mode, RangeValue, StyleEvent } from '../../interface';
-import { RangeEventDetail } from './range-interface';
+import { Color, Mode, RangeChangeEventDetail, RangeValue, StyleEventDetail } from '../../interface';
 export declare class Range implements ComponentInterface {
     private noUpdate;
     private rect;
@@ -21,12 +20,11 @@ export declare class Range implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
      * How long, in milliseconds, to wait to trigger the
-     * `ionChange` event after each change in the range value. Default `0`.
+     * `ionChange` event after each change in the range value.
      */
     debounce: number;
     protected debounceChanged(): void;
@@ -35,35 +33,35 @@ export declare class Range implements ComponentInterface {
      */
     name: string;
     /**
-     * Show two knobs. Defaults to `false`.
+     * Show two knobs.
      */
     dualKnobs: boolean;
     /**
-     * Minimum integer value of the range. Defaults to `0`.
+     * Minimum integer value of the range.
      */
     min: number;
     protected minChanged(): void;
     /**
-     * Maximum integer value of the range. Defaults to `100`.
+     * Maximum integer value of the range.
      */
     max: number;
     protected maxChanged(): void;
     /**
      * If `true`, a pin with integer value is shown when the knob
-     * is pressed. Defaults to `false`.
+     * is pressed.
      */
     pin: boolean;
     /**
      * If `true`, the knob snaps to tick marks evenly spaced based
-     * on the step property value. Defaults to `false`.
+     * on the step property value.
      */
     snaps: boolean;
     /**
-     * Specifies the value granularity. Defaults to `1`.
+     * Specifies the value granularity.
      */
     step: number;
     /**
-     * If `true`, the user cannot interact with the range. Defaults to `false`.
+     * If `true`, the user cannot interact with the range.
      */
     disabled: boolean;
     protected disabledChanged(): void;
@@ -75,11 +73,12 @@ export declare class Range implements ComponentInterface {
     /**
      * Emitted when the value property has changed.
      */
-    ionChange: EventEmitter<InputChangeEvent>;
+    ionChange: EventEmitter<RangeChangeEventDetail>;
     /**
      * Emitted when the styles change.
+     * @internal
      */
-    ionStyle: EventEmitter<StyleEvent>;
+    ionStyle: EventEmitter<StyleEventDetail>;
     /**
      * Emitted when the range has focus.
      */
@@ -88,14 +87,14 @@ export declare class Range implements ComponentInterface {
      * Emitted when the range loses focus.
      */
     ionBlur: EventEmitter<void>;
+    onBlur(): void;
+    onFocus(): void;
     componentWillLoad(): void;
     componentDidLoad(): Promise<void>;
-    keyChng(ev: CustomEvent<RangeEventDetail>): void;
+    componentDidUnload(): void;
     private handleKeyboard;
     private getValue;
     private emitStyle;
-    private fireBlur;
-    private fireFocus;
     private onStart;
     private onMove;
     private onEnd;
@@ -106,6 +105,7 @@ export declare class Range implements ComponentInterface {
     private readonly ratioUpper;
     private updateRatio;
     private updateValue;
+    private setFocus;
     hostData(): {
         class: {
             'in-item': boolean;

@@ -10,7 +10,6 @@ export declare class Slides implements ComponentInterface {
     el: HTMLStencilElement;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -20,11 +19,11 @@ export declare class Slides implements ComponentInterface {
     options: any;
     optionsChanged(): Promise<void>;
     /**
-     * If `true`, show the pagination. Defaults to `false`.
+     * If `true`, show the pagination.
      */
     pager: boolean;
     /**
-     * If `true`, show the scrollbar. Defaults to `false`.
+     * If `true`, show the scrollbar.
      */
     scrollbar: boolean;
     /**
@@ -99,6 +98,10 @@ export declare class Slides implements ComponentInterface {
      * child slides.
      */
     update(): Promise<void>;
+    /**
+     * Force swiper to update its height (when autoHeight enabled) for the duration equal to 'speed' parameter
+     */
+    updateAutoHeight(speed?: number): Promise<void>;
     /**
      * Transition to the specified slide.
      */

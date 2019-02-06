@@ -1,4 +1,5 @@
-export async function writeNavState(root, chain, intent, index, changed = false) {
+import { ROUTER_INTENT_NONE } from './constants';
+export async function writeNavState(root, chain, direction, index, changed = false) {
     try {
         const outlet = searchNavNode(root);
         if (index >= chain.length || !outlet) {
@@ -6,12 +7,12 @@ export async function writeNavState(root, chain, intent, index, changed = false)
         }
         await outlet.componentOnReady();
         const route = chain[index];
-        const result = await outlet.setRouteId(route.id, route.params, intent);
+        const result = await outlet.setRouteId(route.id, route.params, direction);
         if (result.changed) {
-            intent = 0;
+            direction = ROUTER_INTENT_NONE;
             changed = true;
         }
-        changed = await writeNavState(result.element, chain, intent, index + 1, changed);
+        changed = await writeNavState(result.element, chain, direction, index + 1, changed);
         if (result.markVisible) {
             await result.markVisible();
         }

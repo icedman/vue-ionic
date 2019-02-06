@@ -1,9 +1,9 @@
-import { Animation, AnimationBuilder, MenuControllerI, MenuI } from '../../interface';
+import { Animation, AnimationBuilder, Config, MenuControllerI, MenuI } from '../../interface';
 export declare class MenuController implements MenuControllerI {
     private menus;
     private menuAnimations;
-    animationCtrl: HTMLIonAnimationControllerElement;
     doc: Document;
+    config: Config;
     constructor();
     /**
      * Open the menu.
@@ -67,6 +67,9 @@ export declare class MenuController implements MenuControllerI {
      * ```
      */
     registerAnimation(name: string, animation: AnimationBuilder): void;
+    /**
+     * @internal
+     */
     _getInstance(): Promise<MenuControllerI>;
     _register(menu: MenuI): void;
     _unregister(menu: MenuI): void;

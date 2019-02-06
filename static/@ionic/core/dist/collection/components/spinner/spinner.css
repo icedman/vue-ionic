@@ -19,6 +19,8 @@ svg {
   width: 100%;
   height: 100%;
   transform: translateZ(0); }
+  :host-context([dir=rtl]) svg {
+    right: 0; }
 
 :host(.spinner-lines) line,
 :host(.spinner-lines-small) line {
@@ -55,6 +57,8 @@ svg {
 :host(.spinner-dots) svg {
   transform-origin: center;
   animation: spinner-dots 1s linear infinite; }
+  :host([dir=rtl].spinner-dots) svg {
+    transform-origin: calc(100% - center); }
 
 :host(.spinner-paused) svg {
   animation-play-state: paused; }

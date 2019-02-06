@@ -1,12 +1,12 @@
 import '../../stencil.core';
 import { ComponentInterface } from '../../stencil.core';
-import { Config } from '../../interface';
+import { Config, SpinnerTypes } from '../../interface';
 export declare class RefresherContent implements ComponentInterface {
     config: Config;
     /**
      * A static icon to display when you begin to pull down
      */
-    pullingIcon?: string;
+    pullingIcon?: string | null;
     /**
      * The text you want to display when you begin to pull down
      */
@@ -14,11 +14,11 @@ export declare class RefresherContent implements ComponentInterface {
     /**
      * An animated SVG spinner that shows when refreshing begins
      */
-    refreshingSpinner?: string;
+    refreshingSpinner?: SpinnerTypes | null;
     /**
      * The text you want to display when performing a refresh
      */
     refreshingText?: string;
-    componentDidLoad(): void;
+    componentWillLoad(): void;
     render(): JSX.Element[];
 }

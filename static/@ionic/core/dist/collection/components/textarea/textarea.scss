@@ -20,8 +20,8 @@
   --background: initial;
   --color: initial;
   --placeholder-color: initial;
-  --placeholder-font-style: inherit;
-  --placeholder-font-weight: inherit;
+  --placeholder-font-style: initial;
+  --placeholder-font-weight: initial;
   --placeholder-opacity: .5;
   --padding-top: 0;
   --padding-end: 0;
@@ -56,8 +56,12 @@
 // Textarea Within An Item
 // --------------------------------------------------
 
-:host(.in-item) {
+:host-context(ion-item) {
   position: static;
+}
+
+:host-context(ion-item:not(.item-label)) {
+  --padding-start: 0;
 }
 
 
@@ -80,10 +84,11 @@
   outline: none;
 
   background: transparent;
-
   box-sizing: border-box;
   resize: none;
   appearance: none;
+
+  white-space: pre-wrap;
 
   &::placeholder {
     color: var(--placeholder-color);

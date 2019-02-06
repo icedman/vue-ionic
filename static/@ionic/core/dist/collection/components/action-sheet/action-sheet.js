@@ -12,12 +12,6 @@ export class ActionSheet {
         this.translucent = false;
         this.animated = true;
     }
-    componentDidLoad() {
-        this.ionActionSheetDidLoad.emit();
-    }
-    componentDidUnload() {
-        this.ionActionSheetDidUnload.emit();
-    }
     onBackdropTap() {
         this.dismiss(undefined, BACKDROP);
     }
@@ -74,6 +68,8 @@ export class ActionSheet {
     }
     hostData() {
         return {
+            'role': 'dialog',
+            'aria-modal': 'true',
             style: {
                 zIndex: 20000 + this.overlayIndex,
             },
@@ -96,10 +92,11 @@ export class ActionSheet {
                         buttons.map(b => h("button", { type: "button", "ion-activatable": true, class: buttonClass(b), onClick: () => this.buttonClick(b) },
                             h("span", { class: "action-sheet-button-inner" },
                                 b.icon && h("ion-icon", { icon: b.icon, lazy: false, class: "action-sheet-icon" }),
-                                b.text)))),
+                                b.text),
+                            this.mode === 'md' && h("ion-ripple-effect", null)))),
                     cancelButton &&
                         h("div", { class: "action-sheet-group action-sheet-group-cancel" },
-                            h("button", { "ion-activatable": true, type: "button", class: buttonClass(cancelButton), onClick: () => this.buttonClick(cancelButton) },
+                            h("button", { type: "button", class: buttonClass(cancelButton), onClick: () => this.buttonClick(cancelButton) },
                                 h("span", { class: "action-sheet-button-inner" },
                                     cancelButton.icon &&
                                         h("ion-icon", { icon: cancelButton.icon, lazy: false, class: "action-sheet-icon" }),
@@ -112,9 +109,6 @@ export class ActionSheet {
         "animated": {
             "type": Boolean,
             "attr": "animated"
-        },
-        "animationCtrl": {
-            "connect": "ion-animation-controller"
         },
         "backdropDismiss": {
             "type": Boolean,
@@ -180,18 +174,6 @@ export class ActionSheet {
         }
     }; }
     static get events() { return [{
-            "name": "ionActionSheetDidLoad",
-            "method": "ionActionSheetDidLoad",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
-            "name": "ionActionSheetDidUnload",
-            "method": "ionActionSheetDidUnload",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
             "name": "ionActionSheetDidPresent",
             "method": "didPresent",
             "bubbles": true,
@@ -227,5 +209,5 @@ export class ActionSheet {
     static get styleMode() { return "/**style-id-placeholder:ion-action-sheet:**/"; }
 }
 function buttonClass(button) {
-    return Object.assign({ 'action-sheet-button': true, [`action-sheet-${button.role}`]: button.role !== undefined }, getClassMap(button.cssClass));
+    return Object.assign({ 'action-sheet-button': true, 'ion-activatable': true, [`action-sheet-${button.role}`]: button.role !== undefined }, getClassMap(button.cssClass));
 }

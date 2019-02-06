@@ -17,7 +17,6 @@ export declare class InfiniteScroll implements ComponentInterface {
      * output event to get called when the user has scrolled 10%
      * from the bottom of the page. Use the value `100px` when the
      * scroll is within 100 pixels from the bottom of the page.
-     * Defaults to `15%`.
      */
     threshold: string;
     protected thresholdChanged(val: string): void;
@@ -35,7 +34,6 @@ export declare class InfiniteScroll implements ComponentInterface {
     /**
      * The position of the infinite scroll element.
      * The value can be either `top` or `bottom`.
-     * Defaults to `bottom`.
      */
     position: 'top' | 'bottom';
     /**

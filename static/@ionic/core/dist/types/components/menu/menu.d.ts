@@ -36,20 +36,20 @@ export declare class Menu implements ComponentInterface, MenuI {
      * The display type of the menu.
      * Available options: `"overlay"`, `"reveal"`, `"push"`.
      */
-    type: string;
+    type?: string;
     typeChanged(type: string, oldType: string | undefined): void;
     /**
-     * If `true`, the menu is disabled. Defaults to `false`.
+     * If `true`, the menu is disabled.
      */
     disabled: boolean;
     protected disabledChanged(): void;
     /**
-     * Which side of the view the menu should be placed. Default `"start"`.
+     * Which side of the view the menu should be placed.
      */
     side: Side;
     protected sideChanged(): void;
     /**
-     * If `true`, swiping the menu is enabled. Defaults to `true`.
+     * If `true`, swiping the menu is enabled.
      */
     swipeGesture: boolean;
     protected swipeGestureChanged(): void;
@@ -76,7 +76,6 @@ export declare class Menu implements ComponentInterface, MenuI {
     ionDidClose: EventEmitter<void>;
     /**
      * Emitted when the menu state is changed.
-     *
      * @internal
      */
     protected ionMenuChange: EventEmitter<MenuChangeEventDetail>;

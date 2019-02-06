@@ -1,11 +1,11 @@
-import { debounceEvent, renderHiddenInput } from '../../utils/helpers';
-import { createColorClasses, hostContext } from '../../utils/theme';
+import { debounceEvent, findItemLabel } from '../../utils/helpers';
+import { createColorClasses } from '../../utils/theme';
 export class Input {
     constructor() {
         this.inputId = `ion-input-${inputIds++}`;
         this.didBlurAfterEdit = false;
         this.hasFocus = false;
-        this.autocapitalize = 'none';
+        this.autocapitalize = 'off';
         this.autocomplete = 'off';
         this.autocorrect = 'off';
         this.autofocus = false;
@@ -56,13 +56,8 @@ export class Input {
         this.emitStyle();
     }
     valueChanged() {
-        const inputEl = this.nativeInput;
-        const value = this.getValue();
-        if (inputEl && inputEl.value !== value) {
-            inputEl.value = value;
-        }
         this.emitStyle();
-        this.ionChange.emit({ value });
+        this.ionChange.emit({ value: this.value });
     }
     componentWillLoad() {
         if (this.clearOnEdit === undefined && this.type === 'password') {
@@ -75,13 +70,15 @@ export class Input {
         this.ionInputDidLoad.emit();
     }
     componentDidUnload() {
-        this.nativeInput = undefined;
         this.ionInputDidUnload.emit();
     }
     setFocus() {
         if (this.nativeInput) {
             this.nativeInput.focus();
         }
+    }
+    getInputElement() {
+        return Promise.resolve(this.nativeInput);
     }
     getValue() {
         return this.value || '';
@@ -90,6 +87,7 @@ export class Input {
         this.ionStyle.emit({
             'interactive': true,
             'input': true,
+            'has-placeholder': this.placeholder != null,
             'has-value': this.hasValue(),
             'has-focus': this.hasFocus,
             'interactive-disabled': this.disabled,
@@ -105,20 +103,24 @@ export class Input {
     }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('ion-item', this.el), 'has-value': this.hasValue(), 'has-focus': this.hasFocus })
+            'aria-disabled': this.disabled ? 'true' : null,
+            class: Object.assign({}, createColorClasses(this.color), { 'has-value': this.hasValue(), 'has-focus': this.hasFocus })
         };
     }
     render() {
         const value = this.getValue();
-        renderHiddenInput(this.el, this.name, value, this.disabled);
+        const labelId = this.inputId + '-lbl';
+        const label = findItemLabel(this.el);
+        if (label) {
+            label.id = labelId;
+        }
         return [
-            h("input", { ref: input => this.nativeInput = input, "aria-disabled": this.disabled ? 'true' : null, accept: this.accept, autoCapitalize: this.autocapitalize, autoComplete: this.autocomplete, autoCorrect: this.autocorrect, autoFocus: this.autofocus, class: "native-input", disabled: this.disabled, inputMode: this.inputmode, min: this.min, max: this.max, minLength: this.minlength, maxLength: this.maxlength, multiple: this.multiple, name: this.name, pattern: this.pattern, placeholder: this.placeholder, results: this.results, readOnly: this.readonly, required: this.required, spellCheck: this.spellcheck, step: this.step, size: this.size, type: this.type, value: value, onInput: this.onInput, onBlur: this.onBlur, onFocus: this.onFocus, onKeyDown: this.onKeydown }),
-            h("slot", null),
+            h("input", { class: "native-input", ref: input => this.nativeInput = input, "aria-labelledby": labelId, disabled: this.disabled, accept: this.accept, autoCapitalize: this.autocapitalize, autoComplete: this.autocomplete, autoCorrect: this.autocorrect, autoFocus: this.autofocus, inputMode: this.inputmode, min: this.min, max: this.max, minLength: this.minlength, maxLength: this.maxlength, multiple: this.multiple, name: this.name, pattern: this.pattern, placeholder: this.placeholder || '', readOnly: this.readonly, required: this.required, spellCheck: this.spellcheck, step: this.step, size: this.size, type: this.type, value: value, onInput: this.onInput, onBlur: this.onBlur, onFocus: this.onFocus, onKeyDown: this.onKeydown }),
             (this.clearInput && !this.readonly && !this.disabled) && h("button", { type: "button", class: "input-clear-icon", tabindex: "-1", onTouchStart: this.clearTextInput, onMouseDown: this.clearTextInput })
         ];
     }
     static get is() { return "ion-input"; }
-    static get encapsulation() { return "shadow"; }
+    static get encapsulation() { return "scoped"; }
     static get properties() { return {
         "accept": {
             "type": String,
@@ -165,6 +167,9 @@ export class Input {
         },
         "el": {
             "elementRef": true
+        },
+        "getInputElement": {
+            "method": true
         },
         "hasFocus": {
             "state": true
@@ -217,10 +222,6 @@ export class Input {
             "type": Boolean,
             "attr": "required"
         },
-        "results": {
-            "type": Number,
-            "attr": "results"
-        },
         "setFocus": {
             "method": true
         },
@@ -260,12 +261,6 @@ export class Input {
             "cancelable": true,
             "composed": true
         }, {
-            "name": "ionStyle",
-            "method": "ionStyle",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
             "name": "ionBlur",
             "method": "ionBlur",
             "bubbles": true,
@@ -286,6 +281,12 @@ export class Input {
         }, {
             "name": "ionInputDidUnload",
             "method": "ionInputDidUnload",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "ionStyle",
+            "method": "ionStyle",
             "bubbles": true,
             "cancelable": true,
             "composed": true

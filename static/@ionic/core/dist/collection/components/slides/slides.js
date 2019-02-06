@@ -31,6 +31,10 @@ export class Slides {
         const swiper = await this.getSwiper();
         swiper.update();
     }
+    async updateAutoHeight(speed) {
+        const swiper = await this.getSwiper();
+        swiper.updateAutoHeight(speed);
+    }
     async slideTo(index, speed, runCallbacks) {
         const swiper = await this.getSwiper();
         swiper.slideTo(index, speed, runCallbacks);
@@ -297,6 +301,9 @@ export class Slides {
             "method": true
         },
         "update": {
+            "method": true
+        },
+        "updateAutoHeight": {
             "method": true
         }
     }; }

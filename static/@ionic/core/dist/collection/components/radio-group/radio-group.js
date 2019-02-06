@@ -33,6 +33,15 @@ export class RadioGroup {
             this.value = selectedRadio.value;
         }
     }
+    onRadioDeselect(ev) {
+        if (this.allowEmptySelection) {
+            const selectedRadio = ev.target;
+            if (selectedRadio) {
+                selectedRadio.checked = false;
+                this.value = undefined;
+            }
+        }
+    }
     componentDidLoad() {
         let header = this.el.querySelector('ion-list-header');
         if (!header) {
@@ -101,6 +110,9 @@ export class RadioGroup {
         }, {
             "name": "ionSelect",
             "method": "onRadioSelect"
+        }, {
+            "name": "ionDeselect",
+            "method": "onRadioDeselect"
         }]; }
 }
 let radioGroupIds = 0;

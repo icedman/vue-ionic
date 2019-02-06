@@ -7,7 +7,7 @@ export function mdEnterAnimation(AnimationC, baseEl) {
     wrapperAnimation
         .fromTo('opacity', 0.01, 1)
         .fromTo('translateY', '40px', '0px');
-    backdropAnimation.fromTo('opacity', 0.01, 0.4);
+    backdropAnimation.fromTo('opacity', 0.01, 0.32);
     return Promise.resolve(baseAnimation
         .addElement(baseEl)
         .easing('cubic-bezier(0.36,0.66,0.04,1)')

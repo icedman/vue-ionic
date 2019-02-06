@@ -10,11 +10,10 @@ export declare class CardHeader implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
-     * If `true`, the card header will be translucent. Defaults to `false`.
+     * If `true`, the card header will be translucent.
      */
     translucent: boolean;
     hostData(): {

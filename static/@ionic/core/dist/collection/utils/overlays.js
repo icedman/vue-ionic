@@ -3,7 +3,7 @@ export function createOverlay(element, opts) {
     const doc = element.ownerDocument;
     connectListeners(doc);
     Object.assign(element, opts);
-    element.classList.add('ion-page-invisible');
+    element.classList.add('overlay-hidden');
     const overlayIndex = lastId++;
     element.overlayIndex = overlayIndex;
     if (!element.hasAttribute('id')) {
@@ -15,6 +15,15 @@ export function createOverlay(element, opts) {
 export function connectListeners(doc) {
     if (lastId === 0) {
         lastId = 1;
+        doc.addEventListener('focusin', ev => {
+            const lastOverlay = getOverlay(doc);
+            if (lastOverlay && lastOverlay.backdropDismiss && !isDescendant(lastOverlay, ev.target)) {
+                const firstInput = lastOverlay.querySelector('input,button');
+                if (firstInput) {
+                    firstInput.focus();
+                }
+            }
+        });
         doc.addEventListener('ionBackButton', ev => {
             const lastOverlay = getOverlay(doc);
             if (lastOverlay && lastOverlay.backdropDismiss) {
@@ -96,28 +105,26 @@ async function overlayAnimation(overlay, animationBuilder, baseEl, opts) {
         overlay.animation = undefined;
         return false;
     }
-    else {
-        baseEl.classList.remove('ion-page-invisible');
-        const aniRoot = baseEl.shadowRoot || overlay.el;
-        const animation = overlay.animation = await overlay.animationCtrl.create(animationBuilder, aniRoot, opts);
-        overlay.animation = animation;
-        if (!overlay.animated) {
-            animation.duration(0);
-        }
-        if (overlay.keyboardClose) {
-            animation.beforeAddWrite(() => {
-                const activeElement = baseEl.ownerDocument.activeElement;
-                if (activeElement && activeElement.matches('input, ion-input, ion-textarea')) {
-                    activeElement.blur();
-                }
-            });
-        }
-        await animation.playAsync();
-        const hasCompleted = animation.hasCompleted;
-        animation.destroy();
-        overlay.animation = undefined;
-        return hasCompleted;
+    baseEl.classList.remove('overlay-hidden');
+    const aniRoot = baseEl.shadowRoot || overlay.el;
+    const animation = overlay.animation = await import('./animation').then(mod => mod.create(animationBuilder, aniRoot, opts));
+    overlay.animation = animation;
+    if (!overlay.animated || !overlay.config.getBoolean('animated', true)) {
+        animation.duration(0);
     }
+    if (overlay.keyboardClose) {
+        animation.beforeAddWrite(() => {
+            const activeElement = baseEl.ownerDocument.activeElement;
+            if (activeElement && activeElement.matches('input, ion-input, ion-textarea')) {
+                activeElement.blur();
+            }
+        });
+    }
+    await animation.playAsync();
+    const hasCompleted = animation.hasCompleted;
+    animation.destroy();
+    overlay.animation = undefined;
+    return hasCompleted;
 }
 export function autoFocus(containerEl) {
     const focusableEls = containerEl.querySelectorAll('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]');
@@ -145,5 +152,14 @@ export function onceEvent(element, eventName, callback) {
 }
 export function isCancel(role) {
     return role === 'cancel' || role === BACKDROP;
+}
+function isDescendant(parent, child) {
+    while (child) {
+        if (child === parent) {
+            return true;
+        }
+        child = child.parentElement;
+    }
+    return false;
 }
 export const BACKDROP = 'backdrop';

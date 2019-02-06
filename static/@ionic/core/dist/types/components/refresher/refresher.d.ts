@@ -22,7 +22,7 @@ export declare class Refresher implements ComponentInterface {
     private state;
     /**
      * The minimum distance the user must pull down until the
-     * refresher will go into the `refreshing` state. Defaults to `60`.
+     * refresher will go into the `refreshing` state.
      */
     pullMin: number;
     /**
@@ -32,15 +32,15 @@ export declare class Refresher implements ComponentInterface {
      */
     pullMax: number;
     /**
-     * Time it takes to close the refresher. Defaults to `280ms`.
+     * Time it takes to close the refresher.
      */
     closeDuration: string;
     /**
-     * Time it takes the refresher to to snap back to the `refreshing` state. Defaults to `280ms`.
+     * Time it takes the refresher to to snap back to the `refreshing` state.
      */
     snapbackDuration: string;
     /**
-     * If `true`, the refresher will be hidden. Defaults to `false`.
+     * If `true`, the refresher will be hidden.
      */
     disabled: boolean;
     disabledChanged(): void;

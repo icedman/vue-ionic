@@ -22,6 +22,8 @@ ion-item-sliding .item {
   order: 1;
   transition-duration: .6s;
   transition-property: padding-left; }
+  :host-context([dir=rtl]) .item-sliding-active-swipe-end .item-options-end .item-option-expandable {
+    order: -1; }
 
 .item-sliding-active-swipe-start .item-options-start .item-option-expandable {
   /* stylelint-disable-next-line property-blacklist */
@@ -29,3 +31,5 @@ ion-item-sliding .item {
   order: -1;
   transition-duration: .6s;
   transition-property: padding-right; }
+  :host-context([dir=rtl]) .item-sliding-active-swipe-start .item-options-start .item-option-expandable {
+    order: 1; }

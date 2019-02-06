@@ -35,7 +35,7 @@ export class Alert {
             type: i.type || 'text',
             name: i.name || `${index}`,
             placeholder: i.placeholder || '',
-            value: i.value || '',
+            value: i.value,
             label: i.label,
             checked: !!i.checked,
             disabled: !!i.disabled,
@@ -48,12 +48,6 @@ export class Alert {
     componentWillLoad() {
         this.inputsChanged();
         this.buttonsChanged();
-    }
-    componentDidLoad() {
-        this.ionAlertDidLoad.emit();
-    }
-    componentDidUnload() {
-        this.ionAlertDidUnload.emit();
     }
     onBackdropTap() {
         this.dismiss(undefined, BACKDROP);
@@ -147,7 +141,7 @@ export class Alert {
         if (inputs.length === 0) {
             return null;
         }
-        return (h("div", { class: "alert-checkbox-group", "aria-labelledby": labelledby }, inputs.map(i => (h("button", { type: "button", onClick: () => this.cbClick(i), "aria-checked": i.checked ? 'true' : null, id: i.id, disabled: i.disabled, tabIndex: 0, role: "checkbox", class: "alert-tappable alert-checkbox alert-checkbox-button" },
+        return (h("div", { class: "alert-checkbox-group", "aria-labelledby": labelledby }, inputs.map(i => (h("button", { type: "button", onClick: () => this.cbClick(i), "aria-checked": `${i.checked}`, id: i.id, disabled: i.disabled, tabIndex: 0, role: "checkbox", class: "alert-tappable alert-checkbox alert-checkbox-button ion-focusable" },
             h("div", { class: "alert-button-inner" },
                 h("div", { class: "alert-checkbox-icon" },
                     h("div", { class: "alert-checkbox-inner" })),
@@ -159,12 +153,11 @@ export class Alert {
         if (inputs.length === 0) {
             return null;
         }
-        return (h("div", { class: "alert-radio-group", role: "radiogroup", "aria-labelledby": labelledby, "aria-activedescendant": this.activeId }, inputs.map(i => (h("button", { type: "button", onClick: () => this.rbClick(i), "aria-checked": i.checked ? 'true' : null, disabled: i.disabled, id: i.id, tabIndex: 0, class: "alert-radio-button alert-tappable alert-radio", role: "radio" },
+        return (h("div", { class: "alert-radio-group", role: "radiogroup", "aria-labelledby": labelledby, "aria-activedescendant": this.activeId }, inputs.map(i => (h("button", { type: "button", onClick: () => this.rbClick(i), "aria-checked": `${i.checked}`, disabled: i.disabled, id: i.id, tabIndex: 0, class: "alert-radio-button alert-tappable alert-radio ion-focusable", role: "radio" },
             h("div", { class: "alert-button-inner" },
                 h("div", { class: "alert-radio-icon" },
                     h("div", { class: "alert-radio-inner" })),
-                h("div", { class: "alert-radio-label" }, i.label)),
-            this.mode === 'md' && h("ion-ripple-effect", null))))));
+                h("div", { class: "alert-radio-label" }, i.label)))))));
     }
     renderInput(labelledby) {
         const inputs = this.processedInputs;
@@ -176,7 +169,8 @@ export class Alert {
     }
     hostData() {
         return {
-            role: 'alertdialog',
+            'role': 'dialog',
+            'aria-modal': 'true',
             style: {
                 zIndex: 20000 + this.overlayIndex,
             },
@@ -189,8 +183,9 @@ export class Alert {
             'alert-button-group': true,
             'alert-button-group-vertical': buttons.length > 2
         };
-        return (h("div", { class: alertButtonGroupClass }, buttons.map(button => h("button", { type: "button", "ion-activatable": true, class: buttonClass(button), tabIndex: 0, onClick: () => this.buttonClick(button) },
-            h("span", { class: "alert-button-inner" }, button.text)))));
+        return (h("div", { class: alertButtonGroupClass }, buttons.map(button => h("button", { type: "button", class: buttonClass(button), tabIndex: 0, onClick: () => this.buttonClick(button) },
+            h("span", { class: "alert-button-inner" }, button.text),
+            this.mode === 'md' && h("ion-ripple-effect", null)))));
     }
     render() {
         const hdrId = `alert-${this.overlayIndex}-hdr`;
@@ -220,9 +215,6 @@ export class Alert {
         "animated": {
             "type": Boolean,
             "attr": "animated"
-        },
-        "animationCtrl": {
-            "connect": "ion-animation-controller"
         },
         "backdropDismiss": {
             "type": Boolean,
@@ -299,18 +291,6 @@ export class Alert {
         }
     }; }
     static get events() { return [{
-            "name": "ionAlertDidLoad",
-            "method": "ionAlertDidLoad",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
-            "name": "ionAlertDidUnload",
-            "method": "ionAlertDidUnload",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
             "name": "ionAlertDidPresent",
             "method": "didPresent",
             "bubbles": true,
@@ -346,5 +326,5 @@ export class Alert {
     static get styleMode() { return "/**style-id-placeholder:ion-alert:**/"; }
 }
 function buttonClass(button) {
-    return Object.assign({ 'alert-button': true }, getClassMap(button.cssClass));
+    return Object.assign({ 'alert-button': true, 'ion-focusable': true, 'ion-activatable': true }, getClassMap(button.cssClass));
 }

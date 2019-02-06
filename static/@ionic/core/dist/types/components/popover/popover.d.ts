@@ -6,7 +6,6 @@ export declare class Popover implements ComponentInterface, OverlayInterface {
     presented: boolean;
     animation?: Animation;
     el: HTMLElement;
-    animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
     /** @internal */
     delegate?: FrameworkDelegate;
@@ -14,7 +13,6 @@ export declare class Popover implements ComponentInterface, OverlayInterface {
     overlayIndex: number;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -43,7 +41,7 @@ export declare class Popover implements ComponentInterface, OverlayInterface {
      */
     cssClass?: string | string[];
     /**
-     * If `true`, the popover will be dismissed when the backdrop is clicked. Defaults to `true`.
+     * If `true`, the popover will be dismissed when the backdrop is clicked.
      */
     backdropDismiss: boolean;
     /**
@@ -51,25 +49,17 @@ export declare class Popover implements ComponentInterface, OverlayInterface {
      */
     event: any;
     /**
-     * If `true`, a backdrop will be displayed behind the popover. Defaults to `true`.
+     * If `true`, a backdrop will be displayed behind the popover.
      */
     showBackdrop: boolean;
     /**
-     * If `true`, the popover will be translucent. Defaults to `false`.
+     * If `true`, the popover will be translucent.
      */
     translucent: boolean;
     /**
-     * If `true`, the popover will animate. Defaults to `true`.
+     * If `true`, the popover will animate.
      */
     animated: boolean;
-    /**
-     * Emitted after the popover has loaded.
-     */
-    ionPopoverDidLoad: EventEmitter<void>;
-    /**
-     * Emitted after the popover has unloaded.
-     */
-    ionPopoverDidUnload: EventEmitter<void>;
     /**
      * Emitted after the popover has presented.
      */
@@ -86,8 +76,6 @@ export declare class Popover implements ComponentInterface, OverlayInterface {
      * Emitted after the popover has dismissed.
      */
     didDismiss: EventEmitter<OverlayEventDetail>;
-    componentDidLoad(): void;
-    componentDidUnload(): void;
     protected onDismiss(ev: UIEvent): void;
     protected onBackdropTap(): void;
     protected lifecycle(modalEvent: CustomEvent): void;
@@ -108,10 +96,11 @@ export declare class Popover implements ComponentInterface, OverlayInterface {
      */
     onWillDismiss(): Promise<OverlayEventDetail>;
     hostData(): {
+        'aria-modal': string;
+        'no-router': boolean;
         style: {
             zIndex: number;
         };
-        'no-router': boolean;
         class: {
             'popover-translucent': boolean;
         };

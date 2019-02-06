@@ -1,11 +1,13 @@
 export class Tabs {
     constructor() {
         this.transitioning = false;
-        this.useRouter = false;
         this.tabs = [];
+        this.useRouter = false;
     }
     async componentWillLoad() {
-        this.useRouter = !!this.doc.querySelector('ion-router') && !this.el.closest('[no-router]');
+        if (!this.useRouter) {
+            this.useRouter = !!this.doc.querySelector('ion-router') && !this.el.closest('[no-router]');
+        }
         this.tabs = Array.from(this.el.querySelectorAll('ion-tab'));
         this.ionNavWillLoad.emit();
         this.componentWillUpdate();
@@ -18,10 +20,10 @@ export class Tabs {
         this.selectedTab = this.leavingTab = undefined;
     }
     componentWillUpdate() {
-        const tabbar = this.el.querySelector('ion-tab-bar');
-        if (tabbar) {
+        const tabBar = this.el.querySelector('ion-tab-bar');
+        if (tabBar) {
             const tab = this.selectedTab ? this.selectedTab.tab : undefined;
-            tabbar.selectedTab = tab;
+            tabBar.selectedTab = tab;
         }
     }
     onTabClicked(ev) {
@@ -47,6 +49,18 @@ export class Tabs {
         this.tabSwitch();
         return true;
     }
+    async getTab(tab) {
+        const tabEl = (typeof tab === 'string')
+            ? this.tabs.find(t => t.tab === tab)
+            : tab;
+        if (!tabEl) {
+            console.error(`tab with id: "${tabEl}" does not exist`);
+        }
+        return tabEl;
+    }
+    getSelected() {
+        return Promise.resolve(this.selectedTab ? this.selectedTab.tab : undefined);
+    }
     async setRouteId(id) {
         const selectedTab = await this.getTab(id);
         if (!this.shouldSwitch(selectedTab)) {
@@ -63,18 +77,6 @@ export class Tabs {
         const tabId = this.selectedTab && this.selectedTab.tab;
         return tabId !== undefined ? { id: tabId, element: this.selectedTab } : undefined;
     }
-    async getTab(tab) {
-        const tabEl = (typeof tab === 'string')
-            ? this.tabs.find(t => t.tab === tab)
-            : tab;
-        if (!tabEl) {
-            console.error(`tab with id: "${tabEl}" does not exist`);
-        }
-        return tabEl;
-    }
-    getSelected() {
-        return Promise.resolve(this.selectedTab);
-    }
     async initSelect() {
         if (this.useRouter) {
             return;
@@ -89,7 +91,7 @@ export class Tabs {
         this.transitioning = true;
         this.leavingTab = this.selectedTab;
         this.selectedTab = selectedTab;
-        this.ionNavWillChange.emit();
+        this.ionTabsWillChange.emit({ tab: selectedTab.tab });
         return selectedTab.setActive();
     }
     tabSwitch() {
@@ -104,15 +106,14 @@ export class Tabs {
             if (leavingTab) {
                 leavingTab.active = false;
             }
-            this.ionChange.emit({ tab: selectedTab });
-            this.ionNavDidChange.emit();
+            this.ionTabsDidChange.emit({ tab: selectedTab.tab });
         }
     }
     notifyRouter() {
         if (this.useRouter) {
             const router = this.doc.querySelector('ion-router');
             if (router) {
-                return router.navChanged(1);
+                return router.navChanged('forward');
             }
         }
         return Promise.resolve(false);
@@ -161,30 +162,29 @@ export class Tabs {
         },
         "tabs": {
             "state": true
+        },
+        "useRouter": {
+            "type": Boolean,
+            "attr": "use-router",
+            "mutable": true
         }
     }; }
     static get events() { return [{
-            "name": "ionChange",
-            "method": "ionChange",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
             "name": "ionNavWillLoad",
             "method": "ionNavWillLoad",
             "bubbles": true,
             "cancelable": true,
             "composed": true
         }, {
-            "name": "ionNavWillChange",
-            "method": "ionNavWillChange",
-            "bubbles": true,
+            "name": "ionTabsWillChange",
+            "method": "ionTabsWillChange",
+            "bubbles": false,
             "cancelable": true,
             "composed": true
         }, {
-            "name": "ionNavDidChange",
-            "method": "ionNavDidChange",
-            "bubbles": true,
+            "name": "ionTabsDidChange",
+            "method": "ionTabsDidChange",
+            "bubbles": false,
             "cancelable": true,
             "composed": true
         }]; }

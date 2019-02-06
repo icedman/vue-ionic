@@ -1,9 +1,9 @@
 import '../../stencil.core';
 import { EventEmitter, QueueApi } from '../../stencil.core';
-import { AnimationBuilder, ComponentProps, Config, FrameworkDelegate, Mode, NavComponent, NavOptions, NavOutlet, RouteID, RouteWrite, TransitionDoneFn, ViewController } from '../../interface';
+import { AnimationBuilder, ComponentProps, Config, FrameworkDelegate, Mode, NavComponent, NavOptions, NavOutlet, RouteID, RouteWrite, RouterDirection, TransitionDoneFn, ViewController } from '../../interface';
 export declare class Nav implements NavOutlet {
     private transInstr;
-    private sbTrns?;
+    private sbAni?;
     private useRouter;
     private isTransitioning;
     private destroyed;
@@ -14,7 +14,6 @@ export declare class Nav implements NavOutlet {
     queue: QueueApi;
     config: Config;
     win: Window;
-    animationCtrl: HTMLIonAnimationControllerElement;
     /** @internal */
     delegate?: FrameworkDelegate;
     /**
@@ -23,7 +22,7 @@ export declare class Nav implements NavOutlet {
     swipeGesture?: boolean;
     swipeGestureChanged(): void;
     /**
-     * If `true`, the nav should animate the transition of components. Default to `true`.
+     * If `true`, the nav should animate the transition of components.
      */
     animated: boolean;
     /**
@@ -42,6 +41,7 @@ export declare class Nav implements NavOutlet {
     rootChanged(): void;
     /**
      * Event fired when Nav will load a component
+     * @internal
      */
     ionNavWillLoad: EventEmitter<void>;
     /**
@@ -92,7 +92,7 @@ export declare class Nav implements NavOutlet {
      */
     setPages(views: any[], opts?: NavOptions | null, done?: TransitionDoneFn): Promise<boolean>;
     /** @internal */
-    setRouteId(id: string, params: ComponentProps | undefined, direction: number): Promise<RouteWrite>;
+    setRouteId(id: string, params: ComponentProps | undefined, direction: RouterDirection): Promise<RouteWrite>;
     /** @internal */
     getRouteId(): Promise<RouteID | undefined>;
     /**
@@ -137,5 +137,5 @@ export declare class Nav implements NavOutlet {
     private onStart;
     private onMove;
     private onEnd;
-    render(): JSX.Element[];
+    render(): JSX.Element;
 }

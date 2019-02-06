@@ -1,20 +1,23 @@
 import { attachComponent } from '../../utils/framework-delegate';
 import { assert } from '../../utils/helpers';
+export const VIEW_STATE_NEW = 1;
+export const VIEW_STATE_ATTACHED = 2;
+export const VIEW_STATE_DESTROYED = 3;
 export class ViewController {
     constructor(component, params) {
         this.component = component;
         this.params = params;
-        this.state = 1;
+        this.state = VIEW_STATE_NEW;
     }
     async init(container) {
-        this.state = 2;
+        this.state = VIEW_STATE_ATTACHED;
         if (!this.element) {
             const component = this.component;
             this.element = await attachComponent(this.delegate, container, component, ['ion-page', 'ion-page-invisible'], this.params);
         }
     }
     _destroy() {
-        assert(this.state !== 3, 'view state must be ATTACHED');
+        assert(this.state !== VIEW_STATE_DESTROYED, 'view state must be ATTACHED');
         const element = this.element;
         if (element) {
             if (this.delegate) {
@@ -25,7 +28,7 @@ export class ViewController {
             }
         }
         this.nav = undefined;
-        this.state = 3;
+        this.state = VIEW_STATE_DESTROYED;
     }
 }
 export function matches(view, id, params) {

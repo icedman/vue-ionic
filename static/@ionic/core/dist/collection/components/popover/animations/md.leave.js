@@ -5,7 +5,7 @@ export function mdLeaveAnimation(AnimationC, baseEl) {
     const wrapperAnimation = new AnimationC();
     wrapperAnimation.addElement(baseEl.querySelector('.popover-wrapper'));
     wrapperAnimation.fromTo('opacity', 0.99, 0);
-    backdropAnimation.fromTo('opacity', 0.08, 0);
+    backdropAnimation.fromTo('opacity', 0.32, 0);
     return Promise.resolve(baseAnimation
         .addElement(baseEl)
         .easing('ease')

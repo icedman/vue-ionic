@@ -1,6 +1,6 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter } from '../../stencil.core';
-import { Color, Mode, StyleEvent, TextFieldTypes, TextInputChangeEvent } from '../../interface';
+import { Color, InputChangeEventDetail, Mode, StyleEventDetail, TextFieldTypes } from '../../interface';
 export declare class Input implements ComponentInterface {
     private nativeInput?;
     private inputId;
@@ -15,7 +15,6 @@ export declare class Input implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -23,23 +22,23 @@ export declare class Input implements ComponentInterface {
      */
     accept?: string;
     /**
-     * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user. Defaults to `"none"`.
+     * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user.
      */
     autocapitalize: string;
     /**
-     * Indicates whether the value of the control can be automatically completed by the browser. Defaults to `"off"`.
+     * Indicates whether the value of the control can be automatically completed by the browser.
      */
-    autocomplete: string;
+    autocomplete: 'on' | 'off';
     /**
-     * Whether autocorrection should be enabled when the user is entering/editing the text value. Defaults to `"off"`.
+     * Whether auto correction should be enabled when the user is entering/editing the text value.
      */
-    autocorrect: string;
+    autocorrect: 'on' | 'off';
     /**
-     * This Boolean attribute lets you specify that a form control should have input focus when the page loads. Defaults to `false`.
+     * This Boolean attribute lets you specify that a form control should have input focus when the page loads.
      */
     autofocus: boolean;
     /**
-     * If `true`, a clear icon will appear in the input when there is a value. Clicking it clears the input. Defaults to `false`.
+     * If `true`, a clear icon will appear in the input when there is a value. Clicking it clears the input.
      */
     clearInput: boolean;
     /**
@@ -47,17 +46,18 @@ export declare class Input implements ComponentInterface {
      */
     clearOnEdit?: boolean;
     /**
-     * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `0`.
+     * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke.
      */
     debounce: number;
     protected debounceChanged(): void;
     /**
-     * If `true`, the user cannot interact with the input. Defaults to `false`.
+     * If `true`, the user cannot interact with the input.
      */
     disabled: boolean;
     protected disabledChanged(): void;
     /**
-     * A hint to the browser for which keyboard to display. This attribute applies when the value of the type attribute is `"text"`, `"password"`, `"email"`, or `"url"`. Possible values are: `"verbatim"`, `"latin"`, `"latin-name"`, `"latin-prose"`, `"full-width-latin"`, `"kana"`, `"katakana"`, `"numeric"`, `"tel"`, `"email"`, `"url"`.
+     * A hint to the browser for which keyboard to display.
+     * This attribute applies when the value of the type attribute is `"text"`, `"password"`, `"email"`, or `"url"`. Possible values are: `"verbatim"`, `"latin"`, `"latin-name"`, `"latin-prose"`, `"full-width-latin"`, `"kana"`, `"katakana"`, `"numeric"`, `"tel"`, `"email"`, `"url"`.
      */
     inputmode?: string;
     /**
@@ -91,9 +91,9 @@ export declare class Input implements ComponentInterface {
     /**
      * Instructional text that shows before the input has a value.
      */
-    placeholder?: string;
+    placeholder?: string | null;
     /**
-     * If `true`, the user cannot modify the value. Defaults to `false`.
+     * If `true`, the user cannot modify the value.
      */
     readonly: boolean;
     /**
@@ -101,15 +101,12 @@ export declare class Input implements ComponentInterface {
      */
     required: boolean;
     /**
-     * This is a nonstandard attribute supported by Safari that only applies when the type is `"search"`. Its value should be a nonnegative decimal integer.
-     */
-    results?: number;
-    /**
-     * If `true`, the element will have its spelling and grammar checked. Defaults to `false`.
+     * If `true`, the element will have its spelling and grammar checked.
      */
     spellcheck: boolean;
     /**
-     * Works with the min and max attributes to limit the increments at which a value can be set. Possible values are: `"any"` or a positive floating point number.
+     * Works with the min and max attributes to limit the increments at which a value can be set.
+     * Possible values are: `"any"` or a positive floating point number.
      */
     step?: string;
     /**
@@ -117,7 +114,7 @@ export declare class Input implements ComponentInterface {
      */
     size?: number;
     /**
-     * The type of control to display. The default type is text. Possible values are: `"text"`, `"password"`, `"email"`, `"number"`, `"search"`, `"tel"`, or `"url"`.
+     * The type of control to display. The default type is text.
      */
     type: TextFieldTypes;
     /**
@@ -135,11 +132,7 @@ export declare class Input implements ComponentInterface {
     /**
      * Emitted when the value has changed.
      */
-    ionChange: EventEmitter<TextInputChangeEvent>;
-    /**
-     * Emitted when the styles change.
-     */
-    ionStyle: EventEmitter<StyleEvent>;
+    ionChange: EventEmitter<InputChangeEventDetail>;
     /**
      * Emitted when the input loses focus.
      */
@@ -150,12 +143,19 @@ export declare class Input implements ComponentInterface {
     ionFocus: EventEmitter<void>;
     /**
      * Emitted when the input has been created.
+     * @internal
      */
     ionInputDidLoad: EventEmitter<void>;
     /**
      * Emitted when the input has been removed.
+     * @internal
      */
     ionInputDidUnload: EventEmitter<void>;
+    /**
+     * Emitted when the styles change.
+     * @internal
+     */
+    ionStyle: EventEmitter<StyleEventDetail>;
     componentWillLoad(): void;
     componentDidLoad(): void;
     componentDidUnload(): void;
@@ -164,6 +164,10 @@ export declare class Input implements ComponentInterface {
      * `input.focus()`.
      */
     setFocus(): void;
+    /**
+     * Returns the native `<input>` element used under the hood.
+     */
+    getInputElement(): Promise<HTMLInputElement>;
     private getValue;
     private emitStyle;
     private onInput;
@@ -174,12 +178,11 @@ export declare class Input implements ComponentInterface {
     private focusChanged;
     private hasValue;
     hostData(): {
+        'aria-disabled': string | null;
         class: {
-            'in-item': boolean;
             'has-value': boolean;
             'has-focus': boolean;
         } | {
-            'in-item': boolean;
             'has-value': boolean;
             'has-focus': boolean;
         };

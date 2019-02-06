@@ -1,18 +1,16 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter, QueueApi } from '../../stencil.core';
-import { CheckedInputChangeEvent, Color, Mode, StyleEvent } from '../../interface';
+import { Color, Mode, StyleEventDetail, ToggleChangeEventDetail } from '../../interface';
 export declare class Toggle implements ComponentInterface {
     private inputId;
-    private nativeInput;
-    private pivotX;
     private gesture?;
+    private buttonEl?;
+    private lastDrag;
     el: HTMLElement;
     queue: QueueApi;
     activated: boolean;
-    keyFocus: boolean;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -26,11 +24,11 @@ export declare class Toggle implements ComponentInterface {
      */
     name: string;
     /**
-     * If `true`, the toggle is selected. Defaults to `false`.
+     * If `true`, the toggle is selected.
      */
     checked: boolean;
     /**
-     * If `true`, the user cannot interact with the toggle. Defaults to `false`.
+     * If `true`, the user cannot interact with the toggle.
      */
     disabled: boolean;
     /**
@@ -39,13 +37,12 @@ export declare class Toggle implements ComponentInterface {
      *
      * The value of a toggle is analogous to the value of a `<input type="checkbox">`,
      * it's only used when the toggle participates in a native `<form>`.
-     * Defaults to `on`.
      */
     value?: string | null;
     /**
      * Emitted when the value property has changed.
      */
-    ionChange: EventEmitter<CheckedInputChangeEvent>;
+    ionChange: EventEmitter<ToggleChangeEventDetail>;
     /**
      * Emitted when the toggle has focus.
      */
@@ -56,35 +53,39 @@ export declare class Toggle implements ComponentInterface {
     ionBlur: EventEmitter<void>;
     /**
      * Emitted when the styles change.
+     * @internal
      */
-    ionStyle: EventEmitter<StyleEvent>;
+    ionStyle: EventEmitter<StyleEventDetail>;
     checkedChanged(isChecked: boolean): void;
     disabledChanged(): void;
     componentWillLoad(): void;
     componentDidLoad(): Promise<void>;
+    componentDidUnload(): void;
+    onClick(): void;
     private emitStyle;
     private onStart;
     private onMove;
     private onEnd;
-    private onChange;
-    private onKeyUp;
+    private getValue;
+    private setFocus;
     private onFocus;
     private onBlur;
-    private getValue;
     hostData(): {
+        'role': string;
+        'aria-disabled': string | null;
+        'aria-checked': string;
+        'aria-labelledby': string;
         class: {
             'in-item': boolean;
             'toggle-activated': boolean;
             'toggle-checked': boolean;
             'toggle-disabled': boolean;
-            'toggle-key': boolean;
             'interactive': boolean;
         } | {
             'in-item': boolean;
             'toggle-activated': boolean;
             'toggle-checked': boolean;
             'toggle-disabled': boolean;
-            'toggle-key': boolean;
             'interactive': boolean;
         };
     };

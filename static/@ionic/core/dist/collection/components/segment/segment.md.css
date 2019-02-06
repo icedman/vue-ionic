@@ -1,77 +1,65 @@
 :host {
-  /**
-   * @prop --background: Background of segment
-   * @prop --background-checked: Background of checked segment
-   * @prop --border-color: Color of segment border
-   * @prop --border-color-checked: Color of checked segment border
-   * @prop --border-color-disabled: Color of disabled segment border
-   * @prop --color: Color of segment text
-   * @prop --color-checked: Color of checked segment text
-   * @prop --color-disabled: Color of disabled segment text
-   */
+  --indicator-color-checked: initial;
+  --ripple-color: initial;
+  --color-activated: initial;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   display: flex;
-  flex: 1;
   align-items: center;
   justify-content: center;
   width: 100%;
   font-family: var(--ion-font-family, inherit);
   text-align: center; }
 
-::slotted(ion-segment-button) {
-  --btn-background: var(--background);
-  --btn-border-color: var(--border-color);
-  color: var(--color); }
-
-::slotted(.segment-button-checked) {
-  --btn-background: var(--background-checked);
-  --btn-border-color: var(--border-color-checked);
-  color: var(--color-checked); }
-
 :host(.segment-disabled),
 ::slotted(.segment-button-disabled) {
   pointer-events: none; }
 
+:host(.segment-scrollable) {
+  justify-content: start;
+  width: auto;
+  overflow-x: scroll; }
+
+:host(.segment-scrollable::-webkit-scrollbar) {
+  display: none; }
+
 :host {
-  --background: transparent;
-  --background-checked: transparent;
-  --border-color: rgba(0, 0, 0, 0.1);
-  --color: var(--ion-toolbar-color-activated, #4a4a4a);
-  --color-checked: var(--ion-toolbar-color-activated, #4a4a4a); }
+  --background: none;
+  --background-checked: none;
+  --background-hover: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.04);
+  --background-activated: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.16);
+  --color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.6);
+  --color-checked: var(--ion-color-primary, #3880ff);
+  --color-checked-disabled: var(--color-checked);
+  --indicator-color: transparent; }
 
 :host(.segment-disabled) {
   opacity: 0.3; }
 
-:host-context(ion-toolbar.ion-color):not(.ion-color) {
-  --color: var(--ion-color-contrast);
-  --color-checked: var(--ion-color-contrast); }
-
 :host(.ion-color)::slotted(ion-segment-button) {
-  --color: var(--ion-color-base); }
+  --background-hover: rgba(var(--ion-color-base-rgb), 0.04);
+  --background-activated: rgba(var(--ion-color-base-rgb), 0.16);
+  --ripple-color: var(--ion-color-base);
+  background: transparent;
+  color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.6); }
 
 :host(.ion-color)::slotted(.segment-button-checked) {
+  --indicator-color-checked: var(--ion-color-base);
   color: var(--ion-color-base); }
 
-::slotted(ion-segment-button) {
-  --padding-top: 0;
-  --padding-end: 6px;
-  --padding-bottom: 0;
-  --padding-start: 6px;
-  --border-width: 0 0 2px 0;
-  --border-style: solid;
-  --transition: 100ms all linear;
-  --icon-size: 26px;
-  height: 42px;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 40px;
-  text-transform: uppercase;
-  opacity: 0.7; }
+:host(.ion-color)::slotted(.segment-button-checked.activated) {
+  color: var(--ion-color-base); }
 
-::slotted(.activated),
-::slotted(.segment-button-checked) {
-  opacity: 1; }
+:host-context(ion-toolbar):not(.ion-color)::slotted(ion-segment-button) {
+  color: var(--ion-toolbar-color-unchecked, var(--color)); }
 
-::slotted(.segment-button-disabled) {
-  opacity: 0.3; }
+:host-context(ion-toolbar):not(.ion-color)::slotted(.segment-button-checked) {
+  --indicator-color-checked: var(--ion-toolbar-color-checked, var(--color-checked));
+  color: var(--ion-toolbar-color-checked, var(--color-checked)); }
+
+:host-context(ion-toolbar.ion-color):not(.ion-color)::slotted(ion-segment-button) {
+  --background-hover: rgba(var(--ion-color-contrast-rgb), 0.04);
+  --background-activated: var(--ion-color-base);
+  --color: rgba(var(--ion-color-contrast-rgb), 0.6);
+  --color-checked: var(--ion-color-contrast);
+  --indicator-color-checked: var(--ion-color-contrast); }

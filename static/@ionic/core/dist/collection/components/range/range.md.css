@@ -3,6 +3,7 @@
    * @prop --bar-background: Background of the range bar
    * @prop --bar-background-active: Background of the active range bar
    * @prop --bar-height: Height of the range bar
+   * @prop --bar-border-radius: Border radius of the range bar
    * @prop --height: Height of the range
    * @prop --knob-background: Background of the range knob
    * @prop --knob-border-radius: Border radius of the range knob
@@ -18,6 +19,9 @@
   user-select: none;
   z-index: 2; }
 
+:host(.range-disabled) {
+  pointer-events: none; }
+
 ::slotted(ion-label) {
   flex: initial; }
 
@@ -30,7 +34,8 @@
   width: 100%;
   height: var(--height);
   contain: size layout style;
-  cursor: grab; }
+  cursor: grab;
+  touch-action: pan-y; }
 
 :host(.range-pressed) .range-slider {
   cursor: grabbing; }
@@ -50,10 +55,18 @@
   width: var(--knob-handle-size);
   height: var(--knob-handle-size);
   text-align: center; }
+  :host-context([dir=rtl]) .range-knob-handle {
+    right: 0; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    .range-knob-handle {
+      margin-left: unset;
+      -webkit-margin-start: calc(0px - var(--knob-handle-size) / 2);
+      margin-inline-start: calc(0px - var(--knob-handle-size) / 2); } }
   .range-knob-handle:active, .range-knob-handle:focus {
     outline: none; }
 
 .range-bar {
+  border-radius: var(--bar-border-radius);
   left: 0;
   top: calc((var(--height) - var(--bar-height)) / 2);
   position: absolute;
@@ -61,6 +74,8 @@
   height: var(--bar-height);
   background: var(--bar-background);
   pointer-events: none; }
+  :host-context([dir=rtl]) .range-bar {
+    right: 0; }
 
 .range-knob {
   border-radius: var(--knob-border-radius);
@@ -73,6 +88,8 @@
   box-shadow: var(--knob-box-shadow);
   z-index: 2;
   pointer-events: none; }
+  :host-context([dir=rtl]) .range-knob {
+    right: calc(50% - var(--knob-size) / 2); }
 
 :host(.range-pressed) .range-bar-active {
   will-change: left, right; }
@@ -94,11 +111,26 @@
   --bar-height: 2px;
   --bar-background: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.26);
   --bar-background-active: var(--ion-color-primary, #3880ff);
+  --bar-border-radius: 0;
   --height: 42px;
   --pin-background: var(--ion-color-primary, #3880ff);
   --pin-color: var(--ion-color-primary-contrast, #fff);
-  padding: 8px;
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   font-size: 12px; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: 14px;
+      padding-inline-start: 14px;
+      -webkit-padding-end: 14px;
+      padding-inline-end: 14px; } }
+
+:host(.ion-color) .range-bar {
+  background: rgba(var(--ion-color-base-rgb), 0.26); }
 
 :host(.ion-color) .range-bar-active,
 :host(.ion-color) .range-knob,
@@ -108,8 +140,33 @@
   background: var(--ion-color-base);
   color: var(--ion-color-contrast); }
 
-:host(.ion-color) .range-bar {
-  background: rgba(var(--ion-color-base-rgb), 0.26); }
+::slotted([slot="start"]) {
+  margin-left: 0;
+  margin-right: 14px;
+  margin-top: 0;
+  margin-bottom: 0; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    ::slotted([slot="start"]) {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: 0;
+      margin-inline-start: 0;
+      -webkit-margin-end: 14px;
+      margin-inline-end: 14px; } }
+
+::slotted([slot="end"]) {
+  margin-left: 14px;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    ::slotted([slot="end"]) {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: 14px;
+      margin-inline-start: 14px;
+      -webkit-margin-end: 0;
+      margin-inline-end: 0; } }
 
 :host(.range-has-pin) {
   padding-top: 28px; }
@@ -139,7 +196,10 @@
   background: transparent; }
 
 .range-pin {
-  padding: 8px 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
   border-radius: 50%;
   transform: translate3d(0,  0,  0) scale(0.01);
   display: inline-block;
@@ -166,6 +226,18 @@
     background: var(--pin-background);
     content: "";
     z-index: -1; }
+    :host-context([dir=rtl]) .range-pin::before {
+      right: 50%; }
+    :host-context([dir=rtl]) .range-pin::before {
+      border-top-left-radius: 50%;
+      border-top-right-radius: 50%;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 50%; }
+    @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+      .range-pin::before {
+        margin-left: unset;
+        -webkit-margin-start: -13px;
+        margin-inline-start: -13px; } }
 
 .range-knob-pressed .range-pin {
   transform: translate3d(0,  -24px,  0) scale(1); }
@@ -176,9 +248,9 @@
 :host(.range-disabled) .range-bar-active,
 :host(.range-disabled) .range-bar,
 :host(.range-disabled) .range-tick {
-  background-color: var(--ion-background-color-step-250, #bfbfbf); }
+  background-color: var(--ion-color-step-250, #bfbfbf); }
 
 :host(.range-disabled) .range-knob {
   transform: scale(0.55);
   outline: 5px solid #fff;
-  background-color: var(--ion-background-color-step-250, #bfbfbf); }
+  background-color: var(--ion-color-step-250, #bfbfbf); }

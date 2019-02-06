@@ -1,7 +1,4 @@
 export class RouteRedirect {
-    constructor() {
-        this.from = '';
-    }
     propDidChange() {
         this.ionRouteRedirectChanged.emit();
     }

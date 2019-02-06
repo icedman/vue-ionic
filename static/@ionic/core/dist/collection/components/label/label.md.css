@@ -3,9 +3,7 @@
    * @prop --color: Color of the label
    */
   --color: initial;
-  margin: 0;
   display: block;
-  flex: 1;
   color: var(--color);
   font-family: var(--ion-font-family, inherit);
   font-size: inherit;
@@ -44,17 +42,14 @@
   max-width: 100%; }
 
 :host-context(.item-has-focus).label-floating,
+:host-context(.item-has-placeholder).label-floating,
 :host-context(.item-has-value).label-floating {
   transform: translate3d(0,  0,  0) scale(0.8); }
 
 :host(.label-no-animate.label-floating) {
   transition: none; }
 
-:host-context(.item) {
-  margin: 11px 8px 11px 0; }
-
 :host([text-wrap]) {
-  font-size: 14px;
   line-height: 1.5; }
 
 :host(.label-stacked) {
@@ -64,19 +59,33 @@
   transform: translate3d(0,  27px,  0);
   transform-origin: left top;
   transition: transform 150ms ease-in-out; }
+  :host([dir=rtl].label-floating) {
+    transform-origin: right top; }
 
 :host(.label-stacked),
 :host(.label-floating) {
   margin-left: 0;
   margin-bottom: 0; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host(.label-stacked),
+    :host(.label-floating) {
+      margin-left: unset;
+      -webkit-margin-start: 0;
+      margin-inline-start: 0; } }
 
 ::slotted(*) h1 {
-  margin: 0 0 2px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 2px;
   font-size: 24px;
   font-weight: normal; }
 
 ::slotted(*) h2 {
-  margin: 2px 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 2px;
+  margin-bottom: 2px;
   font-size: 16px;
   font-weight: normal; }
 
@@ -84,20 +93,26 @@
 ::slotted(*) h4,
 ::slotted(*) h5,
 ::slotted(*) h6 {
-  margin: 2px 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 2px;
+  margin-bottom: 2px;
   font-size: 14px;
   font-weight: normal;
   line-height: normal; }
 
 ::slotted(*) p {
-  margin: 0 0 2px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 2px;
   font-size: 14px;
-  line-height: normal;
+  line-height: 20px;
   text-overflow: inherit;
   overflow: inherit; }
 
 ::slotted(p) {
-  color: var(--ion-text-color-step-400, #666666); }
+  color: var(--ion-color-step-600, #666666); }
 
 :host-context(.ion-color)::slotted(p) {
   color: inherit; }

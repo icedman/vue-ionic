@@ -1,12 +1,12 @@
 import { ComponentInterface, EventEmitter } from '../../stencil.core';
-import { InputChangeEvent } from '../../interface';
+import { RadioGroupChangeEventDetail } from '../../interface';
 export declare class RadioGroup implements ComponentInterface {
     private inputId;
     private labelId;
     private radios;
     el: HTMLElement;
     /**
-     * If `true`, the radios can be deselected. Defaults to `false`.
+     * If `true`, the radios can be deselected.
      */
     allowEmptySelection: boolean;
     /**
@@ -21,10 +21,11 @@ export declare class RadioGroup implements ComponentInterface {
     /**
      * Emitted when the value has changed.
      */
-    ionChange: EventEmitter<InputChangeEvent>;
+    ionChange: EventEmitter<RadioGroupChangeEventDetail>;
     onRadioDidLoad(ev: Event): void;
     onRadioDidUnload(ev: Event): void;
     onRadioSelect(ev: Event): void;
+    onRadioDeselect(ev: Event): void;
     componentDidLoad(): void;
     private updateRadios;
     hostData(): {

@@ -3,7 +3,7 @@ export declare class SelectOption implements ComponentInterface {
     private inputId;
     el: HTMLElement;
     /**
-     * If `true`, the user cannot interact with the select option. Defaults to `false`.
+     * If `true`, the user cannot interact with the select option.
      */
     disabled: boolean;
     /**

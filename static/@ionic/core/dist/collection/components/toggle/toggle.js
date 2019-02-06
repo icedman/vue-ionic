@@ -1,27 +1,19 @@
 import { hapticSelection } from '../../utils/haptic';
-import { renderHiddenInput } from '../../utils/helpers';
+import { findItemLabel, renderHiddenInput } from '../../utils/helpers';
 import { createColorClasses, hostContext } from '../../utils/theme';
 export class Toggle {
     constructor() {
         this.inputId = `ion-tg-${toggleIds++}`;
-        this.pivotX = 0;
+        this.lastDrag = 0;
         this.activated = false;
-        this.keyFocus = false;
         this.name = this.inputId;
         this.checked = false;
         this.disabled = false;
         this.value = 'on';
-        this.onChange = () => {
-            this.checked = !this.checked;
-        };
-        this.onKeyUp = () => {
-            this.keyFocus = true;
-        };
         this.onFocus = () => {
             this.ionFocus.emit();
         };
         this.onBlur = () => {
-            this.keyFocus = false;
             this.ionBlur.emit();
         };
     }
@@ -41,70 +33,81 @@ export class Toggle {
         this.emitStyle();
     }
     async componentDidLoad() {
-        const parentItem = this.nativeInput.closest('ion-item');
-        if (parentItem) {
-            const itemLabel = parentItem.querySelector('ion-label');
-            if (itemLabel) {
-                itemLabel.id = this.inputId + '-lbl';
-                this.nativeInput.setAttribute('aria-labelledby', itemLabel.id);
-            }
-        }
-        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
+        this.gesture = (await import('../../utils/gesture')).createGesture({
             el: this.el,
             queue: this.queue,
             gestureName: 'toggle',
             gesturePriority: 100,
-            threshold: 0,
-            onStart: ev => this.onStart(ev),
+            threshold: 5,
+            passive: false,
+            onStart: () => this.onStart(),
             onMove: ev => this.onMove(ev),
             onEnd: ev => this.onEnd(ev),
         });
         this.disabledChanged();
+    }
+    componentDidUnload() {
+        if (this.gesture) {
+            this.gesture.destroy();
+            this.gesture = undefined;
+        }
+    }
+    onClick() {
+        if (this.lastDrag + 300 < Date.now()) {
+            this.checked = !this.checked;
+        }
     }
     emitStyle() {
         this.ionStyle.emit({
             'interactive-disabled': this.disabled,
         });
     }
-    onStart(detail) {
-        this.pivotX = detail.currentX;
+    onStart() {
         this.activated = true;
-        detail.event.preventDefault();
-        return true;
+        this.setFocus();
     }
     onMove(detail) {
-        const currentX = detail.currentX;
-        if (shouldToggle(this.checked, currentX - this.pivotX, -15)) {
+        if (shouldToggle(this.checked, detail.deltaX, -10)) {
             this.checked = !this.checked;
-            this.pivotX = currentX;
             hapticSelection();
         }
     }
-    onEnd(detail) {
-        const delta = detail.currentX - this.pivotX;
-        if (shouldToggle(this.checked, delta, 4)) {
-            this.checked = !this.checked;
-            hapticSelection();
-        }
+    onEnd(ev) {
         this.activated = false;
-        this.nativeInput.focus();
+        this.lastDrag = Date.now();
+        ev.event.preventDefault();
+        ev.event.stopImmediatePropagation();
     }
     getValue() {
         return this.value || '';
     }
+    setFocus() {
+        if (this.buttonEl) {
+            this.buttonEl.focus();
+        }
+    }
     hostData() {
+        const { inputId, disabled, checked, activated, color, el } = this;
+        const labelId = inputId + '-lbl';
+        const label = findItemLabel(el);
+        if (label) {
+            label.id = labelId;
+        }
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('ion-item', this.el), 'toggle-activated': this.activated, 'toggle-checked': this.checked, 'toggle-disabled': this.disabled, 'toggle-key': this.keyFocus, 'interactive': true })
+            'role': 'checkbox',
+            'aria-disabled': disabled ? 'true' : null,
+            'aria-checked': `${checked}`,
+            'aria-labelledby': labelId,
+            class: Object.assign({}, createColorClasses(color), { 'in-item': hostContext('ion-item', el), 'toggle-activated': activated, 'toggle-checked': checked, 'toggle-disabled': disabled, 'interactive': true })
         };
     }
     render() {
         const value = this.getValue();
-        renderHiddenInput(this.el, this.name, (this.checked ? value : ''), this.disabled);
+        renderHiddenInput(true, this.el, this.name, (this.checked ? value : ''), this.disabled);
         return [
             h("div", { class: "toggle-icon" },
                 h("div", { class: "toggle-inner" })),
-            h("input", { type: "checkbox", onChange: this.onChange, onFocus: this.onFocus, onBlur: this.onBlur, onKeyUp: this.onKeyUp, checked: this.checked, id: this.inputId, name: this.name, value: value, disabled: this.disabled, ref: r => this.nativeInput = r }),
-            h("slot", null)
+            h("button", { type: "button", onFocus: this.onFocus, onBlur: this.onBlur, disabled: this.disabled, ref: el => this.buttonEl = el })
         ];
     }
     static get is() { return "ion-toggle"; }
@@ -130,9 +133,6 @@ export class Toggle {
         },
         "el": {
             "elementRef": true
-        },
-        "keyFocus": {
-            "state": true
         },
         "mode": {
             "type": String,
@@ -174,6 +174,10 @@ export class Toggle {
             "bubbles": true,
             "cancelable": true,
             "composed": true
+        }]; }
+    static get listeners() { return [{
+            "name": "click",
+            "method": "onClick"
         }]; }
     static get style() { return "/**style-placeholder:ion-toggle:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-toggle:**/"; }

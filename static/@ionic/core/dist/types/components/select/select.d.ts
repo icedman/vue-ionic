@@ -1,33 +1,31 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter } from '../../stencil.core';
-import { Mode, OverlaySelect, SelectInputChangeEvent, SelectInterface, StyleEvent } from '../../interface';
+import { Mode, OverlaySelect, SelectChangeEventDetail, SelectInterface, StyleEventDetail } from '../../interface';
 export declare class Select implements ComponentInterface {
     private childOpts;
     private inputId;
-    private labelId?;
     private overlay?;
+    private didInit;
+    private buttonEl?;
     el: HTMLIonSelectElement;
     actionSheetCtrl: HTMLIonActionSheetControllerElement;
     alertCtrl: HTMLIonAlertControllerElement;
     popoverCtrl: HTMLIonPopoverControllerElement;
     isExpanded: boolean;
-    keyFocus: boolean;
-    text: string;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
-     * If `true`, the user cannot interact with the select. Defaults to `false`.
+     * If `true`, the user cannot interact with the select.
      */
     disabled: boolean;
     /**
-     * The text to display on the cancel button. Default: `Cancel`.
+     * The text to display on the cancel button.
      */
     cancelText: string;
     /**
-     * The text to display on the ok button. Default: `OK`.
+     * The text to display on the ok button.
      */
     okText: string;
     /**
@@ -47,7 +45,7 @@ export declare class Select implements ComponentInterface {
      */
     multiple: boolean;
     /**
-     * The interface the select should use: `action-sheet`, `popover` or `alert`. Default: `alert`.
+     * The interface the select should use: `action-sheet`, `popover` or `alert`.
      */
     interface: SelectInterface;
     /**
@@ -65,7 +63,7 @@ export declare class Select implements ComponentInterface {
     /**
      * Emitted when the value has changed.
      */
-    ionChange: EventEmitter<SelectInputChangeEvent>;
+    ionChange: EventEmitter<SelectChangeEventDetail>;
     /**
      * Emitted when the selection is cancelled.
      */
@@ -80,21 +78,20 @@ export declare class Select implements ComponentInterface {
     ionBlur: EventEmitter<void>;
     /**
      * Emitted when the styles change.
+     * @internal
      */
-    ionStyle: EventEmitter<StyleEvent>;
+    ionStyle: EventEmitter<StyleEventDetail>;
     disabledChanged(): void;
     valueChanged(): void;
-    optLoad(ev: CustomEvent): void;
-    optUnload(ev: CustomEvent): void;
-    onSelect(ev: CustomEvent): void;
-    componentWillLoad(): void;
-    componentDidLoad(): void;
+    selectOptionChanged(): Promise<void>;
+    onClick(ev: UIEvent): void;
+    componentDidLoad(): Promise<void>;
     /**
      * Opens the select overlay, it could be an alert, action-sheet or popover,
      * based in `ion-select` settings.
      */
-    open(ev?: UIEvent): Promise<OverlaySelect>;
-    private getLabel;
+    open(ev?: UIEvent): Promise<OverlaySelect | undefined>;
+    private createOverlay;
     private openPopover;
     private openActionSheet;
     private openAlert;
@@ -102,16 +99,24 @@ export declare class Select implements ComponentInterface {
      * Close the select interface.
      */
     private close;
-    private onKeyUp;
+    private loadOptions;
+    private updateOptions;
+    private getLabel;
+    private hasValue;
+    private getText;
+    private setFocus;
+    private emitStyle;
     private onFocus;
     private onBlur;
-    hasValue(): boolean;
-    private emitStyle;
     hostData(): {
+        'role': string;
+        'aria-disabled': string | null;
+        'aria-expanded': string;
+        'aria-haspopup': string;
+        'aria-labelledby': string;
         class: {
             'in-item': boolean;
             'select-disabled': boolean;
-            'select-key': boolean;
         };
     };
     render(): JSX.Element[];

@@ -19,6 +19,10 @@ ion-footer ion-toolbar:last-child {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAHBAMAAADzDtBxAAAAD1BMVEUAAAAAAAAAAAAAAAAAAABPDueNAAAABXRSTlMUCS0gBIh/TXEAAAAaSURBVAjXYxCEAgY4UIICBmMogMsgFLtAAQCNSwXZKOdPxgAAAABJRU5ErkJggg==");
   background-repeat: repeat-x;
   content: ""; }
+  :host-context([dir=rtl]) .footer-md::before {
+    right: 0; }
+  :host-context([dir=rtl]) .footer-md::before {
+    background-position: right 0 top 0; }
 
 .footer-md[no-border]::before {
   display: none; }

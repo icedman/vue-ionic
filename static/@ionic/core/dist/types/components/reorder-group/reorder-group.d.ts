@@ -1,5 +1,5 @@
 import { ComponentInterface, EventEmitter, QueueApi } from '../../stencil.core';
-import { ItemReorderDetail } from '../../interface';
+import { ItemReorderEventDetail } from '../../interface';
 declare const enum ReordeGroupState {
     Idle = 0,
     Active = 1,
@@ -22,7 +22,7 @@ export declare class ReorderGroup implements ComponentInterface {
     queue: QueueApi;
     doc: Document;
     /**
-     * If `true`, the reorder will be hidden. Defaults to `true`.
+     * If `true`, the reorder will be hidden.
      */
     disabled: boolean;
     disabledChanged(): void;
@@ -33,7 +33,7 @@ export declare class ReorderGroup implements ComponentInterface {
      *
      * The complete() method exposed as
      */
-    ionItemReorder: EventEmitter<ItemReorderDetail>;
+    ionItemReorder: EventEmitter<ItemReorderEventDetail>;
     componentDidLoad(): Promise<void>;
     componentDidUnload(): void;
     /**

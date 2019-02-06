@@ -21,13 +21,13 @@ export class Label {
         const position = this.position;
         this.ionStyle.emit({
             'label': true,
-            [`label-${position}`]: !!position
+            [`label-${position}`]: position !== undefined
         });
     }
     hostData() {
         const position = this.position;
         return {
-            class: Object.assign({}, createColorClasses(this.color), { [`label-${position}`]: !!position, [`label-no-animate`]: (this.noAnimate) })
+            class: Object.assign({}, createColorClasses(this.color), { [`label-${position}`]: position !== undefined, [`label-no-animate`]: (this.noAnimate) })
         };
     }
     static get is() { return "ion-label"; }

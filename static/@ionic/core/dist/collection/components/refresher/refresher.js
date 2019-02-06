@@ -29,7 +29,7 @@ export class Refresher {
         else {
             console.error('ion-refresher did not attach, make sure the parent is an ion-content.');
         }
-        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
+        this.gesture = (await import('../../utils/gesture')).createGesture({
             el: this.el.closest('ion-content'),
             queue: this.queue,
             gestureName: 'refresher',
@@ -46,6 +46,10 @@ export class Refresher {
     }
     componentDidUnload() {
         this.scrollEl = undefined;
+        if (this.gesture) {
+            this.gesture.destroy();
+            this.gesture = undefined;
+        }
     }
     complete() {
         this.close(32, '120ms');
@@ -69,7 +73,6 @@ export class Refresher {
         return true;
     }
     onStart() {
-        console.log('start');
         this.progress = 0;
         this.state = 1;
     }
@@ -149,7 +152,7 @@ export class Refresher {
             this.setCss(0, '0ms', false, '');
         }, 600);
         this.state = state;
-        this.setCss(0, '', true, delay);
+        this.setCss(0, this.closeDuration, true, delay);
     }
     setCss(y, duration, overflowVisible, delay) {
         this.appliedStyles = (y > 0);

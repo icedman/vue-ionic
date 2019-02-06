@@ -1,28 +1,25 @@
 import { createColorClasses, hostContext, openURL } from '../../utils/theme';
 export class FabButton {
     constructor() {
-        this.keyFocus = false;
         this.activated = false;
         this.disabled = false;
+        this.routerDirection = 'forward';
         this.show = false;
         this.translucent = false;
         this.type = 'button';
         this.onFocus = () => {
             this.ionFocus.emit();
         };
-        this.onKeyUp = () => {
-            this.keyFocus = true;
-        };
         this.onBlur = () => {
-            this.keyFocus = false;
             this.ionBlur.emit();
         };
     }
     hostData() {
-        const inList = hostContext('ion-fab-list', this.el);
+        const { el, disabled, color, activated, show, translucent, size } = this;
+        const inList = hostContext('ion-fab-list', el);
         return {
-            'ion-activatable': true,
-            class: Object.assign({}, createColorClasses(this.color), { 'fab-button-in-list': inList, 'fab-button-translucent-in-list': inList && this.translucent, 'fab-button-close-active': this.activated, 'fab-button-show': this.show, 'fab-button-disabled': this.disabled, 'fab-button-translucent': this.translucent, 'focused': this.keyFocus })
+            'aria-disabled': disabled ? 'true' : null,
+            class: Object.assign({}, createColorClasses(color), { 'fab-button-in-list': inList, 'fab-button-translucent-in-list': inList && translucent, 'fab-button-close-active': activated, 'fab-button-show': show, 'fab-button-disabled': disabled, 'fab-button-translucent': translucent, 'ion-activatable': true, 'ion-focusable': true, [`fab-button-${size}`]: size !== undefined })
         };
     }
     render() {
@@ -30,7 +27,7 @@ export class FabButton {
         const attrs = (TagType === 'button')
             ? { type: this.type }
             : { href: this.href };
-        return (h(TagType, Object.assign({}, attrs, { class: "button-native", disabled: this.disabled, onFocus: this.onFocus, onKeyUp: this.onKeyUp, onBlur: this.onBlur, onClick: ev => openURL(this.win, this.href, ev, this.routerDirection) }),
+        return (h(TagType, Object.assign({}, attrs, { class: "button-native", disabled: this.disabled, onFocus: this.onFocus, onBlur: this.onBlur, onClick: (ev) => openURL(this.win, this.href, ev, this.routerDirection) }),
             h("span", { class: "close-icon" },
                 h("ion-icon", { name: "close", lazy: false })),
             h("span", { class: "button-inner" },
@@ -59,9 +56,6 @@ export class FabButton {
             "type": String,
             "attr": "href"
         },
-        "keyFocus": {
-            "state": true
-        },
         "mode": {
             "type": String,
             "attr": "mode"
@@ -73,6 +67,10 @@ export class FabButton {
         "show": {
             "type": Boolean,
             "attr": "show"
+        },
+        "size": {
+            "type": String,
+            "attr": "size"
         },
         "translucent": {
             "type": Boolean,

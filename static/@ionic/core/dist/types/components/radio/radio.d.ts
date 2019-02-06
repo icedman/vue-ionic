@@ -1,10 +1,8 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter } from '../../stencil.core';
-import { CheckedInputChangeEvent, Color, Mode, StyleEvent } from '../../interface';
+import { Color, Mode, RadioChangeEventDetail, StyleEventDetail } from '../../interface';
 export declare class Radio implements ComponentInterface {
     private inputId;
-    private nativeInput;
-    keyFocus: boolean;
     el: HTMLElement;
     /**
      * The color to use from your application's color palette.
@@ -14,7 +12,6 @@ export declare class Radio implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -22,11 +19,11 @@ export declare class Radio implements ComponentInterface {
      */
     name: string;
     /**
-     * If `true`, the user cannot interact with the radio. Defaults to `false`.
+     * If `true`, the user cannot interact with the radio.
      */
     disabled: boolean;
     /**
-     * If `true`, the radio is selected. Defaults to `false`.
+     * If `true`, the radio is selected.
      */
     checked: boolean;
     /**
@@ -35,20 +32,28 @@ export declare class Radio implements ComponentInterface {
     value?: any | null;
     /**
      * Emitted when the radio loads.
+     * @internal
      */
     ionRadioDidLoad: EventEmitter<void>;
     /**
      * Emitted when the radio unloads.
+     * @internal
      */
     ionRadioDidUnload: EventEmitter<void>;
     /**
      * Emitted when the styles change.
+     * @internal
      */
-    ionStyle: EventEmitter<StyleEvent>;
+    ionStyle: EventEmitter<StyleEventDetail>;
     /**
      * Emitted when the radio button is selected.
      */
-    ionSelect: EventEmitter<CheckedInputChangeEvent>;
+    ionSelect: EventEmitter<RadioChangeEventDetail>;
+    /**
+     * Emitted when checked radio button is selected.
+     * @internal
+     */
+    ionDeselect: EventEmitter<RadioChangeEventDetail>;
     /**
      * Emitted when the radio button has focus.
      */
@@ -57,31 +62,31 @@ export declare class Radio implements ComponentInterface {
      * Emitted when the radio button loses focus.
      */
     ionBlur: EventEmitter<void>;
+    colorChanged(): void;
+    checkedChanged(isChecked: boolean): void;
+    disabledChanged(): void;
     componentWillLoad(): void;
     componentDidLoad(): void;
     componentDidUnload(): void;
-    colorChanged(): void;
-    checkedChanged(isChecked: boolean): void;
-    disabledChanged(isDisabled: boolean): void;
+    onClick(): void;
     private emitStyle;
-    private onClick;
-    private onChange;
-    private onKeyUp;
     private onFocus;
     private onBlur;
     hostData(): {
+        'role': string;
+        'aria-disabled': string | null;
+        'aria-checked': string;
+        'aria-labelledby': string;
         class: {
             'in-item': boolean;
             'interactive': boolean;
             'radio-checked': boolean;
             'radio-disabled': boolean;
-            'radio-key': boolean;
         } | {
             'in-item': boolean;
             'interactive': boolean;
             'radio-checked': boolean;
             'radio-disabled': boolean;
-            'radio-key': boolean;
         };
     };
     render(): JSX.Element[];

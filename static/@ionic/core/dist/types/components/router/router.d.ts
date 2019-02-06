@@ -50,11 +50,11 @@ export declare class Router implements ComponentInterface {
     /**
      * Go back to previous page in the window.history.
      */
-    goBack(): Promise<void>;
+    back(): Promise<void>;
     /** @internal */
     printDebug(): void;
     /** @internal */
-    navChanged(intent: number): Promise<boolean>;
+    navChanged(direction: RouterDirection): Promise<boolean>;
     private onRedirectChanged;
     private onRoutesChanged;
     private historyDirection;

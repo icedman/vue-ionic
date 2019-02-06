@@ -1,57 +1,22 @@
+import { findItemLabel } from '../../utils/helpers';
 import { createColorClasses, hostContext } from '../../utils/theme';
 export class Radio {
     constructor() {
         this.inputId = `ion-rb-${radioButtonIds++}`;
-        this.keyFocus = false;
         this.name = this.inputId;
         this.disabled = false;
         this.checked = false;
-        this.onClick = () => {
-            this.checkedChanged(true);
-        };
-        this.onChange = () => {
-            this.checked = true;
-            this.nativeInput.focus();
-        };
-        this.onKeyUp = () => {
-            this.keyFocus = true;
-        };
         this.onFocus = () => {
             this.ionFocus.emit();
         };
         this.onBlur = () => {
-            this.keyFocus = false;
             this.ionBlur.emit();
         };
-    }
-    componentWillLoad() {
-        if (this.value == null) {
-            this.value = this.inputId;
-        }
-        this.emitStyle();
-    }
-    componentDidLoad() {
-        this.ionRadioDidLoad.emit();
-        this.nativeInput.checked = this.checked;
-        const parentItem = this.nativeInput.closest('ion-item');
-        if (parentItem) {
-            const itemLabel = parentItem.querySelector('ion-label');
-            if (itemLabel) {
-                itemLabel.id = this.inputId + '-lbl';
-                this.nativeInput.setAttribute('aria-labelledby', itemLabel.id);
-            }
-        }
-    }
-    componentDidUnload() {
-        this.ionRadioDidUnload.emit();
     }
     colorChanged() {
         this.emitStyle();
     }
     checkedChanged(isChecked) {
-        if (this.nativeInput.checked !== isChecked) {
-            this.nativeInput.checked = isChecked;
-        }
         if (isChecked) {
             this.ionSelect.emit({
                 checked: true,
@@ -60,9 +25,28 @@ export class Radio {
         }
         this.emitStyle();
     }
-    disabledChanged(isDisabled) {
-        this.nativeInput.disabled = isDisabled;
+    disabledChanged() {
         this.emitStyle();
+    }
+    componentWillLoad() {
+        if (this.value === undefined) {
+            this.value = this.inputId;
+        }
+        this.emitStyle();
+    }
+    componentDidLoad() {
+        this.ionRadioDidLoad.emit();
+    }
+    componentDidUnload() {
+        this.ionRadioDidUnload.emit();
+    }
+    onClick() {
+        if (this.checked) {
+            this.ionDeselect.emit();
+        }
+        else {
+            this.checked = true;
+        }
     }
     emitStyle() {
         this.ionStyle.emit({
@@ -71,15 +55,25 @@ export class Radio {
         });
     }
     hostData() {
+        const { inputId, disabled, checked, color, el } = this;
+        const labelId = inputId + '-lbl';
+        const label = findItemLabel(el);
+        if (label) {
+            label.id = labelId;
+        }
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('ion-item', this.el), 'interactive': true, 'radio-checked': this.checked, 'radio-disabled': this.disabled, 'radio-key': this.keyFocus })
+            'role': 'radio',
+            'aria-disabled': disabled ? 'true' : null,
+            'aria-checked': `${checked}`,
+            'aria-labelledby': labelId,
+            class: Object.assign({}, createColorClasses(color), { 'in-item': hostContext('ion-item', el), 'interactive': true, 'radio-checked': checked, 'radio-disabled': disabled })
         };
     }
     render() {
         return [
             h("div", { class: "radio-icon" },
                 h("div", { class: "radio-inner" })),
-            h("input", { type: "radio", onClick: this.onClick, onChange: this.onChange, onFocus: this.onFocus, onBlur: this.onBlur, onKeyUp: this.onKeyUp, id: this.inputId, name: this.name, value: this.value, disabled: this.disabled, ref: r => this.nativeInput = r })
+            h("button", { type: "button", onFocus: this.onFocus, onBlur: this.onBlur, disabled: this.disabled }),
         ];
     }
     static get is() { return "ion-radio"; }
@@ -103,9 +97,6 @@ export class Radio {
         },
         "el": {
             "elementRef": true
-        },
-        "keyFocus": {
-            "state": true
         },
         "mode": {
             "type": String,
@@ -146,6 +137,12 @@ export class Radio {
             "cancelable": true,
             "composed": true
         }, {
+            "name": "ionDeselect",
+            "method": "ionDeselect",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
             "name": "ionFocus",
             "method": "ionFocus",
             "bubbles": true,
@@ -157,6 +154,10 @@ export class Radio {
             "bubbles": true,
             "cancelable": true,
             "composed": true
+        }]; }
+    static get listeners() { return [{
+            "name": "click",
+            "method": "onClick"
         }]; }
     static get style() { return "/**style-placeholder:ion-radio:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-radio:**/"; }

@@ -1,9 +1,9 @@
-import { createColorClasses } from '../../utils/theme';
 let ids = 0;
 export class SegmentButton {
     constructor() {
         this.checked = false;
         this.disabled = false;
+        this.layout = 'icon-top';
         this.value = 'ion-sb-' + (ids++);
     }
     checkedChanged(checked, prev) {
@@ -11,18 +11,38 @@ export class SegmentButton {
             this.ionSelect.emit();
         }
     }
+    onClick() {
+        this.checked = true;
+    }
+    get hasLabel() {
+        return !!this.el.querySelector('ion-label');
+    }
+    get hasIcon() {
+        return !!this.el.querySelector('ion-icon');
+    }
     hostData() {
-        const { disabled, checked, color } = this;
+        const { checked, disabled, hasIcon, hasLabel, layout } = this;
         return {
-            'ion-activatable': true,
-            class: Object.assign({}, createColorClasses(color), { 'segment-button-disabled': disabled, 'segment-button-checked': checked })
+            'aria-disabled': disabled ? 'true' : null,
+            class: {
+                'segment-button-has-label': hasLabel,
+                'segment-button-has-icon': hasIcon,
+                'segment-button-has-label-only': hasLabel && !hasIcon,
+                'segment-button-has-icon-only': hasIcon && !hasLabel,
+                'segment-button-disabled': disabled,
+                'segment-button-checked': checked,
+                [`segment-button-layout-${layout}`]: true,
+                'ion-activatable': true,
+                'ion-activatable-instant': true,
+            }
         };
     }
     render() {
         return [
-            h("button", { type: "button", "aria-pressed": this.checked ? 'true' : null, class: "button-native", disabled: this.disabled, onClick: () => this.checked = true },
+            h("button", { type: "button", "aria-pressed": this.checked ? 'true' : null, class: "button-native", disabled: this.disabled },
                 h("slot", null),
-                this.mode === 'md' && h("ion-ripple-effect", null))
+                this.mode === 'md' && h("ion-ripple-effect", null)),
+            h("div", { class: "segment-button-indicator" })
         ];
     }
     static get is() { return "ion-segment-button"; }
@@ -34,16 +54,16 @@ export class SegmentButton {
             "mutable": true,
             "watchCallbacks": ["checkedChanged"]
         },
-        "color": {
-            "type": String,
-            "attr": "color"
-        },
         "disabled": {
             "type": Boolean,
             "attr": "disabled"
         },
         "el": {
             "elementRef": true
+        },
+        "layout": {
+            "type": String,
+            "attr": "layout"
         },
         "mode": {
             "type": String,
@@ -61,5 +81,10 @@ export class SegmentButton {
             "cancelable": true,
             "composed": true
         }]; }
+    static get listeners() { return [{
+            "name": "click",
+            "method": "onClick"
+        }]; }
     static get style() { return "/**style-placeholder:ion-segment-button:**/"; }
+    static get styleMode() { return "/**style-id-placeholder:ion-segment-button:**/"; }
 }

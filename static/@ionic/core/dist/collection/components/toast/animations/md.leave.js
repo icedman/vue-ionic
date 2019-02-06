@@ -1,21 +1,12 @@
-export function mdLeaveAnimation(AnimationC, baseEl, position) {
+export function mdLeaveAnimation(AnimationC, baseEl) {
     const baseAnimation = new AnimationC();
     const wrapperAnimation = new AnimationC();
-    const wrapperEle = baseEl.querySelector('.toast-wrapper');
-    wrapperAnimation.addElement(wrapperEle);
-    switch (position) {
-        case 'top':
-            wrapperAnimation.fromTo('translateY', '0px', '-100%');
-            break;
-        case 'middle':
-            wrapperAnimation.fromTo('opacity', 0.99, 0);
-            break;
-        default:
-            wrapperAnimation.fromTo('translateY', `0px`, '100%');
-            break;
-    }
+    const hostEl = baseEl.host || baseEl;
+    const wrapperEl = baseEl.querySelector('.toast-wrapper');
+    wrapperAnimation.addElement(wrapperEl);
+    wrapperAnimation.fromTo('opacity', 0.99, 0);
     return Promise.resolve(baseAnimation
-        .addElement(baseEl)
+        .addElement(hostEl)
         .easing('cubic-bezier(.36,.66,.04,1)')
         .duration(300)
         .add(wrapperAnimation));

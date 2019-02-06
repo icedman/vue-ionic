@@ -15,12 +15,6 @@ export class Popover {
         this.translucent = false;
         this.animated = true;
     }
-    componentDidLoad() {
-        this.ionPopoverDidLoad.emit();
-    }
-    componentDidUnload() {
-        this.ionPopoverDidUnload.emit();
-    }
     onDismiss(ev) {
         ev.stopPropagation();
         ev.preventDefault();
@@ -69,11 +63,12 @@ export class Popover {
     }
     hostData() {
         return {
+            'aria-modal': 'true',
+            'no-router': true,
             style: {
                 zIndex: 20000 + this.overlayIndex,
             },
-            'no-router': true,
-            class: Object.assign({ 'popover-translucent': this.translucent }, getClassMap(this.cssClass))
+            class: Object.assign({}, getClassMap(this.cssClass), { 'popover-translucent': this.translucent })
         };
     }
     render() {
@@ -90,9 +85,6 @@ export class Popover {
         "animated": {
             "type": Boolean,
             "attr": "animated"
-        },
-        "animationCtrl": {
-            "connect": "ion-animation-controller"
         },
         "backdropDismiss": {
             "type": Boolean,
@@ -166,18 +158,6 @@ export class Popover {
         }
     }; }
     static get events() { return [{
-            "name": "ionPopoverDidLoad",
-            "method": "ionPopoverDidLoad",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
-            "name": "ionPopoverDidUnload",
-            "method": "ionPopoverDidUnload",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
             "name": "ionPopoverDidPresent",
             "method": "didPresent",
             "bubbles": true,

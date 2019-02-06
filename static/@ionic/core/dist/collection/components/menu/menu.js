@@ -1,4 +1,4 @@
-import { GESTURE_CONTROLLER } from '../../utils/gesture/gesture-controller';
+import { GESTURE_CONTROLLER } from '../../utils/gesture';
 import { assert, isEndSide as isEnd } from '../../utils/helpers';
 export class Menu {
     constructor() {
@@ -41,7 +41,9 @@ export class Menu {
         this.updateState();
     }
     async componentWillLoad() {
-        this.type = this.type || this.config.get('menuType', this.mode === 'ios' ? 'reveal' : 'overlay');
+        if (this.type === undefined) {
+            this.type = this.config.get('menuType', this.mode === 'ios' ? 'reveal' : 'overlay');
+        }
         if (this.isServer) {
             this.disabled = true;
             return;
@@ -61,11 +63,11 @@ export class Menu {
         this.typeChanged(this.type, undefined);
         this.sideChanged();
         menuCtrl._register(this);
-        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
+        this.gesture = (await import('../../utils/gesture')).createGesture({
             el: this.doc,
             queue: this.queue,
             gestureName: 'menu-swipe',
-            gesturePriority: 40,
+            gesturePriority: 30,
             threshold: 10,
             canStart: ev => this.canStart(ev),
             onWillStart: () => this.onWillStart(),
@@ -86,6 +88,7 @@ export class Menu {
         }
         if (this.gesture) {
             this.gesture.destroy();
+            this.gesture = undefined;
         }
         this.animation = undefined;
         this.contentEl = this.backdropEl = this.menuInnerEl = undefined;

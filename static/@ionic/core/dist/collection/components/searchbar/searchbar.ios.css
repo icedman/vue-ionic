@@ -11,8 +11,8 @@
    * @prop --placeholder-opacity: Opacity of the searchbar placeholder
    */
   --placeholder-color: initial;
-  --placeholder-font-style: inherit;
-  --placeholder-font-weight: inherit;
+  --placeholder-font-style: initial;
+  --placeholder-font-weight: initial;
   --placeholder-opacity: .5;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
@@ -71,15 +71,38 @@
     font-style: var(--placeholder-font-style);
     font-weight: var(--placeholder-font-weight);
     opacity: var(--placeholder-opacity); }
-  .searchbar-input::-webkit-search-cancel-button {
+  .searchbar-input::-webkit-search-cancel-button, .searchbar-input::-ms-clear {
     display: none; }
 
 .searchbar-cancel-button {
-  color: var(--cancel-button-color); }
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  display: none;
+  height: 100%;
+  border: 0;
+  outline: none;
+  color: var(--cancel-button-color);
+  cursor: pointer;
+  appearance: none; }
+
+.searchbar-cancel-button > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%; }
 
 .searchbar-clear-button {
-  margin: 0;
-  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   display: none;
   min-height: 0;
   outline: none;
@@ -90,14 +113,25 @@
   display: block; }
 
 :host {
-  --clear-button-color: var(--ion-text-color-step-400, #666666);
+  --clear-button-color: var(--ion-color-step-600, #666666);
   --cancel-button-color: var(--ion-color-primary, #3880ff);
   --color: var(--ion-text-color, #000);
-  --icon-color: var(--ion-text-color-step-400, #666666);
+  --icon-color: var(--ion-color-step-600, #666666);
   --background: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.07);
-  padding: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   height: 60px;
   contain: strict; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: 12px;
+      padding-inline-start: 12px;
+      -webkit-padding-end: 12px;
+      padding-inline-end: 12px; } }
 
 .searchbar-input-container {
   height: 36px;
@@ -111,14 +145,32 @@
   width: 16px;
   height: 100%;
   contain: strict; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    .searchbar-search-icon {
+      margin-left: unset;
+      -webkit-margin-start: calc(50% - 60px);
+      margin-inline-start: calc(50% - 60px); } }
+  :host-context([dir=rtl]) .searchbar-search-icon {
+    right: 8px; }
 
 .searchbar-input {
-  padding: 0 28px;
+  padding-left: 28px;
+  padding-right: 28px;
+  padding-top: 0;
+  padding-bottom: 0;
   border-radius: 10px;
   height: 100%;
   font-size: 14px;
   font-weight: 400;
   contain: strict; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    .searchbar-input {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: 28px;
+      padding-inline-start: 28px;
+      -webkit-padding-end: 28px;
+      padding-inline-end: 28px; } }
 
 .searchbar-clear-button {
   right: 0;
@@ -129,30 +181,48 @@
   height: 100%;
   border: 0;
   background-color: transparent; }
+  :host-context([dir=rtl]) .searchbar-clear-button {
+    left: 0; }
 
 .searchbar-clear-icon {
   width: 18px;
   height: 100%; }
 
 .searchbar-cancel-button {
-  padding: 0 0 0 8px;
-  display: none;
+  padding-left: 8px;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   flex-shrink: 0;
-  border: 0;
-  outline: none;
   background-color: transparent;
-  font-size: 16px;
-  cursor: pointer;
-  appearance: none; }
+  font-size: 16px; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    .searchbar-cancel-button {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: 8px;
+      padding-inline-start: 8px;
+      -webkit-padding-end: 0;
+      padding-inline-end: 0; } }
 
 :host(.searchbar-left-aligned) .searchbar-search-icon {
   margin-left: 0; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host(.searchbar-left-aligned) .searchbar-search-icon {
+      margin-left: unset;
+      -webkit-margin-start: 0;
+      margin-inline-start: 0; } }
 
 :host(.searchbar-left-aligned) .searchbar-input {
   padding-left: 30px; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host(.searchbar-left-aligned) .searchbar-input {
+      padding-left: unset;
+      -webkit-padding-start: 30px;
+      padding-inline-start: 30px; } }
 
-:host(.searchbar-show-cancel.searchbar-has-focus) .searchbar-cancel-button,
-:host(.searchbar-show-cancel.searchbar-animated) .searchbar-cancel-button {
+:host(.searchbar-has-focus) .searchbar-cancel-button,
+:host(.searchbar-animated) .searchbar-cancel-button {
   display: block; }
 
 :host(.searchbar-animated) .searchbar-search-icon,
@@ -169,6 +239,11 @@
   transition: all 300ms ease;
   opacity: 0;
   pointer-events: none; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host(.searchbar-animated) .searchbar-cancel-button {
+      margin-right: unset;
+      -webkit-margin-end: -100%;
+      margin-inline-end: -100%; } }
 
 :host(.searchbar-no-animate) .searchbar-search-icon,
 :host(.searchbar-no-animate) .searchbar-input,

@@ -1,6 +1,6 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter } from '../../stencil.core';
-import { Color, Config, Mode, TextInputChangeEvent } from '../../interface';
+import { Color, Config, Mode, SearchbarChangeEventDetail } from '../../interface';
 export declare class Searchbar implements ComponentInterface {
     private nativeInput?;
     private isCancelVisible;
@@ -18,27 +18,26 @@ export declare class Searchbar implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
-     * If `true`, enable searchbar animation. Defaults to `false`.
+     * If `true`, enable searchbar animation.
      */
     animated: boolean;
     /**
-     * Set the input's autocomplete property. Default `"off"`.
+     * Set the input's autocomplete property.
      */
     autocomplete: 'on' | 'off';
     /**
-     * Set the input's autocorrect property. Default `"off"`.
+     * Set the input's autocorrect property.
      */
     autocorrect: 'on' | 'off';
     /**
-     * Set the cancel button icon. Only applies to `md` mode. Defaults to `"md-arrow-back"`.
+     * Set the cancel button icon. Only applies to `md` mode.
      */
     cancelButtonIcon: string;
     /**
-     * Set the the cancel button text. Only applies to `ios` mode. Default: `"Cancel"`.
+     * Set the the cancel button text. Only applies to `ios` mode.
      */
     cancelButtonText: string;
     /**
@@ -46,30 +45,30 @@ export declare class Searchbar implements ComponentInterface {
      */
     clearIcon?: string;
     /**
-     * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke. Default `250`.
+     * Set the amount of time, in milliseconds, to wait to trigger the `ionChange` event after each keystroke.
      */
     debounce: number;
     protected debounceChanged(): void;
     /**
-     * Set the input's placeholder. Default `"Search"`.
+     * Set the input's placeholder.
      */
     placeholder: string;
     /**
-     * The icon to use as the search icon. Defaults to `"search"`.
+     * The icon to use as the search icon.
      */
-    searchIcon?: string;
+    searchIcon: string;
     /**
-     * If `true`, show the cancel button. Defaults to `false`.
+     * If `true`, show the cancel button.
      */
     showCancelButton: boolean;
     /**
-     * If `true`, enable spellcheck on the input. Defaults to `false`.
+     * If `true`, enable spellcheck on the input.
      */
     spellcheck: boolean;
     /**
-     * Set the type of the input. Values: `"text"`, `"password"`, `"email"`, `"number"`, `"search"`, `"tel"`, `"url"`. Default `"search"`.
+     * Set the type of the input.
      */
-    type: string;
+    type: 'text' | 'password' | 'email' | 'number' | 'search' | 'tel' | 'url';
     /**
      * the value of the searchbar.
      */
@@ -81,7 +80,7 @@ export declare class Searchbar implements ComponentInterface {
     /**
      * Emitted when the value has changed.
      */
-    ionChange: EventEmitter<TextInputChangeEvent>;
+    ionChange: EventEmitter<SearchbarChangeEventDetail>;
     /**
      * Emitted when the cancel button is clicked.
      */
@@ -105,6 +104,10 @@ export declare class Searchbar implements ComponentInterface {
      * `input.focus()`.
      */
     setFocus(): void;
+    /**
+     * Returns the native `<input>` element used under the hood.
+     */
+    getInputElement(): Promise<HTMLInputElement>;
     /**
      * Clears the input field and triggers the control change.
      */
@@ -147,14 +150,12 @@ export declare class Searchbar implements ComponentInterface {
             'searchbar-animated': boolean;
             'searchbar-no-animate': boolean;
             'searchbar-has-value': boolean;
-            'searchbar-show-cancel': boolean;
             'searchbar-left-aligned': boolean;
             'searchbar-has-focus': boolean;
         } | {
             'searchbar-animated': boolean;
             'searchbar-no-animate': boolean;
             'searchbar-has-value': boolean;
-            'searchbar-show-cancel': boolean;
             'searchbar-left-aligned': boolean;
             'searchbar-has-focus': boolean;
         };

@@ -1,15 +1,18 @@
 import { createColorClasses } from '../../utils/theme';
 export class ItemDivider {
+    constructor() {
+        this.sticky = false;
+    }
     componentDidLoad() {
         Array.from(this.el.querySelectorAll('ion-button')).forEach(button => {
-            if (!button.size) {
+            if (button.size === undefined) {
                 button.size = 'small';
             }
         });
     }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color), { 'item': true })
+            class: Object.assign({}, createColorClasses(this.color), { 'item-divider-sticky': this.sticky, 'item': true })
         };
     }
     render() {
@@ -34,6 +37,10 @@ export class ItemDivider {
         "mode": {
             "type": String,
             "attr": "mode"
+        },
+        "sticky": {
+            "type": Boolean,
+            "attr": "sticky"
         }
     }; }
     static get style() { return "/**style-placeholder:ion-item-divider:**/"; }

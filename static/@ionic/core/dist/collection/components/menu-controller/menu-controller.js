@@ -140,12 +140,17 @@ export class MenuController {
         }
         return menu._setOpen(shouldOpen, animated);
     }
-    _createAnimation(type, menuCmp) {
+    async _createAnimation(type, menuCmp) {
         const animationBuilder = this.menuAnimations.get(type);
         if (!animationBuilder) {
-            return Promise.reject('animation not registered');
+            throw new Error('animation not registered');
         }
-        return this.animationCtrl.create(animationBuilder, null, menuCmp);
+        const animation = await import('../../utils/animation')
+            .then(mod => mod.create(animationBuilder, null, menuCmp));
+        if (!this.config.getBoolean('animated', true)) {
+            animation.duration(0);
+        }
+        return animation;
     }
     getOpenSync() {
         return this.find(m => m._isOpen);
@@ -172,11 +177,11 @@ export class MenuController {
         "_getInstance": {
             "method": true
         },
-        "animationCtrl": {
-            "connect": "ion-animation-controller"
-        },
         "close": {
             "method": true
+        },
+        "config": {
+            "context": "config"
         },
         "doc": {
             "context": "document"

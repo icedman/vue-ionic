@@ -1,6 +1,6 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter, QueueApi } from '../../stencil.core';
-import { Color, Mode, TabbarChangedDetail, TabbarLayout } from '../../interface';
+import { Color, Mode, TabBarChangedEventDetail } from '../../interface';
 export declare class TabBar implements ComponentInterface {
     el: HTMLElement;
     queue: QueueApi;
@@ -8,7 +8,6 @@ export declare class TabBar implements ComponentInterface {
     keyboardVisible: boolean;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -18,20 +17,16 @@ export declare class TabBar implements ComponentInterface {
      */
     color?: Color;
     /**
-     * Set the layout of the text and icon in the tab bar.
-     */
-    layout: TabbarLayout;
-    /**
      * The selected tab component
      */
     selectedTab?: string;
     selectedTabChanged(): void;
     /**
-     * If `true`, the tab bar will be translucent. Defaults to `false`.
+     * If `true`, the tab bar will be translucent.
      */
     translucent: boolean;
     /** @internal */
-    ionTabBarChanged: EventEmitter<TabbarChangedDetail>;
+    ionTabBarChanged: EventEmitter<TabBarChangedEventDetail>;
     protected onKeyboardWillHide(): void;
     protected onKeyboardWillShow(): void;
     componentWillLoad(): void;
@@ -39,11 +34,11 @@ export declare class TabBar implements ComponentInterface {
         'role': string;
         'aria-hidden': string | null;
         class: {
-            'tabbar-translucent': boolean;
-            'tabbar-hidden': boolean;
+            'tab-bar-translucent': boolean;
+            'tab-bar-hidden': boolean;
         } | {
-            'tabbar-translucent': boolean;
-            'tabbar-hidden': boolean;
+            'tab-bar-translucent': boolean;
+            'tab-bar-hidden': boolean;
         };
     };
     render(): JSX.Element;

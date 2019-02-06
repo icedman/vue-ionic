@@ -40,9 +40,6 @@ export function iosEnterAnimation(AnimationC, baseEl, ev) {
     }
     if (targetTop + targetHeight + contentHeight > bodyHeight && targetTop - contentHeight > 0) {
         arrowCSS.top = targetTop - (arrowHeight + 1);
-        console.log(arrowCSS);
-        console.log(targetTop);
-        console.log(contentHeight);
         popoverCSS.top = targetTop - contentHeight - (arrowHeight - 1);
         baseEl.className = baseEl.className + ' popover-bottom';
         originY = 'bottom';

@@ -1,5 +1,5 @@
 @import "../../themes/ionic.globals.md";
-@import "../item/item.vars";
+@import "../item/item.md.vars";
 
 // Material Design Alert
 // --------------------------------------------------
@@ -158,7 +158,7 @@ $alert-md-button-text-color:                  ion-color(primary, base) !default;
 $alert-md-button-background-color:            transparent !default;
 
 /// @prop - Background color of the alert activated button
-$alert-md-button-background-color-activated:  $background-color-step-400 !default;
+$alert-md-button-background-color-activated:  ion-color(primary, base, .04) !default;
 
 /// @prop - Border radius of the alert button
 $alert-md-button-border-radius:               2px !default;
@@ -317,4 +317,4 @@ $alert-md-checkbox-label-text-color:          $text-color-step-150 !default;
 $alert-md-checkbox-label-font-size:           16px !default;
 
 /// @prop - Height of the tappable inputs in the checkbox alert
-$alert-md-tappable-height:                    $item-min-height !default;
+$alert-md-tappable-height:                    $item-md-min-height !default;

@@ -45,13 +45,16 @@ export class Col {
         };
     }
     calculateOffset() {
-        return this.calculatePosition('offset', 'margin-left');
+        const isRTL = document.dir === 'rtl';
+        return this.calculatePosition('offset', isRTL ? 'margin-right' : 'margin-left');
     }
     calculatePull() {
-        return this.calculatePosition('pull', 'right');
+        const isRTL = document.dir === 'rtl';
+        return this.calculatePosition('pull', isRTL ? 'left' : 'right');
     }
     calculatePush() {
-        return this.calculatePosition('push', 'left');
+        const isRTL = document.dir === 'rtl';
+        return this.calculatePosition('push', isRTL ? 'right' : 'left');
     }
     hostData() {
         return {

@@ -1,11 +1,10 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter } from '../../stencil.core';
-import { CheckedInputChangeEvent, Color, Mode, StyleEvent } from '../../interface';
+import { CheckboxChangeEventDetail, Color, Mode, StyleEventDetail } from '../../interface';
 export declare class Checkbox implements ComponentInterface {
     private inputId;
-    private labelId;
+    private buttonEl?;
     el: HTMLElement;
-    keyFocus: boolean;
     /**
      * The color to use from your application's color palette.
      * Default options are: `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`, `"light"`, `"medium"`, and `"dark"`.
@@ -14,7 +13,6 @@ export declare class Checkbox implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -22,11 +20,11 @@ export declare class Checkbox implements ComponentInterface {
      */
     name: string;
     /**
-     * If `true`, the checkbox is selected. Defaults to `false`.
+     * If `true`, the checkbox is selected.
      */
     checked: boolean;
     /**
-     * If `true`, the user cannot interact with the checkbox. Defaults to `false`.
+     * If `true`, the user cannot interact with the checkbox.
      */
     disabled: boolean;
     /**
@@ -35,13 +33,12 @@ export declare class Checkbox implements ComponentInterface {
      *
      * The value of a toggle is analogous to the value of a `<input type="checkbox">`,
      * it's only used when the toggle participates in a native `<form>`.
-     * Defaults to `on`.
      */
     value: string;
     /**
      * Emitted when the checked property has changed.
      */
-    ionChange: EventEmitter<CheckedInputChangeEvent>;
+    ionChange: EventEmitter<CheckboxChangeEventDetail>;
     /**
      * Emitted when the toggle has focus.
      */
@@ -52,27 +49,30 @@ export declare class Checkbox implements ComponentInterface {
     ionBlur: EventEmitter<void>;
     /**
      * Emitted when the styles change.
+     * @internal
      */
-    ionStyle: EventEmitter<StyleEvent>;
+    ionStyle: EventEmitter<StyleEventDetail>;
     componentWillLoad(): void;
     checkedChanged(isChecked: boolean): void;
     emitStyle(): void;
-    private onChange;
-    private onKeyUp;
+    onClick(): void;
+    private setFocus;
     private onFocus;
     private onBlur;
     hostData(): {
+        'role': string;
+        'aria-disabled': string | null;
+        'aria-checked': string;
+        'aria-labelledby': string;
         class: {
             'in-item': boolean;
             'checkbox-checked': boolean;
             'checkbox-disabled': boolean;
-            'checkbox-key': boolean;
             'interactive': boolean;
         } | {
             'in-item': boolean;
             'checkbox-checked': boolean;
             'checkbox-disabled': boolean;
-            'checkbox-key': boolean;
             'interactive': boolean;
         };
     };

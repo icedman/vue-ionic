@@ -6,6 +6,7 @@ export class Item {
         this.button = false;
         this.detailIcon = 'ios-arrow-forward';
         this.disabled = false;
+        this.routerDirection = 'forward';
         this.type = 'button';
     }
     itemStyle(ev) {
@@ -32,7 +33,7 @@ export class Item {
     }
     componentDidLoad() {
         Array.from(this.el.querySelectorAll('ion-button')).forEach(button => {
-            if (!button.size) {
+            if (button.size === undefined) {
                 button.size = 'small';
             }
         });
@@ -48,8 +49,8 @@ export class Item {
             Object.assign(childStyles, value);
         });
         return {
-            'ion-activatable': this.isClickable(),
-            class: Object.assign({}, childStyles, createColorClasses(this.color), { [`item-lines-${this.lines}`]: !!this.lines, 'item-disabled': this.disabled, 'in-list': hostContext('ion-list', this.el), 'item': true, 'item-multiple-inputs': this.multipleInputs })
+            'aria-disabled': this.disabled ? 'true' : null,
+            class: Object.assign({}, childStyles, createColorClasses(this.color), { [`item-lines-${this.lines}`]: this.lines !== undefined, 'item-disabled': this.disabled, 'in-list': hostContext('ion-list', this.el), 'item': true, 'item-multiple-inputs': this.multipleInputs, 'ion-activatable': this.isClickable(), 'ion-focusable': true })
         };
     }
     render() {
@@ -59,7 +60,7 @@ export class Item {
         const attrs = TagType === 'button' ? { type } : { href };
         const showDetail = detail !== undefined ? detail : mode === 'ios' && clickable;
         return [
-            h(TagType, Object.assign({}, attrs, { class: "item-native", onClick: ev => openURL(win, href, ev, routerDirection) }),
+            h(TagType, Object.assign({}, attrs, { class: "item-native", disabled: this.disabled, onClick: (ev) => openURL(win, href, ev, routerDirection) }),
                 h("slot", { name: "start" }),
                 h("div", { class: "item-inner" },
                     h("div", { class: "input-wrapper" },

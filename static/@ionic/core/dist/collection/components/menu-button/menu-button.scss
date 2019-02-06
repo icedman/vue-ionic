@@ -4,9 +4,11 @@
 // --------------------------------------------------
 
 :host {
-  color: var(--color);
+  /**
+   * @prop --color: Color of the menu button
+   */
 
-  pointer-events: all;
+  color: var(--color);
 
   text-align: center;
   text-decoration: none;

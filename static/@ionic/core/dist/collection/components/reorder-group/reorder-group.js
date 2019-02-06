@@ -24,7 +24,7 @@ export class ReorderGroup {
             await contentEl.componentOnReady();
             this.scrollEl = await contentEl.getScrollElement();
         }
-        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
+        this.gesture = (await import('../../utils/gesture')).createGesture({
             el: this.doc.body,
             queue: this.queue,
             gestureName: 'reorder',
@@ -41,6 +41,10 @@ export class ReorderGroup {
     }
     componentDidUnload() {
         this.onEnd();
+        if (this.gesture) {
+            this.gesture.destroy();
+            this.gesture = undefined;
+        }
     }
     complete(listOrReorder) {
         return Promise.resolve(this.completeSync(listOrReorder));
@@ -56,7 +60,6 @@ export class ReorderGroup {
         }
         const item = findReorderItem(reorderEl, this.el);
         if (!item) {
-            console.error('reorder node not found');
             return false;
         }
         ev.data = item;
@@ -252,15 +255,13 @@ function indexForItem(element) {
     return element['$ionIndex'];
 }
 function findReorderItem(node, container) {
-    let nested = 0;
     let parent;
-    while (node && nested < 6) {
-        parent = node.parentNode;
+    while (node) {
+        parent = node.parentElement;
         if (parent === container) {
             return node;
         }
         node = parent;
-        nested++;
     }
     return undefined;
 }

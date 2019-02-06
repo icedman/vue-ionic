@@ -12,7 +12,7 @@ export class List {
     }
     hostData() {
         return {
-            class: Object.assign({}, createThemedClasses(this.mode, 'list'), { [`list-lines-${this.lines}`]: !!this.lines, 'list-inset': this.inset, [`list-${this.mode}-lines-${this.lines}`]: !!this.lines })
+            class: Object.assign({}, createThemedClasses(this.mode, 'list'), { [`list-lines-${this.lines}`]: this.lines !== undefined, 'list-inset': this.inset, [`list-${this.mode}-lines-${this.lines}`]: this.lines !== undefined })
         };
     }
     static get is() { return "ion-list"; }

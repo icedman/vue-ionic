@@ -3,16 +3,14 @@ import { ComponentInterface, EventEmitter } from '../../stencil.core';
 import { Animation, AnimationBuilder, Config, Mode, OverlayEventDetail, OverlayInterface, PickerButton, PickerColumn } from '../../interface';
 export declare class Picker implements ComponentInterface, OverlayInterface {
     private durationTimeout;
-    presented: boolean;
     animation?: Animation;
     el: HTMLElement;
-    animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
+    presented: boolean;
     /** @internal */
     overlayIndex: number;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -45,21 +43,17 @@ export declare class Picker implements ComponentInterface, OverlayInterface {
      */
     duration: number;
     /**
-     * If `true`, a backdrop will be displayed behind the picker. Defaults to `true`.
+     * If `true`, a backdrop will be displayed behind the picker.
      */
     showBackdrop: boolean;
     /**
-     * If `true`, the picker will be dismissed when the backdrop is clicked. Defaults to `true`.
+     * If `true`, the picker will be dismissed when the backdrop is clicked.
      */
     backdropDismiss: boolean;
     /**
-     * If `true`, the picker will animate. Defaults to `true`.
+     * If `true`, the picker will animate.
      */
     animated: boolean;
-    /**
-     * Emitted after the picker has loaded.
-     */
-    ionPickerDidLoad: EventEmitter<void>;
     /**
      * Emitted after the picker has presented.
      */
@@ -76,12 +70,6 @@ export declare class Picker implements ComponentInterface, OverlayInterface {
      * Emitted after the picker has dismissed.
      */
     didDismiss: EventEmitter<OverlayEventDetail>;
-    /**
-     * Emitted after the picker has unloaded.
-     */
-    ionPickerDidUnload: EventEmitter<void>;
-    componentDidLoad(): void;
-    componentDidUnload(): void;
     protected onBackdropTap(): void;
     /**
      * Present the picker overlay after it has been created.
@@ -106,6 +94,7 @@ export declare class Picker implements ComponentInterface, OverlayInterface {
     private buttonClick;
     private getSelected;
     hostData(): {
+        'aria-modal': string;
         class: {
             [x: string]: boolean;
         };

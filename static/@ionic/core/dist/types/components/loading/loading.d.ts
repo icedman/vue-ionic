@@ -1,18 +1,16 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter } from '../../stencil.core';
-import { Animation, AnimationBuilder, Config, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
+import { Animation, AnimationBuilder, Config, Mode, OverlayEventDetail, OverlayInterface, SpinnerTypes } from '../../interface';
 export declare class Loading implements ComponentInterface, OverlayInterface {
     private durationTimeout;
     presented: boolean;
     animation?: Animation;
     el: HTMLElement;
-    animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
     /** @internal */
     overlayIndex: number;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -41,34 +39,25 @@ export declare class Loading implements ComponentInterface, OverlayInterface {
      */
     duration: number;
     /**
-     * If `true`, the loading indicator will be dismissed when the backdrop is clicked. Defaults to `false`.
+     * If `true`, the loading indicator will be dismissed when the backdrop is clicked.
      */
     backdropDismiss: boolean;
     /**
-     * If `true`, a backdrop will be displayed behind the loading indicator. Defaults to `true`.
+     * If `true`, a backdrop will be displayed behind the loading indicator.
      */
     showBackdrop: boolean;
     /**
-     * The name of the spinner to display. Possible values are: `"lines"`, `"lines-small"`, `"dots"`,
-     * `"bubbles"`, `"circles"`, `"crescent"`.
+     * The name of the spinner to display.
      */
-    spinner?: string;
+    spinner?: SpinnerTypes | null;
     /**
-     * If `true`, the loading indicator will be translucent. Defaults to `false`.
+     * If `true`, the loading indicator will be translucent.
      */
     translucent: boolean;
     /**
-     * If `true`, the loading indicator will animate. Defaults to `true`.
+     * If `true`, the loading indicator will animate.
      */
     animated: boolean;
-    /**
-     * Emitted after the loading has unloaded.
-     */
-    ionLoadingDidUnload: EventEmitter<void>;
-    /**
-     * Emitted after the loading has loaded.
-     */
-    ionLoadingDidLoad: EventEmitter<void>;
     /**
      * Emitted after the loading has presented.
      */
@@ -86,8 +75,6 @@ export declare class Loading implements ComponentInterface, OverlayInterface {
      */
     didDismiss: EventEmitter<OverlayEventDetail>;
     componentWillLoad(): void;
-    componentDidLoad(): void;
-    componentDidUnload(): void;
     protected onBackdropTap(): void;
     /**
      * Present the loading overlay after it has been created.
@@ -110,7 +97,7 @@ export declare class Loading implements ComponentInterface, OverlayInterface {
             zIndex: number;
         };
         class: {
-            [x: string]: boolean;
+            'loading-translucent': boolean;
         };
     };
     render(): JSX.Element[];

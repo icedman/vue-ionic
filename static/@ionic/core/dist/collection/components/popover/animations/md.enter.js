@@ -11,8 +11,11 @@ export function mdEnterAnimation(AnimationC, baseEl, ev) {
     const targetTop = targetDim != null && 'top' in targetDim
         ? targetDim.top
         : bodyHeight / 2 - contentHeight / 2;
+    const isRTL = document.dir === 'rtl';
     const targetLeft = targetDim != null && 'left' in targetDim
-        ? targetDim.left
+        ? isRTL
+            ? targetDim.left - contentWidth + targetDim.width
+            : targetDim.left
         : bodyWidth / 2 - contentWidth / 2;
     const targetHeight = (targetDim && targetDim.height) || 0;
     const popoverCSS = {
@@ -42,7 +45,7 @@ export function mdEnterAnimation(AnimationC, baseEl, ev) {
     const baseAnimation = new AnimationC();
     const backdropAnimation = new AnimationC();
     backdropAnimation.addElement(baseEl.querySelector('ion-backdrop'));
-    backdropAnimation.fromTo('opacity', 0.01, 0.08);
+    backdropAnimation.fromTo('opacity', 0.01, 0.32);
     const wrapperAnimation = new AnimationC();
     wrapperAnimation.addElement(baseEl.querySelector('.popover-wrapper'));
     wrapperAnimation.fromTo('opacity', 0.01, 1);

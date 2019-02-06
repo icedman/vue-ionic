@@ -59,10 +59,10 @@ export declare class Content implements ComponentInterface {
      * Emitted when the scroll has ended.
      */
     ionScrollEnd: EventEmitter<ScrollBaseDetail>;
-    onNavChanged(): void;
     componentWillLoad(): void;
     componentDidLoad(): void;
     componentDidUnload(): void;
+    onClick(ev: Event): void;
     private resize;
     private readDimensions;
     private onScroll;

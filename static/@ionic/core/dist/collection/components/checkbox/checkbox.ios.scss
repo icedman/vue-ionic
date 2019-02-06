@@ -5,8 +5,6 @@
 // --------------------------------------------------
 
 :host {
-  --size: #{$checkbox-ios-icon-size};
-
   // Border
   --border-radius: #{$checkbox-ios-icon-border-radius};
   --border-width: #{$checkbox-ios-icon-border-width};
@@ -15,25 +13,12 @@
 
   // Background
   --background: #{$checkbox-ios-background-color-off};
-}
 
-// iOS Checkbox Inner Checkmark: Checked
-// -----------------------------------------
+  // Size
+  --size: #{$checkbox-ios-icon-size};
+  width: var(--size);
 
-.checkbox-inner {
-  @include position(calc(var(--size) / 6), null, null, calc(var(--size) / 2.5 - 1px));
-
-  position: absolute;
-
-  width: calc(var(--size) / 6 + 1px);
-  height: calc(var(--size) / 2);
-
-  transform: rotate(45deg);
-
-  border-width: $checkbox-ios-checkmark-border-width;
-  border-top-width: 0;
-  border-left-width: 0;
-  border-style: $checkbox-ios-checkmark-border-style;
+  height: var(--size);
 }
 
 
@@ -43,26 +28,6 @@
 // TODO: .item-ios.item-checkbox-disabled ion-label
 :host(.checkbox-disabled) {
   opacity: $checkbox-ios-disabled-opacity;
-}
-
-
-// iOS Checkbox Keyboard Focus
-// -----------------------------------------
-
-:host(.checkbox-key) .checkbox-icon::after {
-  @include border-radius(50%);
-  @include position(-9px, null, null, -9px);
-
-  display: block;
-  position: absolute;
-
-  width: 36px;
-  height: 36px;
-
-  background: $checkbox-ios-background-color-focused;
-
-  content: "";
-  opacity: .2;
 }
 
 

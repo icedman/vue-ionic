@@ -7,4 +7,4 @@ export declare function createColorClasses(color: Color | undefined | null): Css
 export declare function createThemedClasses(mode: Mode | undefined, name: string): CssClassMap;
 export declare function getClassList(classes: string | (string | null | undefined)[] | undefined): string[];
 export declare function getClassMap(classes: string | string[] | undefined): CssClassMap;
-export declare function openURL(win: Window, url: string | undefined | null, ev: Event | undefined | null, direction?: RouterDirection): Promise<boolean>;
+export declare function openURL(win: Window, url: string | undefined | null, ev: Event | undefined | null, direction: RouterDirection): Promise<boolean>;

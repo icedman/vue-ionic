@@ -23,7 +23,7 @@ export declare class ItemSliding implements ComponentInterface {
     state: SlidingState;
     queue: QueueApi;
     /**
-     * If `true`, the user cannot interact with the sliding-item. Defaults to `false`.
+     * If `true`, the user cannot interact with the sliding-item.
      */
     disabled: boolean;
     disabledChanged(): void;

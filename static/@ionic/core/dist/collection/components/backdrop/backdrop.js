@@ -1,4 +1,4 @@
-import { GESTURE_CONTROLLER } from '../../utils/gesture/gesture-controller';
+import { GESTURE_CONTROLLER } from '../../utils/gesture';
 import { now } from '../../utils/helpers';
 export class Backdrop {
     constructor() {

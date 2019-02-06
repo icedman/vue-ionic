@@ -1,5 +1,5 @@
 export class RefresherContent {
-    componentDidLoad() {
+    componentWillLoad() {
         if (this.pullingIcon === undefined) {
             this.pullingIcon = this.config.get('refreshingIcon', 'arrow-down');
         }

@@ -1,20 +1,22 @@
 import '../../stencil.core';
 import { ComponentInterface, EventEmitter, QueueApi } from '../../stencil.core';
-import { AnimationBuilder, ComponentProps, ComponentRef, Config, FrameworkDelegate, Mode, NavOutlet, RouteID, RouteWrite, RouterOutletOptions } from '../../interface';
+import { AnimationBuilder, ComponentProps, Config, FrameworkDelegate, Mode, NavOutlet, RouteID, RouteWrite, RouterDirection, RouterOutletOptions, SwipeGestureHandler } from '../../interface';
 export declare class RouterOutlet implements ComponentInterface, NavOutlet {
     private activeEl;
     private activeComponent;
     private waitPromise?;
-    mode: Mode;
+    private gesture?;
+    private ani?;
     el: HTMLElement;
     config: Config;
-    animationCtrl: HTMLIonAnimationControllerElement;
     win: Window;
     queue: QueueApi;
     /** @internal */
+    mode: Mode;
+    /** @internal */
     delegate?: FrameworkDelegate;
     /**
-     * If `true`, the router-outlet should animate the transition of components. Default to `true`.
+     * If `true`, the router-outlet should animate the transition of components.
      */
     animated: boolean;
     /**
@@ -22,31 +24,26 @@ export declare class RouterOutlet implements ComponentInterface, NavOutlet {
      * However, this property allows to create custom transition using `AnimateBuilder` functions.
      */
     animation?: AnimationBuilder;
-    /**
-     * @internal
-     */
+    /** @internal */
+    swipeHandler?: SwipeGestureHandler;
+    swipeHandlerChanged(): void;
+    /** @internal */
     ionNavWillLoad: EventEmitter<void>;
-    /**
-     * @internal
-     */
+    /** @internal */
     ionNavWillChange: EventEmitter<void>;
-    /**
-     * @internal
-     */
+    /** @internal */
     ionNavDidChange: EventEmitter<void>;
     componentWillLoad(): void;
+    componentDidLoad(): Promise<void>;
     componentDidUnload(): void;
-    /**
-     * Set the root component for the given navigation stack
-     */
-    setRoot(component: ComponentRef, params?: ComponentProps, opts?: RouterOutletOptions): Promise<boolean>;
     /** @internal */
     commit(enteringEl: HTMLElement, leavingEl: HTMLElement | undefined, opts?: RouterOutletOptions): Promise<boolean>;
     /** @internal */
-    setRouteId(id: string, params: ComponentProps | undefined, direction: number): Promise<RouteWrite>;
+    setRouteId(id: string, params: ComponentProps | undefined, direction: RouterDirection): Promise<RouteWrite>;
     /** @internal */
     getRouteId(): Promise<RouteID | undefined>;
+    private setRoot;
+    private transition;
     private lock;
-    transition(enteringEl: HTMLElement, leavingEl: HTMLElement | undefined, opts?: RouterOutletOptions): Promise<boolean>;
-    render(): JSX.Element[];
+    render(): JSX.Element;
 }

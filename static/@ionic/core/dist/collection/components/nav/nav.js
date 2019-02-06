@@ -1,6 +1,7 @@
 import { assert } from '../../utils/helpers';
 import { lifecycle, setPageHidden, transition } from '../../utils/transition';
-import { convertToViews, matches } from './view-controller';
+import { LIFECYCLE_DID_LEAVE, LIFECYCLE_WILL_LEAVE, LIFECYCLE_WILL_UNLOAD } from './constants';
+import { VIEW_STATE_ATTACHED, VIEW_STATE_DESTROYED, VIEW_STATE_NEW, convertToViews, matches } from './view-controller';
 export class Nav {
     constructor() {
         this.transInstr = [];
@@ -37,32 +38,19 @@ export class Nav {
     }
     async componentDidLoad() {
         this.rootChanged();
-        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
-            el: this.win.document.body,
-            queue: this.queue,
-            gestureName: 'goback-swipe',
-            gesturePriority: 30,
-            threshold: 10,
-            canStart: () => this.canStart(),
-            onStart: () => this.onStart(),
-            onMove: ev => this.onMove(ev),
-            onEnd: ev => this.onEnd(ev),
-        });
+        this.gesture = (await import('../../utils/gesture/swipe-back')).createSwipeBackGesture(this.el, this.queue, this.canStart.bind(this), this.onStart.bind(this), this.onMove.bind(this), this.onEnd.bind(this));
         this.swipeGestureChanged();
     }
     componentDidUnload() {
         for (const view of this.views) {
-            lifecycle(this.win, view.element, "ionViewWillUnload");
+            lifecycle(view.element, LIFECYCLE_WILL_UNLOAD);
             view._destroy();
         }
         if (this.gesture) {
             this.gesture.destroy();
-        }
-        if (this.sbTrns) {
-            this.sbTrns.destroy();
+            this.gesture = undefined;
         }
         this.transInstr.length = this.views.length = 0;
-        this.sbTrns = undefined;
         this.destroyed = true;
     }
     push(component, componentProps, opts, done) {
@@ -167,7 +155,7 @@ export class Nav {
                 return p;
             }
         };
-        if (direction === 0) {
+        if (direction === 'root') {
             finish = this.setRoot(id, params, commonOpts);
         }
         else {
@@ -175,10 +163,10 @@ export class Nav {
             if (viewController) {
                 finish = this.popTo(viewController, Object.assign({}, commonOpts, { direction: 'back' }));
             }
-            else if (direction === 1) {
+            else if (direction === 'forward') {
                 finish = this.push(id, params, commonOpts);
             }
-            else if (direction === -1) {
+            else if (direction === 'back') {
                 finish = this.setRoot(id, params, Object.assign({}, commonOpts, { direction: 'back', animated: true }));
             }
         }
@@ -251,7 +239,7 @@ export class Nav {
         if (ti.opts.updateURL !== false && this.useRouter) {
             const router = this.win.document.querySelector('ion-router');
             if (router) {
-                const direction = result.direction === 'back' ? -1 : 1;
+                const direction = result.direction === 'back' ? 'back' : 'forward';
                 router.navChanged(direction);
             }
         }
@@ -296,7 +284,7 @@ export class Nav {
             if (!leavingView && !enteringView) {
                 throw new Error('no views in the stack to be removed');
             }
-            if (enteringView && enteringView.state === 1) {
+            if (enteringView && enteringView.state === VIEW_STATE_NEW) {
                 await enteringView.init(this.el);
             }
             this.postViewInit(enteringView, leavingView, ti);
@@ -363,7 +351,7 @@ export class Nav {
             if (nav && nav !== this) {
                 throw new Error('inserted view was already inserted');
             }
-            if (view.state === 3) {
+            if (view.state === VIEW_STATE_DESTROYED) {
                 throw new Error('inserted view was already destroyed');
             }
         }
@@ -428,9 +416,9 @@ export class Nav {
         }
         if (destroyQueue && destroyQueue.length > 0) {
             for (const view of destroyQueue) {
-                lifecycle(this.win, view.element, "ionViewWillLeave");
-                lifecycle(this.win, view.element, "ionViewDidLeave");
-                lifecycle(this.win, view.element, "ionViewWillUnload");
+                lifecycle(view.element, LIFECYCLE_WILL_LEAVE);
+                lifecycle(view.element, LIFECYCLE_DID_LEAVE);
+                lifecycle(view.element, LIFECYCLE_WILL_UNLOAD);
             }
             for (const view of destroyQueue) {
                 this.destroyView(view);
@@ -438,19 +426,13 @@ export class Nav {
         }
     }
     async transition(enteringView, leavingView, ti) {
-        if (this.sbTrns) {
-            this.sbTrns.destroy();
-            this.sbTrns = undefined;
-        }
         const opts = ti.opts;
         const progressCallback = opts.progressAnimation
-            ? (animation) => {
-                this.sbTrns = animation;
-            }
+            ? (ani) => this.sbAni = ani
             : undefined;
         const enteringEl = enteringView.element;
         const leavingEl = leavingView && leavingView.element;
-        const animationOpts = Object.assign({ mode: this.mode, showGoBack: this.canGoBackSync(enteringView), animationCtrl: this.animationCtrl, queue: this.queue, window: this.win, baseEl: this.el, animationBuilder: this.animation || opts.animationBuilder || this.config.get('navAnimation'), progressCallback, animated: this.animated, enteringEl,
+        const animationOpts = Object.assign({ mode: this.mode, showGoBack: this.canGoBackSync(enteringView), queue: this.queue, window: this.win, baseEl: this.el, animationBuilder: this.animation || opts.animationBuilder || this.config.get('navAnimation'), progressCallback, animated: this.animated && this.config.getBoolean('animated', true), enteringEl,
             leavingEl }, opts);
         const { hasCompleted } = await transition(animationOpts);
         return this.transitionFinish(hasCompleted, enteringView, leavingView, opts);
@@ -482,7 +464,7 @@ export class Nav {
         }
     }
     removeView(view) {
-        assert(view.state === 2 || view.state === 3, 'view state should be loaded or destroyed');
+        assert(view.state === VIEW_STATE_ATTACHED || view.state === VIEW_STATE_DESTROYED, 'view state should be loaded or destroyed');
         const views = this.views;
         const index = views.indexOf(view);
         assert(index > -1, 'view must be part of the stack');
@@ -504,7 +486,7 @@ export class Nav {
             const view = views[i];
             const element = view.element;
             if (i > activeViewIndex) {
-                lifecycle(this.win, element, "ionViewWillUnload");
+                lifecycle(element, LIFECYCLE_WILL_UNLOAD);
                 this.destroyView(view);
             }
             else if (i < activeViewIndex) {
@@ -513,55 +495,33 @@ export class Nav {
         }
     }
     canStart() {
-        return !!this.swipeGesture &&
+        return (!!this.swipeGesture &&
             !this.isTransitioning &&
-            this.canGoBackSync();
+            this.transInstr.length === 0 &&
+            this.canGoBackSync());
     }
     onStart() {
-        if (this.isTransitioning || this.transInstr.length > 0) {
-            return;
-        }
-        const opts = {
-            direction: 'back',
-            progressAnimation: true
-        };
         this.queueTrns({
             removeStart: -1,
             removeCount: 1,
-            opts
+            opts: {
+                direction: 'back',
+                progressAnimation: true
+            }
         }, undefined);
     }
-    onMove(detail) {
-        if (this.sbTrns) {
-            this.isTransitioning = true;
-            const delta = detail.deltaX;
-            const stepValue = delta / this.win.innerWidth;
-            this.sbTrns.progressStep(stepValue);
+    onMove(stepValue) {
+        if (this.sbAni) {
+            this.sbAni.progressStep(stepValue);
         }
     }
-    onEnd(detail) {
-        if (this.sbTrns) {
-            const delta = detail.deltaX;
-            const width = this.win.innerWidth;
-            const stepValue = delta / width;
-            const velocity = detail.velocityX;
-            const z = width / 2.0;
-            const shouldComplete = velocity >= 0 && (velocity > 0.2 || detail.deltaX > z);
-            const missing = shouldComplete ? 1 - stepValue : stepValue;
-            const missingDistance = missing * width;
-            let realDur = 0;
-            if (missingDistance > 5) {
-                const dur = missingDistance / Math.abs(velocity);
-                realDur = Math.min(dur, 300);
-            }
-            this.sbTrns.progressEnd(shouldComplete, stepValue, realDur);
+    onEnd(shouldComplete, stepValue, dur) {
+        if (this.sbAni) {
+            this.sbAni.progressEnd(shouldComplete, stepValue, dur);
         }
     }
     render() {
-        return [
-            this.mode === 'ios' && h("div", { class: "nav-decor" }),
-            h("slot", null)
-        ];
+        return (h("slot", null));
     }
     static get is() { return "ion-nav"; }
     static get encapsulation() { return "shadow"; }
@@ -573,9 +533,6 @@ export class Nav {
         "animation": {
             "type": "Any",
             "attr": "animation"
-        },
-        "animationCtrl": {
-            "connect": "ion-animation-controller"
         },
         "canGoBack": {
             "method": true
@@ -663,13 +620,13 @@ export class Nav {
         }, {
             "name": "ionNavWillChange",
             "method": "ionNavWillChange",
-            "bubbles": true,
+            "bubbles": false,
             "cancelable": true,
             "composed": true
         }, {
             "name": "ionNavDidChange",
             "method": "ionNavDidChange",
-            "bubbles": true,
+            "bubbles": false,
             "cancelable": true,
             "composed": true
         }]; }

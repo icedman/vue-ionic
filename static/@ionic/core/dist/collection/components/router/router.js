@@ -1,4 +1,5 @@
 import { debounce } from '../../utils/helpers';
+import { ROUTER_INTENT_BACK, ROUTER_INTENT_FORWARD, ROUTER_INTENT_NONE } from './utils/constants';
 import { printRedirects, printRoutes } from './utils/debug';
 import { readNavState, waitUntilNavNode, writeNavState } from './utils/dom';
 import { routeRedirect, routerIDsToChain, routerPathToChain } from './utils/matching';
@@ -30,7 +31,7 @@ export class Router {
         return this.writeNavStateRoot(path, direction);
     }
     onBackButton(ev) {
-        ev.detail.register(0, () => this.goBack());
+        ev.detail.register(0, () => this.back());
     }
     push(url, direction = 'forward') {
         if (url.startsWith('.')) {
@@ -38,11 +39,10 @@ export class Router {
         }
         console.debug('[ion-router] URL pushed -> updating nav', url, direction);
         const path = parsePath(url);
-        const intent = DIRECTION_TO_INTENT[direction];
-        this.setPath(path, intent);
-        return this.writeNavStateRoot(path, intent);
+        this.setPath(path, direction);
+        return this.writeNavStateRoot(path, direction);
     }
-    goBack() {
+    back() {
         this.win.history.back();
         return Promise.resolve(this.waitPromise);
     }
@@ -52,7 +52,7 @@ export class Router {
         printRoutes(readRoutes(this.el));
         printRedirects(readRedirects(this.el));
     }
-    async navChanged(intent) {
+    async navChanged(direction) {
         if (this.busy) {
             console.warn('[ion-router] router is busy, navChanged was cancelled');
             return false;
@@ -70,38 +70,39 @@ export class Router {
             return false;
         }
         console.debug('[ion-router] nav changed -> update URL', ids, path);
-        this.setPath(path, intent);
-        await this.safeWriteNavState(outlet, chain, 0, path, null, ids.length);
+        this.setPath(path, direction);
+        await this.safeWriteNavState(outlet, chain, ROUTER_INTENT_NONE, path, null, ids.length);
         return true;
     }
     onRedirectChanged() {
         const path = this.getPath();
         if (path && routeRedirect(path, readRedirects(this.el))) {
-            this.writeNavStateRoot(path, 0);
+            this.writeNavStateRoot(path, ROUTER_INTENT_NONE);
         }
     }
     onRoutesChanged() {
-        return this.writeNavStateRoot(this.getPath(), 0);
+        return this.writeNavStateRoot(this.getPath(), ROUTER_INTENT_NONE);
     }
     historyDirection() {
-        if (this.win.history.state === null) {
+        const win = this.win;
+        if (win.history.state === null) {
             this.state++;
-            this.win.history.replaceState(this.state, this.win.document.title, this.win.document.location.href);
+            win.history.replaceState(this.state, win.document.title, win.document.location && win.document.location.href);
         }
-        const state = this.win.history.state;
+        const state = win.history.state;
         const lastState = this.lastState;
         this.lastState = state;
         if (state > lastState) {
-            return 1;
+            return ROUTER_INTENT_FORWARD;
         }
         else if (state < lastState) {
-            return -1;
+            return ROUTER_INTENT_BACK;
         }
         else {
-            return 0;
+            return ROUTER_INTENT_NONE;
         }
     }
-    async writeNavStateRoot(path, intent) {
+    async writeNavStateRoot(path, direction) {
         if (!path) {
             console.error('[ion-router] URL is not part of the routing set');
             return false;
@@ -110,7 +111,7 @@ export class Router {
         const redirect = routeRedirect(path, redirects);
         let redirectFrom = null;
         if (redirect) {
-            this.setPath(redirect.to, intent);
+            this.setPath(redirect.to, direction);
             redirectFrom = redirect.from;
             path = redirect.to;
         }
@@ -120,13 +121,13 @@ export class Router {
             console.error('[ion-router] the path does not match any route');
             return false;
         }
-        return this.safeWriteNavState(this.win.document.body, chain, intent, path, redirectFrom);
+        return this.safeWriteNavState(this.win.document.body, chain, direction, path, redirectFrom);
     }
-    async safeWriteNavState(node, chain, intent, path, redirectFrom, index = 0) {
+    async safeWriteNavState(node, chain, direction, path, redirectFrom, index = 0) {
         const unlock = await this.lock();
         let changed = false;
         try {
-            changed = await this.writeNavState(node, chain, intent, path, redirectFrom, index);
+            changed = await this.writeNavState(node, chain, direction, path, redirectFrom, index);
         }
         catch (e) {
             console.error(e);
@@ -143,7 +144,7 @@ export class Router {
         }
         return resolve;
     }
-    async writeNavState(node, chain, intent, path, redirectFrom, index = 0) {
+    async writeNavState(node, chain, direction, path, redirectFrom, index = 0) {
         if (this.busy) {
             console.warn('[ion-router] router is busy, transition was cancelled');
             return false;
@@ -153,7 +154,7 @@ export class Router {
         if (routeEvent) {
             this.ionRouteWillChange.emit(routeEvent);
         }
-        const changed = await writeNavState(node, chain, intent, index);
+        const changed = await writeNavState(node, chain, direction, index);
         this.busy = false;
         if (changed) {
             console.debug('[ion-router] route changed', path);
@@ -163,9 +164,9 @@ export class Router {
         }
         return changed;
     }
-    setPath(path, intent) {
+    setPath(path, direction) {
         this.state++;
-        writePath(this.win.history, this.root, this.useHash, path, intent, this.state);
+        writePath(this.win.history, this.root, this.useHash, path, direction, this.state);
     }
     getPath() {
         return readPath(this.win.location, this.root, this.useHash);
@@ -186,14 +187,14 @@ export class Router {
     }
     static get is() { return "ion-router"; }
     static get properties() { return {
+        "back": {
+            "method": true
+        },
         "config": {
             "context": "config"
         },
         "el": {
             "elementRef": true
-        },
-        "goBack": {
-            "method": true
         },
         "navChanged": {
             "method": true
@@ -240,8 +241,3 @@ export class Router {
             "method": "onBackButton"
         }]; }
 }
-const DIRECTION_TO_INTENT = {
-    'back': -1,
-    'root': 0,
-    'forward': 1
-};

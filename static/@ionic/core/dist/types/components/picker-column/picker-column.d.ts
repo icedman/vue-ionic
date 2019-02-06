@@ -1,6 +1,9 @@
 import '../../stencil.core';
 import { ComponentInterface, QueueApi } from '../../stencil.core';
 import { Mode, PickerColumn } from '../../interface';
+/**
+ * @internal
+ */
 export declare class PickerColumnCmp implements ComponentInterface {
     mode: Mode;
     private bounceFrom;
@@ -19,7 +22,7 @@ export declare class PickerColumnCmp implements ComponentInterface {
     private noAnimate;
     el: HTMLElement;
     queue: QueueApi;
-    /** @internal */
+    /** Picker column data */
     col: PickerColumn;
     componentWillLoad(): void;
     componentDidLoad(): Promise<void>;

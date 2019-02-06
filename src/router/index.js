@@ -22,7 +22,7 @@ export default new Router({
     },
     {
       path: '/yetAnother',
-      name: 'Some Other',
+      name: 'Some Other 2',
       component: AnotherPage
     }
   ]

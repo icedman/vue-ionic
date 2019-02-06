@@ -1,20 +1,3 @@
-let _sPassive;
-function supportsPassive(node) {
-    if (_sPassive === undefined) {
-        try {
-            const opts = Object.defineProperty({}, 'passive', {
-                get: () => {
-                    _sPassive = true;
-                }
-            });
-            node.addEventListener('optsTest', () => { return; }, opts);
-        }
-        catch (e) {
-            _sPassive = false;
-        }
-    }
-    return !!_sPassive;
-}
 export function addEventListener(el, eventName, callback, opts) {
     const listenerOpts = supportsPassive(el) ? {
         'capture': !!opts.capture,
@@ -34,4 +17,21 @@ export function addEventListener(el, eventName, callback, opts) {
     return () => {
         el[remove](eventName, callback, listenerOpts);
     };
+}
+let _sPassive;
+function supportsPassive(node) {
+    if (_sPassive === undefined) {
+        try {
+            const opts = Object.defineProperty({}, 'passive', {
+                get: () => {
+                    _sPassive = true;
+                }
+            });
+            node.addEventListener('optsTest', () => { return; }, opts);
+        }
+        catch (e) {
+            _sPassive = false;
+        }
+    }
+    return !!_sPassive;
 }

@@ -1,13 +1,18 @@
 import { createColorClasses, openURL } from '../../utils/theme';
 export class Anchor {
+    constructor() {
+        this.routerDirection = 'forward';
+    }
+    onClick(ev) {
+        openURL(this.win, this.href, ev, this.routerDirection);
+    }
     hostData() {
         return {
-            class: createColorClasses(this.color),
-            'ion-activatable': true
+            class: Object.assign({}, createColorClasses(this.color), { 'ion-activatable': true })
         };
     }
     render() {
-        return (h("a", { href: this.href, onClick: ev => openURL(this.win, this.href, ev, this.routerDirection) },
+        return (h("a", { href: this.href },
             h("slot", null)));
     }
     static get is() { return "ion-anchor"; }
@@ -29,5 +34,9 @@ export class Anchor {
             "context": "window"
         }
     }; }
+    static get listeners() { return [{
+            "name": "click",
+            "method": "onClick"
+        }]; }
     static get style() { return "/**style-placeholder:ion-anchor:**/"; }
 }

@@ -19,6 +19,7 @@ export declare class Img implements ComponentInterface {
     ionImgDidLoad: EventEmitter<void>;
     componentDidLoad(): void;
     private addIO;
+    private load;
     private removeIO;
     render(): JSX.Element;
 }

@@ -1,6 +1,5 @@
 import { ComponentInterface } from '../../stencil.core';
 import { OverlayController, PickerOptions } from '../../interface';
-/** @internal */
 export declare class PickerController implements ComponentInterface, OverlayController {
     doc: Document;
     /**

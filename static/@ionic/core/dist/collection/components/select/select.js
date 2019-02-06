@@ -1,12 +1,11 @@
-import { renderHiddenInput } from '../../utils/helpers';
+import { findItemLabel, renderHiddenInput } from '../../utils/helpers';
 import { hostContext } from '../../utils/theme';
 export class Select {
     constructor() {
         this.childOpts = [];
         this.inputId = `ion-sel-${selectIds++}`;
+        this.didInit = false;
         this.isExpanded = false;
-        this.keyFocus = false;
-        this.text = '';
         this.disabled = false;
         this.cancelText = 'Cancel';
         this.okText = 'OK';
@@ -14,14 +13,10 @@ export class Select {
         this.multiple = false;
         this.interface = 'alert';
         this.interfaceOptions = {};
-        this.onKeyUp = () => {
-            this.keyFocus = true;
-        };
         this.onFocus = () => {
             this.ionFocus.emit();
         };
         this.onBlur = () => {
-            this.keyFocus = false;
             this.ionBlur.emit();
         };
     }
@@ -29,100 +24,58 @@ export class Select {
         this.emitStyle();
     }
     valueChanged() {
+        if (this.didInit) {
+            this.updateOptions();
+            this.ionChange.emit({
+                value: this.value,
+            });
+            this.emitStyle();
+        }
+    }
+    async selectOptionChanged() {
+        await this.loadOptions();
+        if (this.didInit) {
+            this.updateOptions();
+        }
+    }
+    onClick(ev) {
+        this.setFocus();
+        this.open(ev);
+    }
+    async componentDidLoad() {
+        await this.loadOptions();
         if (this.value === undefined) {
-            this.childOpts.filter(o => o.selected).forEach(selectOption => {
-                selectOption.selected = false;
-            });
-            this.text = '';
-        }
-        else {
-            let hasChecked = false;
-            const texts = [];
-            this.childOpts.forEach(selectOption => {
-                if ((Array.isArray(this.value) && this.value.includes(selectOption.value)) || (selectOption.value === this.value)) {
-                    if (!selectOption.selected && (this.multiple || !hasChecked)) {
-                        selectOption.selected = true;
-                    }
-                    else if (!this.multiple && hasChecked && selectOption.selected) {
-                        selectOption.selected = false;
-                    }
-                    hasChecked = true;
-                }
-                else if (selectOption.selected) {
-                    selectOption.selected = false;
-                }
-                if (selectOption.selected) {
-                    texts.push(selectOption.textContent || '');
-                }
-            });
-            this.text = texts.join(', ');
-        }
-        this.ionChange.emit({
-            value: this.value,
-            text: this.text
-        });
-        this.emitStyle();
-    }
-    optLoad(ev) {
-        const selectOption = ev.target;
-        this.childOpts = Array.from(this.el.querySelectorAll('ion-select-option'));
-        if (this.value != null && (Array.isArray(this.value) && this.value.includes(selectOption.value)) || (selectOption.value === this.value)) {
-            selectOption.selected = true;
-        }
-        else if (Array.isArray(this.value) && this.multiple && selectOption.selected) {
-            this.value.push(selectOption.value);
-        }
-        else if (this.value === undefined && selectOption.selected) {
-            this.value = selectOption.value;
-        }
-        else if (selectOption.selected) {
-            selectOption.selected = false;
-        }
-    }
-    optUnload(ev) {
-        const index = this.childOpts.indexOf(ev.target);
-        if (index > -1) {
-            this.childOpts.splice(index, 1);
-        }
-    }
-    onSelect(ev) {
-        this.childOpts.forEach(selectOption => {
-            if (selectOption === ev.target) {
-                this.value = selectOption.value;
+            if (this.multiple) {
+                const checked = this.childOpts.filter(o => o.selected);
+                this.value = checked.map(o => o.value);
             }
             else {
-                selectOption.selected = false;
-            }
-        });
-    }
-    componentWillLoad() {
-        if (!this.value) {
-            this.value = this.multiple ? [] : undefined;
-        }
-    }
-    componentDidLoad() {
-        const label = this.getLabel();
-        if (label) {
-            this.labelId = label.id = this.name + '-lbl';
-        }
-        if (this.multiple) {
-            const checked = this.childOpts.filter(o => o.selected);
-            this.value.length = 0;
-            checked.forEach(o => {
-                this.value.push(o.value);
-            });
-            this.text = checked.map(o => o.textContent).join(', ');
-        }
-        else {
-            const checked = this.childOpts.find(o => o.selected);
-            if (checked) {
-                this.value = checked.value;
-                this.text = checked.textContent || '';
+                const checked = this.childOpts.find(o => o.selected);
+                if (checked) {
+                    this.value = checked.value;
+                }
             }
         }
+        this.updateOptions();
         this.emitStyle();
+        this.el.forceUpdate();
+        this.didInit = true;
     }
-    open(ev) {
+    async open(ev) {
+        if (this.disabled || this.isExpanded) {
+            return undefined;
+        }
+        const overlay = this.overlay = await this.createOverlay(ev);
+        this.isExpanded = true;
+        overlay.onDidDismiss().then(() => {
+            this.overlay = undefined;
+            this.isExpanded = false;
+            this.setFocus();
+        });
+        await overlay.present();
+        return overlay;
+    }
+    createOverlay(ev) {
         let selectInterface = this.interface;
         if ((selectInterface === 'action-sheet' || selectInterface === 'popover') && this.multiple) {
             console.warn(`Select interface cannot be "${selectInterface}" with a multi-value select. Using the "alert" interface instead.`);
@@ -140,16 +93,9 @@ export class Select {
         }
         return this.openAlert();
     }
-    getLabel() {
-        const item = this.el.closest('ion-item');
-        if (item) {
-            return item.querySelector('ion-label');
-        }
-        return null;
-    }
     async openPopover(ev) {
         const interfaceOptions = this.interfaceOptions;
-        const popoverOpts = Object.assign({}, interfaceOptions, { component: 'ion-select-popover', cssClass: ['select-popover', interfaceOptions.cssClass], event: ev, componentProps: {
+        const popoverOpts = Object.assign({ mode: this.mode }, interfaceOptions, { component: 'ion-select-popover', cssClass: ['select-popover', interfaceOptions.cssClass], event: ev, componentProps: {
                 header: interfaceOptions.header,
                 subHeader: interfaceOptions.subHeader,
                 message: interfaceOptions.message,
@@ -167,10 +113,7 @@ export class Select {
                     };
                 })
             } });
-        const popover = this.overlay = await this.popoverCtrl.create(popoverOpts);
-        await popover.present();
-        this.isExpanded = true;
-        return popover;
+        return this.popoverCtrl.create(popoverOpts);
     }
     async openActionSheet() {
         const actionSheetButtons = this.childOpts.map(option => {
@@ -190,18 +133,15 @@ export class Select {
             }
         });
         const interfaceOptions = this.interfaceOptions;
-        const actionSheetOpts = Object.assign({}, interfaceOptions, { buttons: actionSheetButtons, cssClass: ['select-action-sheet', interfaceOptions.cssClass] });
-        const actionSheet = this.overlay = await this.actionSheetCtrl.create(actionSheetOpts);
-        await actionSheet.present();
-        this.isExpanded = true;
-        return actionSheet;
+        const actionSheetOpts = Object.assign({ mode: this.mode }, interfaceOptions, { buttons: actionSheetButtons, cssClass: ['select-action-sheet', interfaceOptions.cssClass] });
+        return this.actionSheetCtrl.create(actionSheetOpts);
     }
     async openAlert() {
         const label = this.getLabel();
         const labelText = (label) ? label.textContent : null;
         const interfaceOptions = this.interfaceOptions;
         const inputType = (this.multiple ? 'checkbox' : 'radio');
-        const alertOpts = Object.assign({}, interfaceOptions, { header: interfaceOptions.header ? interfaceOptions.header : labelText, inputs: this.childOpts.map(o => {
+        const alertOpts = Object.assign({ mode: this.mode }, interfaceOptions, { header: interfaceOptions.header ? interfaceOptions.header : labelText, inputs: this.childOpts.map(o => {
                 return {
                     type: inputType,
                     label: o.textContent,
@@ -225,48 +165,82 @@ export class Select {
                 }
             ], cssClass: ['select-alert', interfaceOptions.cssClass,
                 (this.multiple ? 'multiple-select-alert' : 'single-select-alert')] });
-        const alert = this.overlay = await this.alertCtrl.create(alertOpts);
-        await alert.present();
-        this.isExpanded = true;
-        return alert;
+        return this.alertCtrl.create(alertOpts);
     }
     close() {
         if (!this.overlay) {
             return Promise.resolve(false);
         }
-        const overlay = this.overlay;
-        this.overlay = undefined;
-        this.isExpanded = false;
-        return overlay.dismiss();
+        return this.overlay.dismiss();
+    }
+    async loadOptions() {
+        this.childOpts = await Promise.all(Array.from(this.el.querySelectorAll('ion-select-option')).map(o => o.componentOnReady()));
+    }
+    updateOptions() {
+        let canSelect = true;
+        for (const selectOption of this.childOpts) {
+            const selected = canSelect && isOptionSelected(this.value, selectOption.value);
+            selectOption.selected = selected;
+            if (selected && !this.multiple) {
+                canSelect = false;
+            }
+        }
+    }
+    getLabel() {
+        return findItemLabel(this.el);
     }
     hasValue() {
-        if (Array.isArray(this.value)) {
-            return this.value.length > 0;
+        return this.getText() !== '';
+    }
+    getText() {
+        const selectedText = this.selectedText;
+        if (selectedText != null && selectedText !== '') {
+            return selectedText;
         }
-        return (this.value != null && this.value !== undefined && this.value !== '');
+        return generateText(this.childOpts, this.value);
+    }
+    setFocus() {
+        if (this.buttonEl) {
+            this.buttonEl.focus();
+        }
     }
     emitStyle() {
         this.ionStyle.emit({
             'interactive': true,
             'select': true,
+            'has-placeholder': this.placeholder != null,
             'has-value': this.hasValue(),
             'interactive-disabled': this.disabled,
             'select-disabled': this.disabled
         });
     }
     hostData() {
+        const labelId = this.inputId + '-lbl';
+        const label = findItemLabel(this.el);
+        if (label) {
+            label.id = labelId;
+        }
         return {
+            'role': 'combobox',
+            'aria-disabled': this.disabled ? 'true' : null,
+            'aria-expanded': `${this.isExpanded}`,
+            'aria-haspopup': 'dialog',
+            'aria-labelledby': labelId,
             class: {
                 'in-item': hostContext('ion-item', this.el),
                 'select-disabled': this.disabled,
-                'select-key': this.keyFocus
             }
         };
     }
     render() {
-        renderHiddenInput(this.el, this.name, parseValue(this.value), this.disabled);
+        renderHiddenInput(true, this.el, this.name, parseValue(this.value), this.disabled);
+        const labelId = this.inputId + '-lbl';
+        const label = findItemLabel(this.el);
+        if (label) {
+            label.id = labelId;
+        }
         let addPlaceholderClass = false;
-        let selectText = this.selectedText || this.text;
+        let selectText = this.getText();
         if (selectText === '' && this.placeholder != null) {
             selectText = this.placeholder;
             addPlaceholderClass = true;
@@ -276,12 +250,10 @@ export class Select {
             'select-placeholder': addPlaceholderClass
         };
         return [
-            h("div", { role: "textbox", "aria-multiline": "false", class: selectTextClasses }, selectText),
+            h("div", { class: selectTextClasses }, selectText),
             h("div", { class: "select-icon", role: "presentation" },
                 h("div", { class: "select-icon-inner" })),
-            h("button", { type: "button", role: "combobox", "aria-haspopup": "dialog", "aria-labelledby": this.labelId, "aria-expanded": this.isExpanded ? 'true' : null, "aria-disabled": this.disabled ? 'true' : null, onClick: this.open.bind(this), onKeyUp: this.onKeyUp, onFocus: this.onFocus, onBlur: this.onBlur, class: "select-cover" },
-                h("slot", null),
-                this.mode === 'md' && h("ion-ripple-effect", null))
+            h("button", { type: "button", onFocus: this.onFocus, onBlur: this.onBlur, disabled: this.disabled, ref: (el => this.buttonEl = el) })
         ];
     }
     static get is() { return "ion-select"; }
@@ -316,9 +288,6 @@ export class Select {
         "isExpanded": {
             "state": true
         },
-        "keyFocus": {
-            "state": true
-        },
         "mode": {
             "type": String,
             "attr": "mode"
@@ -348,9 +317,6 @@ export class Select {
         "selectedText": {
             "type": String,
             "attr": "selected-text"
-        },
-        "text": {
-            "state": true
         },
         "value": {
             "type": "Any",
@@ -392,13 +358,13 @@ export class Select {
         }]; }
     static get listeners() { return [{
             "name": "ionSelectOptionDidLoad",
-            "method": "optLoad"
+            "method": "selectOptionChanged"
         }, {
             "name": "ionSelectOptionDidUnload",
-            "method": "optUnload"
+            "method": "selectOptionChanged"
         }, {
-            "name": "ionSelect",
-            "method": "onSelect"
+            "name": "click",
+            "method": "onClick"
         }]; }
     static get style() { return "/**style-placeholder:ion-select:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-select:**/"; }
@@ -411,5 +377,36 @@ function parseValue(value) {
         return value.join(',');
     }
     return value.toString();
+}
+function isOptionSelected(currentValue, optionValue) {
+    if (currentValue === undefined) {
+        return false;
+    }
+    if (Array.isArray(currentValue)) {
+        return currentValue.includes(optionValue);
+    }
+    else {
+        return currentValue === optionValue;
+    }
+}
+function generateText(opts, value) {
+    if (value === undefined) {
+        return '';
+    }
+    if (Array.isArray(value)) {
+        return value
+            .map(v => textForValue(opts, v))
+            .filter(opt => opt !== null)
+            .join(', ');
+    }
+    else {
+        return textForValue(opts, value) || '';
+    }
+}
+function textForValue(opts, value) {
+    const selectOpt = opts.find(opt => opt.value === value);
+    return selectOpt
+        ? selectOpt.textContent
+        : null;
 }
 let selectIds = 0;

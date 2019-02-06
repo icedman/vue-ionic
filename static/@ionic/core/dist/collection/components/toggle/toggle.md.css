@@ -8,25 +8,26 @@
   /* stylelint-disable-next-line declaration-no-important */
   box-sizing: content-box !important;
   display: inline-block;
+  outline: none;
   contain: content;
   cursor: pointer;
   touch-action: none;
   user-select: none;
   z-index: 2; }
 
-:host(.toggle-key) input {
+:host(.ion-focused) input {
   border: 2px solid #5e9ed6; }
-
-:host(:focus) {
-  outline: none; }
 
 :host(.toggle-disabled) {
   pointer-events: none; }
 
-input {
+button {
   left: 0;
   top: 0;
-  margin: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -34,20 +35,34 @@ input {
   background: transparent;
   cursor: pointer;
   appearance: none;
-  outline: none;
-  pointer-events: none; }
+  outline: none; }
+  :host-context([dir=rtl]) button {
+    right: 0; }
+  button::-moz-focus-inner {
+    border: 0; }
 
 :host {
-  --background: var(--ion-item-border-color, var(--ion-border-color, rgba(0, 0, 0, 0.13)));
+  --background: var(--ion-color-medium-tint, #a2a4ab);
   --background-checked: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.5);
   --handle-background: var(--ion-background-color, #fff);
   --handle-background-checked: var(--ion-color-primary, #3880ff);
-  padding: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   box-sizing: content-box;
   position: relative;
   width: 36px;
   height: 14px;
   contain: strict; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: 12px;
+      padding-inline-start: 12px;
+      -webkit-padding-end: 12px;
+      padding-inline-end: 12px; } }
 
 :host(.ion-color.toggle-checked) .toggle-icon {
   background: rgba(var(--ion-color-base-rgb), 0.5); }
@@ -79,6 +94,8 @@ input {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
   will-change: transform, background-color;
   contain: strict; }
+  :host-context([dir=rtl]) .toggle-inner {
+    right: 0; }
 
 :host(.toggle-checked) .toggle-icon {
   background: var(--background-checked); }
@@ -86,14 +103,41 @@ input {
 :host(.toggle-checked) .toggle-inner {
   transform: translate3d(16px,  0,  0);
   background: var(--handle-background-checked); }
+  :host([dir=rtl].toggle-checked) .toggle-inner {
+    transform: translate3d(calc(-1 * 16px),  0,  0); }
 
 :host(.toggle-disabled) {
   opacity: 0.3; }
 
 :host(.in-item[slot]) {
-  margin: 0;
-  padding: 12px 8px 12px 16px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 16px;
+  padding-right: 0;
+  padding-top: 12px;
+  padding-bottom: 12px;
   cursor: pointer; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host(.in-item[slot]) {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: 16px;
+      padding-inline-start: 16px;
+      -webkit-padding-end: 0;
+      padding-inline-end: 0; } }
 
 :host(.in-item[slot="start"]) {
-  padding: 12px 18px 12px 2px; }
+  padding-left: 2px;
+  padding-right: 18px;
+  padding-top: 12px;
+  padding-bottom: 12px; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    :host(.in-item[slot="start"]) {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: 2px;
+      padding-inline-start: 2px;
+      -webkit-padding-end: 18px;
+      padding-inline-end: 18px; } }

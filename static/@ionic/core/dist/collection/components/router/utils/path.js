@@ -1,3 +1,4 @@
+import { ROUTER_INTENT_FORWARD } from './constants';
 export function generatePath(segments) {
     const path = segments
         .filter(s => s.length > 0)
@@ -22,7 +23,7 @@ export function chainToPath(chain) {
     }
     return path;
 }
-export function writePath(history, root, useHash, path, intent, state) {
+export function writePath(history, root, useHash, path, direction, state) {
     let url = generatePath([
         ...parsePath(root),
         ...path
@@ -30,7 +31,7 @@ export function writePath(history, root, useHash, path, intent, state) {
     if (useHash) {
         url = '#' + url;
     }
-    if (intent === 1) {
+    if (direction === ROUTER_INTENT_FORWARD) {
         history.pushState(state, '', url);
     }
     else {

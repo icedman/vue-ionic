@@ -1,3 +1,4 @@
+import '../../stencil.core';
 import { ComponentInterface } from '../../stencil.core';
 import { Color, Mode } from '../../interface';
 export declare class Chip implements ComponentInterface {
@@ -9,10 +10,20 @@ export declare class Chip implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
+    /**
+     * Display an outline style button.
+     */
+    outline: boolean;
     hostData(): {
-        class: import("../../../../../../../../../Users/manualmeida/repos/ionic/ionic/core/src/interface").CssClassMap | undefined;
+        class: {
+            'chip-outline': boolean;
+            'ion-activatable': boolean;
+        } | {
+            'chip-outline': boolean;
+            'ion-activatable': boolean;
+        };
     };
+    render(): (JSX.Element | null)[];
 }

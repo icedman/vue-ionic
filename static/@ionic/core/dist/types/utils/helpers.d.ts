@@ -1,12 +1,9 @@
 import { EventEmitter } from '../stencil.core';
 import { Side } from '../interface';
-export declare function reorderArray(array: any[], indexes: {
-    from: number;
-    to: number;
-}): any[];
 export declare function rIC(callback: () => void): void;
 export declare function hasShadowDom(el: HTMLElement): boolean;
-export declare function renderHiddenInput(container: HTMLElement, name: string, value: string | undefined | null, disabled: boolean): void;
+export declare function findItemLabel(componentEl: HTMLElement): HTMLIonLabelElement | null;
+export declare function renderHiddenInput(always: boolean, container: HTMLElement, name: string, value: string | undefined | null, disabled: boolean): void;
 export declare function clamp(min: number, n: number, max: number): number;
 export declare function assert(actual: any, reason: string): void;
 export declare function now(ev: UIEvent): number;

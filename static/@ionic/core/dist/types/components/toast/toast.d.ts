@@ -6,13 +6,13 @@ export declare class Toast implements ComponentInterface, OverlayInterface {
     presented: boolean;
     el: HTMLElement;
     animation: Animation | undefined;
-    animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
-    /** @internal */
+    /**
+     * @internal
+     */
     overlayIndex: number;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -52,25 +52,21 @@ export declare class Toast implements ComponentInterface, OverlayInterface {
      */
     keyboardClose: boolean;
     /**
-     * The position of the toast on the screen. Possible values: "top", "middle", "bottom".
+     * The position of the toast on the screen.
      */
     position: 'top' | 'bottom' | 'middle';
     /**
-     * If `true`, the close button will be displayed. Defaults to `false`.
+     * If `true`, the close button will be displayed.
      */
     showCloseButton: boolean;
     /**
-     * If `true`, the toast will be translucent. Defaults to `false`.
+     * If `true`, the toast will be translucent.
      */
     translucent: boolean;
     /**
-     * If `true`, the toast will animate. Defaults to `true`.
+     * If `true`, the toast will animate.
      */
     animated: boolean;
-    /**
-     * Emitted after the toast has loaded.
-     */
-    ionToastDidLoad: EventEmitter<void>;
     /**
      * Emitted after the toast has presented.
      */
@@ -87,12 +83,6 @@ export declare class Toast implements ComponentInterface, OverlayInterface {
      * Emitted after the toast has dismissed.
      */
     didDismiss: EventEmitter<OverlayEventDetail>;
-    /**
-     * Emitted after the toast has unloaded.
-     */
-    ionToastDidUnload: EventEmitter<void>;
-    componentDidLoad(): void;
-    componentDidUnload(): void;
     /**
      * Present the toast overlay after it has been created.
      */

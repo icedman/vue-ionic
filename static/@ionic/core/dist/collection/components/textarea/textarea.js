@@ -1,4 +1,4 @@
-import { debounceEvent, renderHiddenInput } from '../../utils/helpers';
+import { debounceEvent, findItemLabel } from '../../utils/helpers';
 import { createColorClasses } from '../../utils/theme';
 export class Textarea {
     constructor() {
@@ -16,7 +16,9 @@ export class Textarea {
         this.spellcheck = false;
         this.value = '';
         this.onInput = (ev) => {
-            this.value = this.nativeInput.value;
+            if (this.nativeInput) {
+                this.value = this.nativeInput.value;
+            }
             this.emitStyle();
             this.ionInput.emit(ev);
         };
@@ -43,7 +45,7 @@ export class Textarea {
     valueChanged() {
         const nativeInput = this.nativeInput;
         const value = this.getValue();
-        if (nativeInput.value !== value) {
+        if (nativeInput && nativeInput.value !== value) {
             nativeInput.value = value;
         }
         this.ionChange.emit({ value });
@@ -59,12 +61,16 @@ export class Textarea {
             this.nativeInput.focus();
         }
     }
+    getInputElement() {
+        return Promise.resolve(this.nativeInput);
+    }
     emitStyle() {
         this.ionStyle.emit({
             'interactive': true,
             'textarea': true,
             'input': true,
             'interactive-disabled': this.disabled,
+            'has-placeholder': this.placeholder != null,
             'has-value': this.hasValue(),
             'has-focus': this.hasFocus
         });
@@ -92,16 +98,21 @@ export class Textarea {
     }
     hostData() {
         return {
-            class: Object.assign({}, createColorClasses(this.color))
+            'aria-disabled': this.disabled ? 'true' : null,
+            class: createColorClasses(this.color)
         };
     }
     render() {
         const value = this.getValue();
-        renderHiddenInput(this.el, this.name, value, this.disabled);
-        return (h("textarea", { class: "native-textarea", ref: el => this.nativeInput = el, autoCapitalize: this.autocapitalize, autoFocus: this.autofocus, disabled: this.disabled, maxLength: this.maxlength, minLength: this.minlength, name: this.name, placeholder: this.placeholder, readOnly: this.readonly, required: this.required, spellCheck: this.spellcheck, cols: this.cols, rows: this.rows, wrap: this.wrap, onInput: this.onInput, onBlur: this.onBlur, onFocus: this.onFocus, onKeyDown: this.onKeyDown }, value));
+        const labelId = this.inputId + '-lbl';
+        const label = findItemLabel(this.el);
+        if (label) {
+            label.id = labelId;
+        }
+        return (h("textarea", { class: "native-textarea", ref: el => this.nativeInput = el, autoCapitalize: this.autocapitalize, autoFocus: this.autofocus, disabled: this.disabled, maxLength: this.maxlength, minLength: this.minlength, name: this.name, placeholder: this.placeholder || '', readOnly: this.readonly, required: this.required, spellCheck: this.spellcheck, cols: this.cols, rows: this.rows, wrap: this.wrap, onInput: this.onInput, onBlur: this.onBlur, onFocus: this.onFocus, onKeyDown: this.onKeyDown }, value));
     }
     static get is() { return "ion-textarea"; }
-    static get encapsulation() { return "shadow"; }
+    static get encapsulation() { return "scoped"; }
     static get properties() { return {
         "autocapitalize": {
             "type": String,
@@ -136,6 +147,9 @@ export class Textarea {
         },
         "el": {
             "elementRef": true
+        },
+        "getInputElement": {
+            "method": true
         },
         "hasFocus": {
             "state": true

@@ -1,5 +1,1 @@
-/*!
- * (C) Ionic http://ionicframework.com - MIT License
- * Built with http://stenciljs.com
- */
-Ionic.loadBundle("index.js",["exports","./chunk-b34e377b.js"],function(o,n){window,o.PLATFORMS_MAP=n.PLATFORMS_MAP,o.getPlatforms=n.getPlatforms,o.isPlatform=n.isPlatform,o.setupPlatforms=n.setupPlatforms,o.setupConfig=function(o){var n=window,i=n.Ionic;if(!i||!i.config||"Object"===i.config.constructor.name)return n.Ionic=n.Ionic||{},n.Ionic.config=Object.assign({},n.Ionic.config,o),n.Ionic.config;console.error("ionic config was already initialized")},Object.defineProperty(o,"__esModule",{value:!0})});
+Ionic.loadBundle("index.js",["exports","./chunk-d92df78d.js","./chunk-7348297b.js"],function(L,E,o){window,L.PLATFORMS_MAP=E.PLATFORMS_MAP,L.getPlatforms=E.getPlatforms,L.isPlatform=E.isPlatform,L.setupPlatforms=E.setupPlatforms,L.LIFECYCLE_WILL_ENTER=o.LIFECYCLE_WILL_ENTER,L.LIFECYCLE_DID_ENTER=o.LIFECYCLE_DID_ENTER,L.LIFECYCLE_WILL_LEAVE=o.LIFECYCLE_WILL_LEAVE,L.LIFECYCLE_DID_LEAVE=o.LIFECYCLE_DID_LEAVE,L.LIFECYCLE_WILL_UNLOAD=o.LIFECYCLE_WILL_UNLOAD,L.setupConfig=function(L){var E=window,o=E.Ionic;if(!o||!o.config||"Object"===o.config.constructor.name)return E.Ionic=E.Ionic||{},E.Ionic.config=Object.assign({},E.Ionic.config,L),E.Ionic.config;console.error("ionic config was already initialized")},Object.defineProperty(L,"__esModule",{value:!0})});

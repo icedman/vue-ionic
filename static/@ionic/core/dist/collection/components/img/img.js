@@ -13,16 +13,19 @@ export class Img {
             this.removeIO();
             this.io = new IntersectionObserver(data => {
                 if (data[0].isIntersecting) {
-                    this.loadSrc = this.src;
+                    this.load();
                     this.removeIO();
-                    this.ionImgDidLoad.emit();
                 }
             });
             this.io.observe(this.el);
         }
         else {
-            setTimeout(() => this.loadSrc = this.src, 200);
+            setTimeout(() => this.load(), 200);
         }
+    }
+    load() {
+        this.loadSrc = this.src;
+        this.ionImgDidLoad.emit();
     }
     removeIO() {
         if (this.io) {

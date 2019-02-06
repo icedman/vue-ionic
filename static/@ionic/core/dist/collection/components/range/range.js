@@ -16,6 +16,21 @@ export class Range {
         this.step = 1;
         this.disabled = false;
         this.value = 0;
+        this.handleKeyboard = (knob, isIncrease) => {
+            let step = this.step;
+            step = step > 0 ? step : 1;
+            step = step / (this.max - this.min);
+            if (!isIncrease) {
+                step *= -1;
+            }
+            if (knob === 'A') {
+                this.ratioA = clamp(0, this.ratioA + step, 1);
+            }
+            else {
+                this.ratioB = clamp(0, this.ratioB + step, 1);
+            }
+            this.updateValue();
+        };
     }
     debounceChanged() {
         this.ionChange = debounceEvent(this.ionChange, this.debounce);
@@ -42,13 +57,27 @@ export class Range {
         }
         this.ionChange.emit({ value });
     }
+    onBlur() {
+        if (this.hasFocus) {
+            this.hasFocus = false;
+            this.ionBlur.emit();
+            this.emitStyle();
+        }
+    }
+    onFocus() {
+        if (!this.hasFocus) {
+            this.hasFocus = true;
+            this.ionFocus.emit();
+            this.emitStyle();
+        }
+    }
     componentWillLoad() {
         this.updateRatio();
         this.debounceChanged();
         this.emitStyle();
     }
     async componentDidLoad() {
-        this.gesture = (await import('../../utils/gesture/gesture')).createGesture({
+        this.gesture = (await import('../../utils/gesture')).createGesture({
             el: this.rangeSlider,
             queue: this.queue,
             gestureName: 'range',
@@ -60,35 +89,11 @@ export class Range {
         });
         this.gesture.setDisabled(this.disabled);
     }
-    keyChng(ev) {
-        let step = this.step;
-        step = step > 0 ? step : 1;
-        step = step / (this.max - this.min);
-        if (!ev.detail.isIncrease) {
-            step *= -1;
+    componentDidUnload() {
+        if (this.gesture) {
+            this.gesture.destroy();
+            this.gesture = undefined;
         }
-        if (ev.detail.knob === 'A') {
-            this.ratioA += step;
-        }
-        else {
-            this.ratioB += step;
-        }
-        this.updateValue();
-    }
-    handleKeyboard(knob, isIncrease) {
-        let step = this.step;
-        step = step > 0 ? step : 1;
-        step = step / (this.max - this.min);
-        if (!isIncrease) {
-            step *= -1;
-        }
-        if (knob === 'A') {
-            this.ratioA += step;
-        }
-        else {
-            this.ratioB += step;
-        }
-        this.updateValue();
     }
     getValue() {
         const value = this.value || 0;
@@ -110,25 +115,11 @@ export class Range {
     }
     emitStyle() {
         this.ionStyle.emit({
+            'interactive': true,
             'interactive-disabled': this.disabled
         });
     }
-    fireBlur() {
-        if (this.hasFocus) {
-            this.hasFocus = false;
-            this.ionBlur.emit();
-            this.emitStyle();
-        }
-    }
-    fireFocus() {
-        if (!this.hasFocus) {
-            this.hasFocus = true;
-            this.ionFocus.emit();
-            this.emitStyle();
-        }
-    }
     onStart(detail) {
-        this.fireFocus();
         const rect = this.rect = this.rangeSlider.getBoundingClientRect();
         const currentX = detail.currentX;
         const ratio = clamp(0, (currentX - rect.left) / rect.width, 1);
@@ -137,6 +128,7 @@ export class Range {
                 Math.abs(this.ratioA - ratio) < Math.abs(this.ratioB - ratio)
                 ? 'A'
                 : 'B';
+        this.setFocus(this.pressedKnob);
         this.update(currentX);
     }
     onMove(detail) {
@@ -145,14 +137,12 @@ export class Range {
     onEnd(detail) {
         this.update(detail.currentX);
         this.pressedKnob = undefined;
-        this.fireBlur();
     }
     update(currentX) {
         const rect = this.rect;
         let ratio = clamp(0, (currentX - rect.left) / rect.width, 1);
         if (this.snaps) {
-            const value = ratioToValue(ratio, this.min, this.max, this.step);
-            ratio = valueToRatio(value, this.min, this.max);
+            ratio = valueToRatio(ratioToValue(ratio, this.min, this.max, this.step), this.min, this.max);
         }
         if (this.pressedKnob === 'A') {
             this.ratioA = ratio;
@@ -202,6 +192,14 @@ export class Range {
             };
         this.noUpdate = false;
     }
+    setFocus(knob) {
+        if (this.el.shadowRoot) {
+            const knobEl = this.el.shadowRoot.querySelector(knob === 'A' ? '.range-knob-a' : '.range-knob-b');
+            if (knobEl) {
+                knobEl.focus();
+            }
+        }
+    }
     hostData() {
         return {
             class: Object.assign({}, createColorClasses(this.color), { 'in-item': hostContext('ion-item', this.el), 'range-disabled': this.disabled, 'range-pressed': this.pressedKnob !== undefined, 'range-has-pin': this.pin })
@@ -241,7 +239,7 @@ export class Range {
                     ratio: this.ratioA,
                     pin: this.pin,
                     disabled: this.disabled,
-                    handleKeyboard: this.handleKeyboard.bind(this),
+                    handleKeyboard: this.handleKeyboard,
                     min,
                     max
                 }),
@@ -252,7 +250,7 @@ export class Range {
                     ratio: this.ratioB,
                     pin: this.pin,
                     disabled: this.disabled,
-                    handleKeyboard: this.handleKeyboard.bind(this),
+                    handleKeyboard: this.handleKeyboard,
                     min,
                     max
                 })),
@@ -358,11 +356,11 @@ export class Range {
             "composed": true
         }]; }
     static get listeners() { return [{
-            "name": "ionIncrease",
-            "method": "keyChng"
+            "name": "focusout",
+            "method": "onBlur"
         }, {
-            "name": "ionDecrease",
-            "method": "keyChng"
+            "name": "focusin",
+            "method": "onFocus"
         }]; }
     static get style() { return "/**style-placeholder:ion-range:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-range:**/"; }
@@ -382,6 +380,8 @@ function renderKnob({ knob, value, ratio, min, max, disabled, pressed, pin, hand
             }
         }, class: {
             'range-knob-handle': true,
+            'range-knob-a': knob === 'A',
+            'range-knob-b': knob === 'B',
             'range-knob-pressed': pressed,
             'range-knob-min': value === min,
             'range-knob-max': value === max

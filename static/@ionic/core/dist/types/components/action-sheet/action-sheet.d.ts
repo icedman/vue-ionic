@@ -5,13 +5,11 @@ export declare class ActionSheet implements ComponentInterface, OverlayInterface
     presented: boolean;
     animation?: Animation;
     el: HTMLElement;
-    animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
     /** @internal */
     overlayIndex: number;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -36,7 +34,7 @@ export declare class ActionSheet implements ComponentInterface, OverlayInterface
      */
     cssClass?: string | string[];
     /**
-     * If `true`, the action sheet will be dismissed when the backdrop is clicked. Defaults to `true`.
+     * If `true`, the action sheet will be dismissed when the backdrop is clicked.
      */
     backdropDismiss: boolean;
     /**
@@ -48,21 +46,13 @@ export declare class ActionSheet implements ComponentInterface, OverlayInterface
      */
     subHeader?: string;
     /**
-     * If `true`, the action sheet will be translucent. Defaults to `false`.
+     * If `true`, the action sheet will be translucent. Only applies when the mode is `"ios"` and the device supports backdrop-filter.
      */
     translucent: boolean;
     /**
-     * If `true`, the action sheet will animate. Defaults to `true`.
+     * If `true`, the action sheet will animate.
      */
     animated: boolean;
-    /**
-     * Emitted after the alert has loaded.
-     */
-    ionActionSheetDidLoad: EventEmitter<void>;
-    /**
-     * Emitted after the alert has unloaded.
-     */
-    ionActionSheetDidUnload: EventEmitter<void>;
     /**
      * Emitted after the alert has presented.
      */
@@ -79,8 +69,6 @@ export declare class ActionSheet implements ComponentInterface, OverlayInterface
      * Emitted after the alert has dismissed.
      */
     didDismiss: EventEmitter<OverlayEventDetail>;
-    componentDidLoad(): void;
-    componentDidUnload(): void;
     protected onBackdropTap(): void;
     protected dispatchCancelHandler(ev: CustomEvent): void;
     /**
@@ -104,6 +92,8 @@ export declare class ActionSheet implements ComponentInterface, OverlayInterface
     private callButtonHandler;
     private getButtons;
     hostData(): {
+        'role': string;
+        'aria-modal': string;
         style: {
             zIndex: number;
         };

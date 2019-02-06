@@ -4,7 +4,7 @@ export function mdLeaveAnimation(AnimationC, baseEl) {
     backdropAnimation.addElement(baseEl.querySelector('ion-backdrop'));
     const wrapperAnimation = new AnimationC();
     wrapperAnimation.addElement(baseEl.querySelector('.alert-wrapper'));
-    backdropAnimation.fromTo('opacity', 0.5, 0);
+    backdropAnimation.fromTo('opacity', 0.32, 0);
     wrapperAnimation.fromTo('opacity', 0.99, 0);
     return Promise.resolve(baseAnimation
         .addElement(baseEl)

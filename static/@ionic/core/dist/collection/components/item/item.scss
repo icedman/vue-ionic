@@ -36,7 +36,6 @@
    * @prop --highlight-color-valid: The color of the highlight on the item when valid
    * @prop --highlight-color-invalid: The color of the highlight on the item when invalid
    */
-  --min-height: #{$item-min-height};
   --border-radius: 0px;
   --border-width: 0px;
   --border-style: solid;
@@ -63,13 +62,14 @@
 
   position: relative;
 
+  outline: none;
+
   color: var(--color);
 
   font-family: $font-family-base;
 
   text-align: initial;
   text-decoration: none;
-
   box-sizing: border-box;
 }
 
@@ -90,6 +90,10 @@
 
 // Activated Item
 // --------------------------------------------------
+
+:host(.ion-focused) .item-native {
+  background: var(--background-focused);
+}
 
 :host(.activated) .item-native {
   background: var(--background-activated);
@@ -148,6 +152,10 @@
   box-sizing: border-box;
 }
 
+.item-native::-moz-focus-inner {
+  border: 0;
+}
+
 button, a {
   cursor: pointer;
   user-select: none;
@@ -169,8 +177,6 @@ button, a {
   );
 
   display: flex;
-
-  position: relative;
 
   flex: 1;
   flex-direction: inherit;
@@ -214,6 +220,10 @@ button, a {
   --margin-end: 0;
 
   z-index: 1;
+}
+
+::slotted(ion-label) {
+  flex: 1;
 }
 
 
@@ -274,9 +284,8 @@ button, a {
 // Item Input Focused
 // --------------------------------------------------
 
-:host(.item-interactive.item-has-focus) {
-  --highlight-background: var(--highlight-color-focused);
-
+:host(.item-interactive.item-has-focus),
+:host(.item-interactive.ion-touched.ion-invalid) {
   // If the item has a full border and highlight is enabled, show the full item highlight
   --full-highlight-height: #{calc(var(--highlight-height) * var(--show-full-highlight))};
 
@@ -284,6 +293,12 @@ button, a {
   --inset-highlight-height: #{calc(var(--highlight-height) * var(--show-inset-highlight))};
 }
 
+// Item Input Focus
+// --------------------------------------------------
+
+:host(.item-interactive.item-has-focus) {
+  --highlight-background: var(--highlight-color-focused);
+}
 
 // Item Input Valid
 // --------------------------------------------------
@@ -291,7 +306,6 @@ button, a {
 :host(.item-interactive.ion-valid) {
   --highlight-background: var(--highlight-color-valid);
 }
-
 
 // Item Input Invalid
 // --------------------------------------------------

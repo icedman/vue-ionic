@@ -1,29 +1,29 @@
 {
-  "_from": "@ionic/core@^4.0.0-beta.2",
-  "_id": "@ionic/core@4.0.0-beta.15",
+  "_from": "@ionic/core",
+  "_id": "@ionic/core@4.0.0",
   "_inBundle": false,
-  "_integrity": "sha512-cVB4sGv8pYvftAuy++6YXtoH1CIfP7iJu/VUs5oD23PRXa62QBphpPBcxhCllc3wgLVr+PNjwSBaU9+ejLM+mQ==",
+  "_integrity": "sha512-/hW4882TyjcJTiNBYpoLGRYxkQhRidSuVjCL2RvfMS8a7FDQoS2dkje5KBGG+O2TCjtyXE5de1A6HvUgvDqjGA==",
   "_location": "/@ionic/core",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
+    "type": "tag",
     "registry": true,
-    "raw": "@ionic/core@^4.0.0-beta.2",
+    "raw": "@ionic/core",
     "name": "@ionic/core",
     "escapedName": "@ionic%2fcore",
     "scope": "@ionic",
-    "rawSpec": "^4.0.0-beta.2",
+    "rawSpec": "",
     "saveSpec": null,
-    "fetchSpec": "^4.0.0-beta.2"
+    "fetchSpec": "latest"
   },
   "_requiredBy": [
-    "#DEV:/",
-    "#USER"
+    "#USER",
+    "/"
   ],
-  "_resolved": "https://registry.npmjs.org/@ionic/core/-/core-4.0.0-beta.15.tgz",
-  "_shasum": "c54f94a5481d0ee61dd7e08991dad61a135730a4",
-  "_spec": "@ionic/core@^4.0.0-beta.2",
-  "_where": "/Users/iceman/Developer/Projects/vue-ionic",
+  "_resolved": "https://registry.npmjs.org/@ionic/core/-/core-4.0.0.tgz",
+  "_shasum": "5dd9b44c2feabd3de73a39296f1d9e9b005e4b73",
+  "_spec": "@ionic/core",
+  "_where": "/Volumes/DATA-OSX/Developer/Projects/vue-ionic",
   "author": {
     "name": "Ionic Team"
   },
@@ -33,20 +33,20 @@
   "bundleDependencies": false,
   "collection": "dist/collection/collection-manifest.json",
   "dependencies": {
-    "@types/node": "10.11.0",
-    "ionicons": "4.4.6"
+    "ionicons": "4.5.5"
   },
   "deprecated": false,
   "description": "Base components for Ionic",
   "devDependencies": {
-    "@stencil/core": "0.15.2",
+    "@stencil/core": "0.17.0",
     "@stencil/sass": "0.1.1",
     "@stencil/utils": "latest",
-    "@types/jest": "^23.3.1",
-    "@types/puppeteer": "1.6.4",
-    "@types/swiper": "4.2.1",
+    "@types/jest": "^23.3.13",
+    "@types/node": "10.12.18",
+    "@types/puppeteer": "1.11.2",
+    "@types/swiper": "4.4.1",
     "agadoo": "^1.0.0",
-    "autoprefixer": "^9.0.2",
+    "autoprefixer": "9.4.6",
     "aws-sdk": "^2.320.0",
     "chromedriver": "^2.38.3",
     "clean-css-cli": "^4.1.11",
@@ -55,23 +55,25 @@
     "jest-cli": "23.6.0",
     "np": "^3.0.4",
     "pixelmatch": "4.0.2",
-    "puppeteer": "1.8.0",
-    "rollup": "^0.66.4",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "stylelint": "~9.6.0",
-    "stylelint-order": "~1.0.0",
-    "swiper": "4.4.1",
+    "puppeteer": "1.11.0",
+    "rollup": "1.1.2",
+    "rollup-plugin-node-resolve": "4.0.0",
+    "stylelint": "9.10.1",
+    "stylelint-order": "2.0.0",
+    "swiper": "4.4.6",
     "tslint": "^5.10.0",
-    "tslint-ionic-rules": "0.0.19",
-    "tslint-react": "^3.6.0",
-    "typescript": "^2.9.2"
+    "tslint-ionic-rules": "0.0.21",
+    "tslint-react": "^3.6.0"
   },
+  "es2015": "dist/esm/es2017/index.js",
+  "es2017": "dist/esm/es2017/index.js",
   "files": [
     "dist/",
     "css/",
     "loader/"
   ],
   "homepage": "https://github.com/ionic-team/ionic#readme",
+  "jsnext:main": "dist/esm/es2017/index.js",
   "keywords": [
     "ionic",
     "framework",
@@ -87,7 +89,7 @@
   ],
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/esm/es5/index.js",
+  "module": "dist/esm/index.js",
   "name": "@ionic/core",
   "repository": {
     "type": "git",
@@ -103,7 +105,6 @@
     "clean": "node scripts/clean.js",
     "css.minify": "cleancss -O2 -o ./css/ionic.bundle.css ./css/ionic.bundle.css",
     "css.sass": "node-sass --output ./css src/css --output-style compressed",
-    "dev": "npm run build.css && stencil build --dev --watch --serve",
     "lint": "npm run lint.ts && npm run lint.sass",
     "lint.fix": "npm run lint.ts.fix && npm run lint.sass.fix",
     "lint.sass": "stylelint 'src/**/*.scss'",
@@ -111,6 +112,7 @@
     "lint.ts": "tslint --project .",
     "lint.ts.fix": "tslint --project . --fix",
     "prerelease": "npm run validate && np prerelease --yolo --any-branch --tag next",
+    "start": "npm run build.css && stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test.e2e": "stencil test --e2e",
     "test.screenshot": "stencil test --e2e --screenshot --screenshot-connector=scripts/screenshot/dev.js",
@@ -118,14 +120,10 @@
     "test.spec": "stencil test --spec",
     "test.treeshake": "agadoo dist/collection/index.js",
     "test.watch": "jest --watch --no-cache",
-    "theme-app-build": "stencil build --dev --config scripts/theme-builder/stencil.config.js",
-    "theme-builder": "sd concurrent \"npm run theme-app-build\" \"stencil build --dev --watch\" \"stencil-dev-server\" \"npm run theme-server\" ",
-    "theme-builder:dev": "sd concurrent \"npm run theme-app-build -- --watch\" \"stencil build --dev --watch\" \"stencil-dev-server\" \"npm run theme-server\" ",
-    "theme-server": "node scripts/theme-builder/server.js",
-    "tsc": "tsc -p .",
     "validate": "npm run lint && npm run test && npm run build && npm run test.treeshake"
   },
   "types": "dist/types/interface.d.ts",
   "unpkg": "dist/ionic.js",
-  "version": "4.0.0-beta.15"
+  "version": "4.0.0",
+  "webComponents": "dist/web-components.json"
 }

@@ -11,7 +11,6 @@ export declare class MenuButton implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -23,9 +22,9 @@ export declare class MenuButton implements ComponentInterface {
      */
     autoHide: boolean;
     hostData(): {
-        'ion-activatable': boolean;
         class: {
             'button': boolean;
+            'ion-activatable': boolean;
         };
     };
     render(): JSX.Element;

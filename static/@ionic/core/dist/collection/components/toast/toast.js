@@ -14,12 +14,6 @@ export class Toast {
         this.translucent = false;
         this.animated = true;
     }
-    componentDidLoad() {
-        this.ionToastDidLoad.emit();
-    }
-    componentDidUnload() {
-        this.ionToastDidUnload.emit();
-    }
     async present() {
         await present(this, 'toastEnter', iosEnterAnimation, mdEnterAnimation, this.position);
         if (this.duration > 0) {
@@ -56,7 +50,7 @@ export class Toast {
                 this.message !== undefined &&
                     h("div", { class: "toast-message" }, this.message),
                 this.showCloseButton &&
-                    h("ion-button", { fill: "clear", "ion-activatable": true, class: "toast-button", onClick: () => this.dismiss(undefined, 'cancel') }, this.closeButtonText || 'Close'))));
+                    h("ion-button", { fill: "clear", class: "toast-button", onClick: () => this.dismiss(undefined, 'cancel') }, this.closeButtonText || 'Close'))));
     }
     static get is() { return "ion-toast"; }
     static get encapsulation() { return "shadow"; }
@@ -64,9 +58,6 @@ export class Toast {
         "animated": {
             "type": Boolean,
             "attr": "animated"
-        },
-        "animationCtrl": {
-            "connect": "ion-animation-controller"
         },
         "closeButtonText": {
             "type": String,
@@ -140,12 +131,6 @@ export class Toast {
         }
     }; }
     static get events() { return [{
-            "name": "ionToastDidLoad",
-            "method": "ionToastDidLoad",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
             "name": "ionToastDidPresent",
             "method": "didPresent",
             "bubbles": true,
@@ -166,12 +151,6 @@ export class Toast {
         }, {
             "name": "ionToastDidDismiss",
             "method": "didDismiss",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }, {
-            "name": "ionToastDidUnload",
-            "method": "ionToastDidUnload",
             "bubbles": true,
             "cancelable": true,
             "composed": true

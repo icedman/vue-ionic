@@ -11,20 +11,18 @@ export class BackButton {
     hostData() {
         const showBackButton = this.defaultHref !== undefined;
         return {
-            'ion-activatable': true,
-            class: Object.assign({}, createColorClasses(this.color), { 'button': true, 'show-back-button': showBackButton })
+            class: Object.assign({}, createColorClasses(this.color), { 'button': true, 'ion-activatable': true, 'show-back-button': showBackButton })
         };
     }
     render() {
         const defaultBackButtonText = this.mode === 'ios' ? 'Back' : null;
         const backButtonIcon = this.icon != null ? this.icon : this.config.get('backButtonIcon', 'arrow-back');
         const backButtonText = this.text != null ? this.text : this.config.get('backButtonText', defaultBackButtonText);
-        return (h("button", { type: "button", class: "button-native", onClick: ev => this.onClick(ev) },
+        return (h("button", { type: "button", class: "button-native" },
             h("span", { class: "button-inner" },
                 backButtonIcon && h("ion-icon", { icon: backButtonIcon, lazy: false }),
-                backButtonText && h("span", { class: "button-text" }, backButtonText),
-                this.mode === 'md' && h("ion-ripple-effect", null)),
-            this.mode === 'md' && h("ion-ripple-effect", null)));
+                backButtonText && h("span", { class: "button-text" }, backButtonText)),
+            this.mode === 'md' && h("ion-ripple-effect", { type: "unbounded" })));
     }
     static get is() { return "ion-back-button"; }
     static get encapsulation() { return "scoped"; }
@@ -59,6 +57,10 @@ export class BackButton {
             "context": "window"
         }
     }; }
+    static get listeners() { return [{
+            "name": "click",
+            "method": "onClick"
+        }]; }
     static get style() { return "/**style-placeholder:ion-back-button:**/"; }
     static get styleMode() { return "/**style-id-placeholder:ion-back-button:**/"; }
 }

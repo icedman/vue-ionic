@@ -12,22 +12,23 @@ export class Tab {
                     ` or` +
                     `- Remove the embedded content inside the ion-tab: <ion-tab></ion-tab>`);
             }
-            if (this.tab === undefined) {
-                console.error(`Tab views need to have an unique id attribute:
-  <ion-tab tab="my-unique-id">`);
-            }
         }
     }
     async setActive() {
         await this.prepareLazyLoaded();
         this.active = true;
     }
-    prepareLazyLoaded() {
+    async prepareLazyLoaded() {
         if (!this.loaded && this.component != null) {
             this.loaded = true;
-            return attachComponent(this.delegate, this.el, this.component, ['ion-page']);
+            try {
+                return attachComponent(this.delegate, this.el, this.component, ['ion-page']);
+            }
+            catch (e) {
+                console.error(e);
+            }
         }
-        return Promise.resolve();
+        return undefined;
     }
     hostData() {
         const { tab, active, component } = this;
@@ -35,7 +36,6 @@ export class Tab {
             'role': 'tabpanel',
             'aria-hidden': !active ? 'true' : null,
             'aria-labelledby': `tab-button-${tab}`,
-            'id': `tab-view-${tab}`,
             'class': {
                 'ion-page': component === undefined,
                 'tab-hidden': !active

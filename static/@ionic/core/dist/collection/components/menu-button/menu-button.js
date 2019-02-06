@@ -4,9 +4,9 @@ export class MenuButton {
     }
     hostData() {
         return {
-            'ion-activatable': true,
             class: {
-                'button': true
+                'button': true,
+                'ion-activatable': true,
             }
         };
     }
@@ -16,7 +16,7 @@ export class MenuButton {
             h("button", { type: "button" },
                 h("slot", null,
                     h("ion-icon", { icon: menuIcon, mode: this.mode, color: this.color, lazy: false })),
-                this.mode === 'md' && h("ion-ripple-effect", null))));
+                this.mode === 'md' && h("ion-ripple-effect", { type: "unbounded" }))));
     }
     static get is() { return "ion-menu-button"; }
     static get encapsulation() { return "shadow"; }

@@ -2,7 +2,6 @@ import { createColorClasses } from '../../utils/theme';
 export class TabBar {
     constructor() {
         this.keyboardVisible = false;
-        this.layout = 'icon-top';
         this.translucent = false;
     }
     selectedTabChanged() {
@@ -14,7 +13,7 @@ export class TabBar {
         setTimeout(() => this.keyboardVisible = false, 50);
     }
     onKeyboardWillShow() {
-        if (this.el.getAttribute('slot') === 'bottom') {
+        if (this.el.getAttribute('slot') !== 'top') {
             this.keyboardVisible = true;
         }
     }
@@ -26,7 +25,7 @@ export class TabBar {
         return {
             'role': 'tablist',
             'aria-hidden': keyboardVisible ? 'true' : null,
-            class: Object.assign({}, createColorClasses(color), { 'tabbar-translucent': translucent, 'tabbar-hidden': keyboardVisible })
+            class: Object.assign({}, createColorClasses(color), { 'tab-bar-translucent': translucent, 'tab-bar-hidden': keyboardVisible })
         };
     }
     render() {
@@ -47,10 +46,6 @@ export class TabBar {
         },
         "keyboardVisible": {
             "state": true
-        },
-        "layout": {
-            "type": String,
-            "attr": "layout"
         },
         "mode": {
             "type": String,
@@ -77,10 +72,10 @@ export class TabBar {
             "composed": true
         }]; }
     static get listeners() { return [{
-            "name": "body:keyboardWillHide",
+            "name": "window:keyboardWillHide",
             "method": "onKeyboardWillHide"
         }, {
-            "name": "body:keyboardWillShow",
+            "name": "window:keyboardWillShow",
             "method": "onKeyboardWillShow"
         }]; }
     static get style() { return "/**style-placeholder:ion-tab-bar:**/"; }

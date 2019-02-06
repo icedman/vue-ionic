@@ -11,14 +11,23 @@ export declare class ItemDivider implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
+    /**
+     * When it's set to `true`, the item-divider will stay visible when it reaches the top
+     * of the viewport until the next `ion-item-divider` replaces it.
+     *
+     * This feature relies in `position:sticky`:
+     * https://caniuse.com/#feat=css-sticky
+     */
+    sticky: boolean;
     componentDidLoad(): void;
     hostData(): {
         class: {
+            'item-divider-sticky': boolean;
             'item': boolean;
         } | {
+            'item-divider-sticky': boolean;
             'item': boolean;
         };
     };

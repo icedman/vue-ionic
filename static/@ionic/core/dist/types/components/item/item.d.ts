@@ -1,6 +1,6 @@
 import '../../stencil.core';
 import { ComponentInterface } from '../../stencil.core';
-import { Color, Mode, RouterDirection, StyleEvent } from '../../interface';
+import { Color, Mode, RouterDirection, StyleEventDetail } from '../../interface';
 export declare class Item implements ComponentInterface {
     private itemStyles;
     el: HTMLStencilElement;
@@ -14,11 +14,10 @@ export declare class Item implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
-     * If `true`, a button tag will be rendered and the item will be tappable. Defaults to `false`.
+     * If `true`, a button tag will be rendered and the item will be tappable.
      */
     button: boolean;
     /**
@@ -27,11 +26,11 @@ export declare class Item implements ComponentInterface {
      */
     detail?: boolean;
     /**
-     * The icon to use when `detail` is set to `true`. Defaults to `"ios-arrow-forward"`.
+     * The icon to use when `detail` is set to `true`.
      */
     detailIcon: string;
     /**
-     * If `true`, the user cannot interact with the item. Defaults to `false`.
+     * If `true`, the user cannot interact with the item.
      */
     disabled: boolean;
     /**
@@ -41,35 +40,36 @@ export declare class Item implements ComponentInterface {
     href?: string;
     /**
      * How the bottom border should be displayed on the item.
-     * Available options: `"full"`, `"inset"`, `"none"`.
      */
     lines?: 'full' | 'inset' | 'none';
     /**
      * When using a router, it specifies the transition direction when navigating to
      * another page using `href`.
      */
-    routerDirection?: RouterDirection;
+    routerDirection: RouterDirection;
     /**
      * The type of the button. Only used when an `onclick` or `button` property is present.
-     * Possible values are: `"submit"`, `"reset"` and `"button"`.
-     * Default value is: `"button"`
      */
     type: 'submit' | 'reset' | 'button';
-    itemStyle(ev: CustomEvent<StyleEvent>): void;
+    itemStyle(ev: CustomEvent<StyleEventDetail>): void;
     componentDidLoad(): void;
     private isClickable;
     hostData(): {
-        'ion-activatable': boolean;
+        'aria-disabled': string | null;
         class: {
             'item-disabled': boolean;
             'in-list': boolean;
             'item': boolean;
             'item-multiple-inputs': boolean;
+            'ion-activatable': boolean;
+            'ion-focusable': boolean;
         } | {
             'item-disabled': boolean;
             'in-list': boolean;
             'item': boolean;
             'item-multiple-inputs': boolean;
+            'ion-activatable': boolean;
+            'ion-focusable': boolean;
         };
     };
     render(): JSX.Element[];

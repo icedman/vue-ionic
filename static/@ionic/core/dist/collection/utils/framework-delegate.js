@@ -6,7 +6,7 @@ export async function attachComponent(delegate, container, component, cssClasses
         throw new Error('framework delegate is missing');
     }
     const el = (typeof component === 'string')
-        ? container.ownerDocument.createElement(component)
+        ? container.ownerDocument && container.ownerDocument.createElement(component)
         : component;
     if (cssClasses) {
         cssClasses.forEach(c => el.classList.add(c));

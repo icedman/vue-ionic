@@ -1,51 +1,46 @@
 <template>
   <ion-app id="app">
-<ion-tabs>
 
-<ion-tab tab="home-view">
-<ion-content>
-<router-view/>
-</ion-content>
-</ion-tab>
-
-  <!--
-  <ion-tab tab="home-view">
+    <div class="ion-page">
     <ion-content>
-      <router-view/>
+    <router-view/>
     </ion-content>
-  -->
-    <!-- or <ion-nav></ion-nav>-->
-    <!-- or <ion-router-outlet></ion-router-outlet> -->
-  <!--
-  </ion-tab>
-  -->
-  <ion-tab-bar slot="bottom">
-    <!-- No ion-tab, just a link that looks like a tab -->
-    <ion-tab-button tab="globle"  @click="$router.push('/yetAnother')">
-      <!-- <a href="https://beta.ionicframework.com"> -->
-      <ion-icon name="globe"></ion-icon>
-      <ion-label>Schedule</ion-label>
-    </ion-tab-button>
+    </div>
 
-    <!-- No ion-tab, just a button that looks like a tab -->
-    <ion-tab-button tab="camera" @click="$router.push('/another')">
-      <ion-icon name="camera"></ion-icon>
-      <ion-label>Photo</ion-label>
-    </ion-tab-button>
+    <div class="ion-page">
+    <ion-tabs>
+      <ion-tab tab="home"></ion-tab>
+      <ion-tab tab="settings"></ion-tab>
 
-    <!-- Connected to ion-tab, on click will show the ion-tab with id home-view -->
-    <ion-tab-button tab="home-view" @click="$router.push('/')">
-      <ion-icon name="home"></ion-icon>
-      <ion-label>Home</ion-label>
-    </ion-tab-button>
+      <ion-tab-bar slot="bottom">
 
-    <!--
-    <router-link>
-      does not seem to work
-    -->
-  </ion-tab-bar>
- </ion-tabs>
+        <ion-tab-button tab="home" style="display:none">
+        </ion-tab-button>
+        <!--
+        <ion-tab-button tab="home">
+          <ion-label>Home</ion-label>
+          <ion-icon name="home"></ion-icon>
+          <ion-badge>6</ion-badge>
+        </ion-tab-button>
 
+        <ion-tab-button tab="settings">
+          <ion-label>Settings</ion-label>
+          <ion-icon name="globe"></ion-icon>
+        </ion-tab-button>
+      -->
+
+        <ion-button @click="$router.replace('/')">
+          <ion-label>Home</ion-label>
+          <ion-icon name="home"></ion-icon>
+        </ion-button>
+        <ion-button @click="$router.push('/yetAnother')">
+          <ion-label>Settings</ion-label>
+          <ion-icon name="globe"></ion-icon>
+        </ion-button>
+
+      </ion-tab-bar>
+    </ion-tabs>
+    </div>
   </ion-app>
 
 </template>
@@ -53,7 +48,8 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+    }
   }
 }
 </script>

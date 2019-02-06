@@ -3,13 +3,13 @@ export function getScrollData(componentEl, contentEl, keyboardHeight) {
     const itemEl = componentEl.closest('ion-item,[ion-item]') || componentEl;
     return calcScrollData(itemEl.getBoundingClientRect(), contentEl.getBoundingClientRect(), keyboardHeight, window.innerHeight);
 }
-function calcScrollData(inputRect, contentRect, keyboardHeight, plaformHeight) {
+function calcScrollData(inputRect, contentRect, keyboardHeight, platformHeight) {
     const inputTop = inputRect.top;
     const inputBottom = inputRect.bottom;
     const visibleAreaTop = contentRect.top;
-    const visibleAreaBottom = Math.min(contentRect.bottom, plaformHeight - keyboardHeight);
-    const safeAreaTop = visibleAreaTop + 10;
-    const safeAreaBottom = visibleAreaBottom / 2.0;
+    const visibleAreaBottom = Math.min(contentRect.bottom, platformHeight - keyboardHeight);
+    const safeAreaTop = visibleAreaTop + 15;
+    const safeAreaBottom = visibleAreaBottom * 0.5;
     const distanceToBottom = safeAreaBottom - inputBottom;
     const distanceToTop = safeAreaTop - inputTop;
     const scrollAmount = Math.round((distanceToBottom < 0)

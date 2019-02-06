@@ -9,13 +9,11 @@ export declare class Alert implements ComponentInterface, OverlayInterface {
     presented: boolean;
     animation?: Animation;
     el: HTMLStencilElement;
-    animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
     /** @internal */
     overlayIndex: number;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -56,25 +54,17 @@ export declare class Alert implements ComponentInterface, OverlayInterface {
      */
     inputs: AlertInput[];
     /**
-     * If `true`, the alert will be dismissed when the backdrop is clicked. Defaults to `true`.
+     * If `true`, the alert will be dismissed when the backdrop is clicked.
      */
     backdropDismiss: boolean;
     /**
-     * If `true`, the alert will be translucent. Defaults to `false`.
+     * If `true`, the alert will be translucent.
      */
     translucent: boolean;
     /**
-     * If `true`, the alert will animate. Defaults to `true`.
+     * If `true`, the alert will animate.
      */
     animated: boolean;
-    /**
-     * Emitted after the alert has presented.
-     */
-    ionAlertDidLoad: EventEmitter<void>;
-    /**
-     * Emitted before the alert has presented.
-     */
-    ionAlertDidUnload: EventEmitter<void>;
     /**
      * Emitted after the alert has presented.
      */
@@ -94,8 +84,6 @@ export declare class Alert implements ComponentInterface, OverlayInterface {
     buttonsChanged(): void;
     inputsChanged(): void;
     componentWillLoad(): void;
-    componentDidLoad(): void;
-    componentDidUnload(): void;
     protected onBackdropTap(): void;
     protected dispatchCancelHandler(ev: CustomEvent): void;
     /**
@@ -126,7 +114,8 @@ export declare class Alert implements ComponentInterface, OverlayInterface {
     private renderRadio;
     private renderInput;
     hostData(): {
-        role: string;
+        'role': string;
+        'aria-modal': string;
         style: {
             zIndex: number;
         };

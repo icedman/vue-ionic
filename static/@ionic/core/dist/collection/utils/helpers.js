@@ -1,9 +1,3 @@
-export function reorderArray(array, indexes) {
-    const element = array[indexes.from];
-    array.splice(indexes.from, 1);
-    array.splice(indexes.to, 0, element);
-    return array;
-}
 export function rIC(callback) {
     if ('requestIdleCallback' in window) {
         window.requestIdleCallback(callback);
@@ -15,8 +9,15 @@ export function rIC(callback) {
 export function hasShadowDom(el) {
     return !!el.shadowRoot && !!el.attachShadow;
 }
-export function renderHiddenInput(container, name, value, disabled) {
-    if (hasShadowDom(container)) {
+export function findItemLabel(componentEl) {
+    const itemEl = componentEl.closest('ion-item');
+    if (itemEl) {
+        return itemEl.querySelector('ion-label');
+    }
+    return null;
+}
+export function renderHiddenInput(always, container, name, value, disabled) {
+    if (always || hasShadowDom(container)) {
         let input = container.querySelector('input.aux-input');
         if (!input) {
             input = container.ownerDocument.createElement('input');

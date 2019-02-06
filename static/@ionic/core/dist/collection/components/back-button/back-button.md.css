@@ -67,8 +67,14 @@
   border-radius: var(--border-radius);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  margin: var(--margin-top) var(--margin-end) var(--margin-bottom) var(--margin-start);
-  padding: var(--padding-top) var(--padding-end) var(--padding-bottom) var(--padding-start);
+  margin-left: var(--margin-start);
+  margin-right: var(--margin-end);
+  margin-top: var(--margin-top);
+  margin-bottom: var(--margin-bottom);
+  padding-left: var(--padding-start);
+  padding-right: var(--padding-end);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
   font-family: inherit;
   font-size: inherit;
   font-style: inherit;
@@ -94,6 +100,22 @@
   user-select: none;
   z-index: 0;
   appearance: none; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    .button-native {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: var(--margin-start);
+      margin-inline-start: var(--margin-start);
+      -webkit-margin-end: var(--margin-end);
+      margin-inline-end: var(--margin-end); } }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    .button-native {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: var(--padding-start);
+      padding-inline-start: var(--padding-start);
+      -webkit-padding-end: var(--padding-end);
+      padding-inline-end: var(--padding-end); } }
 
 .button-inner {
   display: flex;
@@ -105,12 +127,34 @@
   height: 100%; }
 
 ion-icon {
-  padding: var(--icon-padding-top) var(--icon-padding-end) var(--icon-padding-bottom) var(--icon-padding-start);
-  margin: var(--icon-margin-top) var(--icon-margin-end) var(--icon-margin-bottom) var(--icon-margin-start);
+  padding-left: var(--icon-padding-start);
+  padding-right: var(--icon-padding-end);
+  padding-top: var(--icon-padding-top);
+  padding-bottom: var(--icon-padding-bottom);
+  margin-left: var(--icon-margin-start);
+  margin-right: var(--icon-margin-end);
+  margin-top: var(--icon-margin-top);
+  margin-bottom: var(--icon-margin-bottom);
   display: inherit;
   font-size: var(--icon-font-size);
   font-weight: var(--icon-font-weight);
   pointer-events: none; }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    ion-icon {
+      padding-left: unset;
+      padding-right: unset;
+      -webkit-padding-start: var(--icon-padding-start);
+      padding-inline-start: var(--icon-padding-start);
+      -webkit-padding-end: var(--icon-padding-end);
+      padding-inline-end: var(--icon-padding-end); } }
+  @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+    ion-icon {
+      margin-left: unset;
+      margin-right: unset;
+      -webkit-margin-start: var(--icon-margin-start);
+      margin-inline-start: var(--icon-margin-start);
+      -webkit-margin-end: var(--icon-margin-end);
+      margin-inline-end: var(--icon-margin-end); } }
 
 :host {
   --color: currentColor;

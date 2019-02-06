@@ -5,7 +5,9 @@ ion-refresher {
   position: absolute;
   width: 100%;
   height: 60px;
-  z-index: 0; }
+  z-index: -1; }
+  :host-context([dir=rtl]) ion-refresher {
+    right: 0; }
   ion-refresher.refresher-active {
     display: block; }
 
@@ -26,6 +28,8 @@ ion-refresher-content {
   transition: 200ms;
   font-size: 30px;
   text-align: center; }
+  :host-context([dir=rtl]) .refresher-pulling-icon, :host-context([dir=rtl]) .refresher-refreshing-icon {
+    transform-origin: calc(100% - center); }
 
 .refresher-pulling-text,
 .refresher-refreshing-text {

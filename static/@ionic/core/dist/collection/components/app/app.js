@@ -5,11 +5,12 @@ export class App {
         rIC(() => {
             const { win, config, queue } = this;
             if (!config.getBoolean('_testing')) {
-                importTapClick(win);
+                importTapClick(win, config);
             }
             importInputShims(win, config);
             importStatusTap(win, config, queue);
             importHardwareBackButton(win, config);
+            importFocusVisible(win);
         });
     }
     hostData() {
@@ -49,8 +50,11 @@ function importStatusTap(win, config, queue) {
         import('../../utils/status-tap').then(module => module.startStatusTap(win, queue));
     }
 }
-function importTapClick(win) {
-    import('../../utils/tap-click').then(module => module.startTapClick(win.document));
+function importFocusVisible(win) {
+    import('../../utils/focus-visible').then(module => module.startFocusVisible(win.document));
+}
+function importTapClick(win, config) {
+    import('../../utils/tap-click').then(module => module.startTapClick(win.document, config));
 }
 function importInputShims(win, config) {
     const inputShims = config.getBoolean('inputShims', needInputShims(win));

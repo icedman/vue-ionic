@@ -3,10 +3,9 @@ import { ComponentInterface, EventEmitter } from '../../stencil.core';
 import { Animation, AnimationBuilder, ComponentProps, ComponentRef, Config, FrameworkDelegate, Mode, OverlayEventDetail, OverlayInterface } from '../../interface';
 export declare class Modal implements ComponentInterface, OverlayInterface {
     private usersElement?;
-    animation: Animation | undefined;
     presented: boolean;
+    animation: Animation | undefined;
     el: HTMLElement;
-    animationCtrl: HTMLIonAnimationControllerElement;
     config: Config;
     /** @internal */
     overlayIndex: number;
@@ -14,7 +13,6 @@ export declare class Modal implements ComponentInterface, OverlayInterface {
     delegate?: FrameworkDelegate;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -43,25 +41,17 @@ export declare class Modal implements ComponentInterface, OverlayInterface {
      */
     cssClass?: string | string[];
     /**
-     * If `true`, the modal will be dismissed when the backdrop is clicked. Defaults to `true`.
+     * If `true`, the modal will be dismissed when the backdrop is clicked.
      */
     backdropDismiss: boolean;
     /**
-     * If `true`, a backdrop will be displayed behind the modal. Defaults to `true`.
+     * If `true`, a backdrop will be displayed behind the modal.
      */
     showBackdrop: boolean;
     /**
-     * If `true`, the modal will animate. Defaults to `true`.
+     * If `true`, the modal will animate.
      */
     animated: boolean;
-    /**
-     * Emitted after the modal has loaded.
-     */
-    ionModalDidLoad: EventEmitter<void>;
-    /**
-     * Emitted after the modal has unloaded.
-     */
-    ionModalDidUnload: EventEmitter<void>;
     /**
      * Emitted after the modal has presented.
      */
@@ -78,8 +68,6 @@ export declare class Modal implements ComponentInterface, OverlayInterface {
      * Emitted after the modal has dismissed.
      */
     didDismiss: EventEmitter<OverlayEventDetail>;
-    componentDidLoad(): void;
-    componentDidUnload(): void;
     protected onDismiss(ev: UIEvent): void;
     protected onBackdropTap(): void;
     protected lifecycle(modalEvent: CustomEvent): void;
@@ -103,6 +91,7 @@ export declare class Modal implements ComponentInterface, OverlayInterface {
     onWillDismiss(): Promise<OverlayEventDetail>;
     hostData(): {
         'no-router': boolean;
+        'aria-modal': string;
         class: {
             [x: string]: boolean;
         };

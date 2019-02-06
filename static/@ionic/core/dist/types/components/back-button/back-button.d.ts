@@ -13,7 +13,6 @@ export declare class BackButton implements ComponentInterface {
     color?: Color;
     /**
      * The mode determines which platform styles to use.
-     * Possible values are: `"ios"` or `"md"`.
      */
     mode: Mode;
     /**
@@ -30,12 +29,13 @@ export declare class BackButton implements ComponentInterface {
     text?: string | null;
     onClick(ev: Event): Promise<boolean>;
     hostData(): {
-        'ion-activatable': boolean;
         class: {
             'button': boolean;
+            'ion-activatable': boolean;
             'show-back-button': boolean;
         } | {
             'button': boolean;
+            'ion-activatable': boolean;
             'show-back-button': boolean;
         };
     };

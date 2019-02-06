@@ -81,6 +81,10 @@
     font-family: inherit;
     font-weight: inherit;
   }
+
+  &::-ms-clear {
+    display: none;
+  }
 }
 
 .alert-input:focus {
@@ -106,12 +110,10 @@
 }
 
 .alert-tappable {
-  display: flex;
   position: relative;
 
   height: $alert-md-tappable-height;
 
-  contain: strict;
   overflow: hidden;
 }
 
@@ -284,10 +286,6 @@
   text-transform: $alert-md-button-text-transform;
 
   overflow: hidden;
-}
-
-.alert-button.activated {
-  background-color: $alert-md-button-background-color-activated;
 }
 
 .alert-button-inner {

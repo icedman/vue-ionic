@@ -1,4 +1,4 @@
-export declare class GestureController {
+declare class GestureController {
     private doc;
     private gestureId;
     private requestedStart;
@@ -27,12 +27,12 @@ export declare class GestureController {
     isDisabled(gestureName: string): boolean;
     private newID;
 }
-export declare class GestureDelegate {
+declare class GestureDelegate {
     private id;
     private name;
-    private priority;
     private disableScroll;
     private ctrl?;
+    private priority;
     constructor(ctrl: GestureController, id: number, name: string, priority: number, disableScroll: boolean);
     canStart(): boolean;
     start(): boolean;
@@ -40,7 +40,7 @@ export declare class GestureDelegate {
     release(): void;
     destroy(): void;
 }
-export declare class BlockerDelegate {
+declare class BlockerDelegate {
     private id;
     private disable;
     private disableScroll;
@@ -60,3 +60,4 @@ export interface BlockerConfig {
     disableScroll?: boolean;
 }
 export declare const GESTURE_CONTROLLER: GestureController;
+export {};
