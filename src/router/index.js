@@ -23,7 +23,10 @@ export default new Router({
     {
       path: '/yetAnother',
       name: 'Some Other 2',
-      component: AnotherPage
+      component: AnotherPage,
+      meta: {
+        tab: 'settings'
+      }
     }
   ]
 })

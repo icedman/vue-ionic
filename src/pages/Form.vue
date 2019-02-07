@@ -49,17 +49,41 @@
         <ion-input type="text" :value="msg" @ionChange="msg=$event.target.value"></ion-input>
       </ion-item>
       <ion-item>
+        <ion-label fixed>Input Text (v-ion-model)</ion-label>
+        <ion-input type="text" v-ion-model="msg" @input="didSomeInput"></ion-input>
+      </ion-item>
+      <ion-item>
         <ion-label>Toggle [{{toggled}}]</ion-label>
         <ion-toggle :checked="toggled" @ionChange="toggled=$event.target.checked ? true : false"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>Toggle (v-ion-model) [{{toggled}}]</ion-label>
+        <ion-toggle v-ion-model="toggled"></ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label>Checkbox [{{checkboxed}}]</ion-label>
         <ion-checkbox color="dark" :checked="checkboxed" @ionChange="checkboxed=$event.target.checked ? true : false"></ion-checkbox>
       </ion-item>
       <ion-item>
-        <ion-label>Date/Time</ion-label>
-        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" :value="dated"></ion-datetime>{{dated}}
+        <ion-label>Checkbox (v-ion-model) [{{checkboxed}}]</ion-label>
+        <ion-checkbox v-ion-model="checkboxed"></ion-checkbox>
       </ion-item>
+      <ion-item>
+        <ion-label>Date/Time {{dated}}</ion-label>
+        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" :value="dated" @ionChange="dated=$event.target.value"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>Date/Time (v-ion-model) {{dated}}</ion-label>
+        <ion-datetime displayFormat="h:mm A" v-ion-model="dated"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+      <ion-textarea v-ion-model="texted" placeholder="Enter more information here..."></ion-textarea>
+      </ion-item>
+      <ion-item>
+      {{texted}}
+      </ion-item>
+
     </ion-list>
     <ion-card>
       <ion-card-header>
@@ -86,9 +110,33 @@
         <ion-radio value="python"></ion-radio>
       </ion-item>
     </ion-radio-group>
+    <ion-radio-group v-ion-model="radioed">
+      <ion-list-header>
+        Radio Group (v-ion-model) [{{radioed}}]
+      </ion-list-header>
+      <ion-item>
+        <ion-label>Go</ion-label>
+        <ion-radio value="go"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>Rust</ion-label>
+        <ion-radio value="rust"></ion-radio>
+      </ion-item>
+      <ion-item disabled="true">
+        <ion-label>Python</ion-label>
+        <ion-radio value="python"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
     <ion-item>
       <ion-label>Range [{{ranged}}]</ion-label>
       <ion-range :value="ranged" @ionChange="ranged=$event.target.value">
+        <ion-icon size="small" name="sunny" slot="start"></ion-icon>
+        <ion-icon name="sunny" slot="end"></ion-icon>
+      </ion-range>
+    </ion-item>
+    <ion-item>
+      <ion-label>Range (v-ion-model) [{{ranged}}]</ion-label>
+      <ion-range v-ion-model="ranged">
         <ion-icon size="small" name="sunny" slot="start"></ion-icon>
         <ion-icon name="sunny" slot="end"></ion-icon>
       </ion-range>
@@ -97,6 +145,17 @@
       <ion-item>
         <ion-label>Gaming [{{selected}}]</ion-label>
         <ion-select :value="selected" @ionChange="selected=$event.target.value">
+          <ion-select-option value="nes">NES</ion-select-option>
+          <ion-select-option value="n64">Nintendo64</ion-select-option>
+          <ion-select-option value="ps">PlayStation</ion-select-option>
+          <ion-select-option value="genesis">Sega Genesis</ion-select-option>
+          <ion-select-option value="saturn">Sega Saturn</ion-select-option>
+          <ion-select-option value="snes">SNES</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Gaming (v-ion-model) [{{selected}}]</ion-label>
+        <ion-select v-ion-model="selected">
           <ion-select-option value="nes">NES</ion-select-option>
           <ion-select-option value="n64">Nintendo64</ion-select-option>
           <ion-select-option value="ps">PlayStation</ion-select-option>
@@ -136,6 +195,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
+      texted: '',
       searched: '',
       dated: null,
       selected: 'n64',
@@ -164,7 +224,8 @@ export default {
       this.$store.commit('ui/SET_LAYOUT', layout)
     },
 
-    sampleAlert () {
+    async sampleAlert () {
+      await this.$ionic.alert.componentOnReady()
       this.$ionic.alert
         .create({
           header: 'Alert',
@@ -177,7 +238,8 @@ export default {
         })
     },
 
-    sampleActionSheet () {
+    async sampleActionSheet () {
+      await this.$ionic.actionSheet.componentOnReady()
       this.$ionic.actionSheet
         .create({
           header: 'Albums',
@@ -226,7 +288,8 @@ export default {
         })
     },
 
-    sampleToast () {
+    async sampleToast () {
+      await this.$ionic.toast.componentOnReady()
       this.$ionic.toast
         .create({
           message: 'Click to Close',
@@ -237,6 +300,10 @@ export default {
         .then(a => {
           a.present()
         })
+    },
+
+    didSomeInput (x) {
+      console.log(x)
     }
   }
 }

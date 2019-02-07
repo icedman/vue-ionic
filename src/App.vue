@@ -1,5 +1,5 @@
 <template>
-  <component :is="layout"/>
+  <component :is="layout" />
 </template>
 
 <script>
@@ -12,27 +12,29 @@ import SplitPane from '@/layout/SplitPane'
 export default {
   name: 'App',
   data () {
-    return {
-    }
+    return {}
   },
   computed: {
     layout () {
-      return this.$store.state.ui.layout || 'Menu'
+      return this.$store.state.ui.layout || 'Tabs'
     }
   },
   components: {
-    'Full': Full,
-    'Header': Header,
-    'Menu': Menu,
-    'Tabs': Tabs,
-    'SplitPane': SplitPane
+    Full: Full,
+    Header: Header,
+    Menu: Menu,
+    Tabs: Tabs,
+    SplitPane: SplitPane
+  },
+  mounted () {
+    window.$app = this
   }
 }
 </script>
 
 <style>
 ion-app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
