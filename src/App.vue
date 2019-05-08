@@ -3,20 +3,20 @@
 </template>
 
 <script>
-import Full from '@/layout/Full'
-import Header from '@/layout/Header'
-import Menu from '@/layout/Menu'
-import Tabs from '@/layout/Tabs'
-import SplitPane from '@/layout/SplitPane'
+import Full from "@/layout/Full";
+import Header from "@/layout/Header";
+import Menu from "@/layout/Menu";
+import Tabs from "@/layout/Tabs";
+import SplitPane from "@/layout/SplitPane";
 
 export default {
-  name: 'App',
-  data () {
-    return {}
+  name: "App",
+  data() {
+    return {};
   },
   computed: {
-    layout () {
-      return this.$store.state.ui.layout || 'Tabs'
+    layout() {
+      return this.$store.state.ui.layout || "Tabs";
     }
   },
   components: {
@@ -26,10 +26,10 @@ export default {
     Tabs: Tabs,
     SplitPane: SplitPane
   },
-  mounted () {
-    window.$app = this
+  mounted() {
+    window.$app = this;
   }
-}
+};
 </script>
 
 <style>

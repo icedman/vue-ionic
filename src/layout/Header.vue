@@ -13,24 +13,21 @@
           </router-link>
           <!-- </ion-item> -->
         </ion-buttons>
-
       </ion-toolbar>
     </ion-header>
 
     <ion-content main>
       <router-view />
     </ion-content>
-
   </ion-app>
 </template>
 
 <script>
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   }
-}
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

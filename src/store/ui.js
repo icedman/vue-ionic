@@ -1,22 +1,22 @@
 let state = {
   layout: null
-}
+};
 
-let actions = {}
+let actions = {};
 
-let getters = {}
+let getters = {};
 
 let mutations = {
-  SET_LAYOUT (state, layout) {
-    state.layout = layout
+  SET_LAYOUT(state, layout) {
+    state.layout = layout;
   }
-}
+};
 
 export default {
-  name: 'ui',
+  name: "ui",
   namespaced: true,
   state,
   getters,
   actions,
   mutations
-}
+};

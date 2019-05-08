@@ -2,37 +2,37 @@
   <ion-app id="app">
     <ion-menu name="menu" :type="type">
       <div class="ion-page">
-      <ion-header>
-        <ion-toolbar color="primary">
-          <ion-title>Menu</ion-title>
-        </ion-toolbar>
-      </ion-header>
+        <ion-header>
+          <ion-toolbar color="primary">
+            <ion-title>Menu</ion-title>
+          </ion-toolbar>
+        </ion-header>
 
-      <ion-content>
-        <ion-list>
-          <ion-list-header>
-            Navigate
-          </ion-list-header>
-          <ion-menu-toggle auto-hide="false">
-            <router-link to='/'>
-            <ion-item button>
-                <ion-icon slot="start" name='home'></ion-icon>
+        <ion-content>
+          <ion-list>
+            <ion-list-header>
+              Navigate
+            </ion-list-header>
+            <ion-menu-toggle auto-hide="false">
+              <router-link to="/">
+                <ion-item button>
+                  <ion-icon slot="start" name="home"></ion-icon>
+                  <ion-label>
+                    Home
+                  </ion-label>
+                </ion-item>
+              </router-link>
+            </ion-menu-toggle>
+            <router-link to="/another">
+              <ion-item button>
+                <ion-icon slot="start" name="another"></ion-icon>
                 <ion-label>
-                  Home
+                  Another Page
                 </ion-label>
-            </ion-item>
+              </ion-item>
             </router-link>
-          </ion-menu-toggle>
-          <router-link to='/another'>
-          <ion-item button>
-              <ion-icon slot="start" name='another'></ion-icon>
-              <ion-label>
-                Another Page
-              </ion-label>
-          </ion-item>
-          </router-link>
-        </ion-list>
-      </ion-content>
+          </ion-list>
+        </ion-content>
       </div>
     </ion-menu>
 
@@ -53,21 +53,18 @@
         <router-view />
       </ion-content>
     </div>
-
   </ion-app>
-
 </template>
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      type: 'push' // reveal, push, overlay
+      type: "push" // reveal, push, overlay
       // reveal is buggy on ios
-    }
+    };
   }
-}
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

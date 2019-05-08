@@ -1,32 +1,32 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Form from '@/pages/Form'
-import AnotherPage from '@/pages/AnotherPage'
+import Vue from "vue";
+import Router from "vue-router";
+import Form from "@/pages/Form";
+import AnotherPage from "@/pages/AnotherPage";
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'Form',
+      path: "/",
+      name: "Form",
       component: Form
     },
     {
-      path: '/another',
-      name: 'Some Other',
+      path: "/another",
+      name: "Some Other",
       component: AnotherPage,
       meta: {
-        layout: 'SplitPane'
+        layout: "SplitPane"
       }
     },
     {
-      path: '/yetAnother',
-      name: 'Some Other 2',
+      path: "/yetAnother",
+      name: "Some Other 2",
       component: AnotherPage,
       meta: {
-        tab: 'settings'
+        tab: "settings"
       }
     }
   ]
-})
+});

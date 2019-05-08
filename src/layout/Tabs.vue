@@ -17,7 +17,6 @@
     -->
 
     <ion-tabs>
-
       <div class="ion-page">
         <ion-content>
           <router-view />
@@ -42,7 +41,6 @@
 
       <!-- <ion-tab-bar slot="top" style="margin-top:60px"> -->
       <ion-tab-bar slot="bottom">
-
         <ion-tab-button tab="home" @click="$router.replace('/')">
           <ion-label>Home</ion-label>
           <ion-icon name="home"></ion-icon>
@@ -64,32 +62,28 @@
           <ion-icon name="globe"></ion-icon>
         </ion-button>
         -->
-
       </ion-tab-bar>
     </ion-tabs>
-
   </ion-app>
-
 </template>
 
 <script>
 export default {
   methods: {
-    updateTabFromRoute () {
+    updateTabFromRoute() {
       if (this.$store.state.route.meta && this.$store.state.route.meta.tab) {
-        var tabs = document.querySelector('ion-tabs')
+        var tabs = document.querySelector("ion-tabs");
         if (tabs) {
-          tabs.select(this.$store.state.route.meta.tab)
+          tabs.select(this.$store.state.route.meta.tab);
         }
       }
     }
   },
 
-  mounted () {
-    setTimeout(this.updateTabFromRoute, 500)
+  mounted() {
+    setTimeout(this.updateTabFromRoute, 500);
   }
-}
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

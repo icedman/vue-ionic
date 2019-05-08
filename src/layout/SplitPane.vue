@@ -15,18 +15,18 @@
                 Navigate
               </ion-list-header>
               <ion-menu-toggle auto-hide="false">
-                <router-link to='/'>
+                <router-link to="/">
                   <ion-item button>
-                    <ion-icon slot="start" name='home'></ion-icon>
+                    <ion-icon slot="start" name="home"></ion-icon>
                     <ion-label>
                       Home
                     </ion-label>
                   </ion-item>
                 </router-link>
               </ion-menu-toggle>
-              <router-link to='/another'>
+              <router-link to="/another">
                 <ion-item button>
-                  <ion-icon slot="start" name='another'></ion-icon>
+                  <ion-icon slot="start" name="another"></ion-icon>
                   <ion-label>
                     Another Page
                   </ion-label>
@@ -54,18 +54,16 @@
           <router-view />
         </ion-content>
       </div>
-
     </ion-split-pane>
   </ion-app>
 </template>
 
 <script>
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   }
-}
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
