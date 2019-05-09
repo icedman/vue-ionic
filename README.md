@@ -1,4 +1,6 @@
-# t
+# vue-ionic
+
+This is kitchen-sink of sort for using ionic with vuejs.
 
 ## Project setup
 ```
