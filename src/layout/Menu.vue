@@ -14,23 +14,19 @@
               Navigate
             </ion-list-header>
             <ion-menu-toggle auto-hide="false">
-              <router-link to="/">
-                <ion-item button>
+                <ion-item button @click="$router.push('/')">
                   <ion-icon slot="start" name="home"></ion-icon>
                   <ion-label>
                     Home
                   </ion-label>
                 </ion-item>
-              </router-link>
             </ion-menu-toggle>
-            <router-link to="/another">
-              <ion-item button>
+              <ion-item button @click="$router.push('/another')">
                 <ion-icon slot="start" name="another"></ion-icon>
                 <ion-label>
                   Another Page
                 </ion-label>
               </ion-item>
-            </router-link>
           </ion-list>
         </ion-content>
       </div>
