@@ -3,6 +3,7 @@ import App from "./App";
 import router from "./router";
 import store from "./store";
 import { sync } from "vuex-router-sync";
+import jp from "jsonpath";
 
 Vue.config.productionTip = false;
 Vue.config.ignoredElements = [/^ion-/];
@@ -40,6 +41,14 @@ Vue.prototype.$ionic = {
   toast: document.querySelector("ion-toast-controller")
 };
 
+function jpv(state, model, value) {
+  try {
+    jp.value(state, model, value);
+  } catch (err) {
+    return (state[model] = value);
+  }
+}
+
 Vue.directive("ion-model", {
   bind: function(el, binding, vnode) {
     // console.log(el)
@@ -55,7 +64,8 @@ Vue.directive("ion-model", {
     });
     el[target] = binding.value;
     el.addEventListener("ionChange", function(e) {
-      vnode.context[binding.expression] = e.detail[target];
+      jpv(vnode.context, binding.expression, e.detail[target]);
+      // vnode.context[binding.expression] = e.detail[target];
       // vnode.$emit('input', e.detail[target])
     });
   }
@@ -67,7 +77,6 @@ Vue.directive("ion-model", {
 
 /* cordova */
 document.addEventListener("deviceready", onDeviceReady, false);
-
 function onDeviceReady() {
   store.commit("SET_DEVICE_READY", true);
 }

@@ -60,7 +60,7 @@
         <ion-label fixed>Input Text (v-ion-model)</ion-label>
         <ion-input
           type="text"
-          v-ion-model="msg"
+          v-ion-model="deep.deeper.texted"
           @input="didSomeInput"
         ></ion-input>
       </ion-item>
@@ -109,6 +109,8 @@
       </ion-item>
       <ion-item>
         {{ texted }}
+        <br/>
+        {{ deep.deeper.texted }}
       </ion-item>
     </ion-list>
     <ion-card>
@@ -235,7 +237,13 @@ export default {
       checkboxed: true,
       radioed: "python",
       ranged: 10,
-      msg: "Welcome to Your Vue.js App"
+      msg: "Welcome to Your Vue.js App",
+      deep: {
+        texted: "xxx",
+        deeper: {
+          texted: "yyy"
+        }
+      }
     };
   },
 
